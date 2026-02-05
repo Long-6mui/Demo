@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="30dp"
+    android:gravity="center"
+    android:background="#F5F5F5">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create\nYour account"
+        android:textColor="#333333"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="30dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Username"
+        android:textColorHint="#999999"
+        android:backgroundTint="#CCCCCC"
+        android:layout_marginBottom="15dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:textColorHint="#999999"
+        android:backgroundTint="#CCCCCC"
+        android:layout_marginBottom="15dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textColorHint="#999999"
+        android:backgroundTint="#CCCCCC"
+        android:layout_marginBottom="40dp" />
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:text="Create Account"
+        android:backgroundTint="#8B0000" />
+
+    <TextView
+        android:id="@+id/tvBackToLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Already have an account? Log in"
+        android:textColor="#666666"
+        android:padding="10dp"
+        android:layout_marginTop="20dp" />
+</LinearLayout>
