@@ -1,10 +1,766 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F5F2EE">
 
-    tools:context=".MainActivity"/>
+    <!-- MAIN SCROLLABLE CONTENT -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="80dp"
+        android:clipToPadding="false">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ═══════════════════════════════════ -->
+            <!--           TOP HEADER               -->
+            <!-- ═══════════════════════════════════ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="52dp"
+                android:paddingBottom="8dp"
+                android:gravity="center_vertical">
+
+                <!-- App Logo / Name -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🍽 RecipeBox"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="#1A3A2A"
+                        android:letterSpacing="0.02"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="What's cooking today?"
+                        android:textSize="13sp"
+                        android:textColor="#6B8C77"
+                        android:layout_marginTop="2dp"/>
+                </LinearLayout>
+
+                <!-- Notification Bell -->
+                <ImageButton
+                    android:id="@+id/btnNotification"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/circle_white_bg"
+                    android:src="@drawable/ic_notifications"
+                    android:padding="10dp"
+                    android:contentDescription="Notifications"/>
+
+            </LinearLayout>
+
+            <!-- ═══════════════════════════════════ -->
+            <!--           SEARCH BAR               -->
+            <!-- ═══════════════════════════════════ -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="4dp"
+                app:cardCornerRadius="25dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:cardElevation="2dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingHorizontal="16dp">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_search"
+                        app:tint="#000000"
+                        android:alpha="0.4"/>
+
+                    <EditText
+                        android:id="@+id/edtSearch"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:hint="Tìm kiếm công thức..."
+                        android:textColorHint="#AAAAAA"
+                        android:textSize="14sp"
+                        android:textColor="#1A3A2A"
+                        android:background="@null"
+                        android:paddingStart="10dp"
+                        android:singleLine="true"
+                        android:imeOptions="actionSearch"/>
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- ═══════════════════════════════════ -->
+            <!--        CATEGORY SECTION            -->
+            <!-- ═══════════════════════════════════ -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Danh mục"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="#1A3A2A"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Category Grid - Row 1 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:weightSum="4">
+
+                <!-- Category 1: Đồ Khô -->
+                <LinearLayout
+                    android:id="@+id/catDryFood"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/category_card_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🍚"
+                        android:textSize="26sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đồ Khô"
+                        android:textSize="11sp"
+                        android:textColor="#1A3A2A"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+
+                <!-- Category 2: Đồ Nước -->
+                <LinearLayout
+                    android:id="@+id/catSoup"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/category_card_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🍜"
+                        android:textSize="26sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đồ Nước"
+                        android:textSize="11sp"
+                        android:textColor="#1A3A2A"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+
+                <!-- Category 3: Ăn Vặt -->
+                <LinearLayout
+                    android:id="@+id/catSnack"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/category_card_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🧆"
+                        android:textSize="26sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Ăn Vặt"
+                        android:textSize="11sp"
+                        android:textColor="#1A3A2A"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+
+                <!-- Category 4: Tráng Miệng -->
+                <LinearLayout
+                    android:id="@+id/catDessert"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/category_card_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🍮"
+                        android:textSize="26sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tráng Miệng"
+                        android:textSize="10sp"
+                        android:textColor="#1A3A2A"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Category Grid - Row 2 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:layout_marginTop="8dp"
+                android:weightSum="4">
+
+                <!-- Category 5: Nướng -->
+                <LinearLayout
+                    android:id="@+id/catGrill"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/category_card_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🔥"
+                        android:textSize="26sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nướng"
+                        android:textSize="11sp"
+                        android:textColor="#1A3A2A"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+
+                <!-- Category 6: Chay -->
+                <LinearLayout
+                    android:id="@+id/catVegan"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/category_card_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🥗"
+                        android:textSize="26sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Chay"
+                        android:textSize="11sp"
+                        android:textColor="#1A3A2A"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+
+                <!-- Category 7: Đồ Uống -->
+                <LinearLayout
+                    android:id="@+id/catDrink"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/category_card_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🧋"
+                        android:textSize="26sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Đồ Uống"
+                        android:textSize="11sp"
+                        android:textColor="#1A3A2A"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+
+                <!-- Category 8: Xem Thêm -->
+                <LinearLayout
+                    android:id="@+id/catMore"
+                    android:layout_width="0dp"
+                    android:layout_height="90dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:background="@drawable/category_card_green_bg">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="•••"
+                        android:textSize="20sp"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Thêm"
+                        android:textSize="11sp"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold"
+                        android:layout_marginTop="4dp"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ═══════════════════════════════════ -->
+            <!--        FAVORITES SECTION           -->
+            <!-- ═══════════════════════════════════ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:layout_marginTop="28dp"
+                android:layout_marginBottom="12dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="❤ Yêu thích"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A3A2A"/>
+
+                <TextView
+                    android:id="@+id/txtSeeAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Xem tất cả →"
+                    android:textSize="13sp"
+                    android:textColor="#4A8C5C"/>
+
+            </LinearLayout>
+
+            <!-- Horizontal Scroll - Favorite Cards -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:clipToPadding="false">
+
+                <LinearLayout
+                    android:id="@+id/listFavorites"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Favorite Card 1 -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="160dp"
+                        android:layout_height="200dp"
+                        android:layout_marginEnd="12dp"
+                        app:cardCornerRadius="18dp"
+                        app:cardElevation="4dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/imgFav1"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/login"/>
+
+                            <!-- Dark gradient overlay -->
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="80dp"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/gradient_dark_bottom"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:padding="12dp"
+                                android:text="Pasta Carbonara"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13sp"
+                                android:textStyle="bold"/>
+
+                            <!-- Heart button -->
+                            <ImageButton
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_margin="8dp"
+                                android:background="@drawable/circle_white_bg"
+                                android:src="@drawable/ic_favorite"
+                                android:padding="8dp"
+                                android:contentDescription="Favorite"/>
+                        </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Favorite Card 2 -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="160dp"
+                        android:layout_height="200dp"
+                        android:layout_marginEnd="12dp"
+                        app:cardCornerRadius="18dp"
+                        app:cardElevation="4dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:id="@+id/imgFav2"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/register"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="80dp"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/gradient_dark_bottom"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:padding="12dp"
+                                android:text="Phở Bò"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13sp"
+                                android:textStyle="bold"/>
+
+                            <ImageButton
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_margin="8dp"
+                                android:background="@drawable/circle_white_bg"
+                                android:src="@drawable/ic_favorite"
+                                android:padding="8dp"
+                                android:contentDescription="Favorite"/>
+                        </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Favorite Card 3 -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="160dp"
+                        android:layout_height="200dp"
+                        android:layout_marginEnd="12dp"
+                        app:cardCornerRadius="18dp"
+                        app:cardElevation="4dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/login"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="80dp"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/gradient_dark_bottom"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:padding="12dp"
+                                android:text="Bánh Xèo"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13sp"
+                                android:textStyle="bold"/>
+
+                            <ImageButton
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_margin="8dp"
+                                android:background="@drawable/circle_white_bg"
+                                android:src="@drawable/ic_favorite"
+                                android:padding="8dp"
+                                android:contentDescription="Favorite"/>
+                        </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Favorite Card 4 -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="160dp"
+                        android:layout_height="200dp"
+                        android:layout_marginEnd="12dp"
+                        app:cardCornerRadius="18dp"
+                        app:cardElevation="4dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/register"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="80dp"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/gradient_dark_bottom"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:padding="12dp"
+                                android:text="Bún Bò Huế"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13sp"
+                                android:textStyle="bold"/>
+
+                            <ImageButton
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_margin="8dp"
+                                android:background="@drawable/circle_white_bg"
+                                android:src="@drawable/ic_favorite"
+                                android:padding="8dp"
+                                android:contentDescription="Favorite"/>
+                        </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Favorite Card 5 -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="160dp"
+                        android:layout_height="200dp"
+                        android:layout_marginEnd="4dp"
+                        app:cardCornerRadius="18dp"
+                        app:cardElevation="4dp">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@drawable/login"/>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="80dp"
+                                android:layout_alignParentBottom="true"
+                                android:background="@drawable/gradient_dark_bottom"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:padding="12dp"
+                                android:text="Gỏi Cuốn"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13sp"
+                                android:textStyle="bold"/>
+
+                            <ImageButton
+                                android:layout_width="36dp"
+                                android:layout_height="36dp"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentEnd="true"
+                                android:layout_margin="8dp"
+                                android:background="@drawable/circle_white_bg"
+                                android:src="@drawable/ic_favorite"
+                                android:padding="8dp"
+                                android:contentDescription="Favorite"/>
+                        </RelativeLayout>
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- Bottom padding -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="16dp"/>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- ═══════════════════════════════════ -->
+    <!--         BOTTOM NAVIGATION          -->
+    <!-- ═══════════════════════════════════ -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="32dp"
+        app:cardBackgroundColor="#1A3A2A"
+        app:cardElevation="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:weightSum="3"
+            android:gravity="center">
+
+            <!-- Tab: Tôi -->
+            <LinearLayout
+                android:id="@+id/tabProfile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_person"
+                    app:tint="#FFFFFF"
+                    android:alpha="0.6"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tôi"
+                    android:textSize="10sp"
+                    android:textColor="#99FFFFFF"
+                    android:layout_marginTop="2dp"/>
+
+            </LinearLayout>
+
+            <!-- Divider trái -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="30dp"
+                android:background="#33FFFFFF"/>
+
+            <!-- ✅ Nút Home tròn xanh lá ở giữa -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageButton
+                    android:id="@+id/btnHome"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/circle_green_bg"
+                    android:src="@drawable/ic_home"
+                    android:padding="12dp"
+                    android:contentDescription="Trang chủ"
+                    android:elevation="6dp"/>
+
+            </LinearLayout>
+
+            <!-- Divider phải -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="30dp"
+                android:background="#33FFFFFF"/>
+
+            <!-- Tab: Kho lưu -->
+            <LinearLayout
+                android:id="@+id/tabSaved"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_bookmark"
+                    app:tint="#FFFFFF"
+                    android:alpha="0.6"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Kho lưu"
+                    android:textSize="10sp"
+                    android:textColor="#99FFFFFF"
+                    android:layout_marginTop="2dp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

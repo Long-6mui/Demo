@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-  
-</selector>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Màu trắng mờ (Glass effect) -->
+    <solid android:color="#30FFFFFF"/>
+
+    <!-- Bo góc -->
+    <corners android:radius="24dp"/>
+
+    <!-- Viền trắng nhẹ -->
+    <stroke
+        android:width="1dp"
+        android:color="#80FFFFFF"/>
+
+</shape>

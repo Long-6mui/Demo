@@ -1,10 +1,11 @@
-package com.example.demo
+package com.example.demo.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.demo.R
 
 class LoginActivity : AppCompatActivity() {
 
@@ -13,7 +14,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         val btnLogin = findViewById<Button>(R.id.btnLogin)
-        val txtGoRegister = findViewById<TextView>(R.id.tvGoToRegister)
+        val txtGoRegister = findViewById<TextView>(R.id.txtGoRegister)
 
         btnLogin.setOnClickListener {
             startActivity(Intent(this, MainActivity::class.java))
