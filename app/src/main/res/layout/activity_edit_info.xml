@@ -36,7 +36,6 @@
             android:id="@+id/edtName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nhập họ tên"
             android:layout_marginBottom="15dp"
             android:padding="10dp"/>
 
@@ -51,7 +50,6 @@
             android:id="@+id/edtID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nhập ID"
             android:layout_marginBottom="15dp"
             android:padding="10dp"/>
 
@@ -74,13 +72,12 @@
 
                 <EditText
                     android:id="@+id/edtBirthDay"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:clickable="true"
                     android:drawableEnd="@android:drawable/ic_menu_my_calendar"
                     android:focusable="false"
-                    android:hint="Chọn ngày sinh"
                     android:padding="10dp" />
             </LinearLayout>
 

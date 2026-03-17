@@ -50,8 +50,11 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
 
     // ✅ Flexbox cho chip nguyên liệu
     implementation("com.google.android.flexbox:flexbox:3.0.0")
 
+    // Glide hiển thị ảnh từ URl
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 }
