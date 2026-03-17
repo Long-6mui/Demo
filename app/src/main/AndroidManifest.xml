@@ -17,20 +17,18 @@
         <activity android:name=".activities.MainActivity" android:exported="false" />
         <activity android:name=".activities.FeedActivity" android:exported="false" />
         <activity android:name=".activities.CommentActivity" android:exported="false" />
+        <activity android:name=".activities.NotificationActivity" android:exported="false" />
+        <activity android:name=".activities.SettingActivity" android:exported="false" />
+        <activity android:name=".activities.FeedbackActivity" android:exported="false" />
 
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".activities.NotificationActivity"/>
-        <activity android:name=".activities.SettingActivity"/>
-        <activity android:name=".activities.FeedbackActivity"/>
     </application>
 
 </manifest>
