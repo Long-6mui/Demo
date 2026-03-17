@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.example.demo.activities.ProfileActivity
 import com.example.demo.Database.DatabaseHelper
 import com.example.demo.R
 
@@ -30,7 +31,6 @@ class editInfoActivity : AppCompatActivity() {
             val gallery = Intent(Intent.ACTION_PICK)
             gallery.type = "image/*"
             startActivityForResult(gallery, PICK_IMAGE)
-
         }
         //chọn ngày sinh
         val edtBirthDay = findViewById<EditText>(R.id.edtBirthDay)
@@ -51,8 +51,7 @@ class editInfoActivity : AppCompatActivity() {
         //Quay lại
         val btnBack = findViewById<Button>(R.id.btnBack)
         btnBack.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
+            finish()
         }
         val db = DatabaseHelper(this)
     }

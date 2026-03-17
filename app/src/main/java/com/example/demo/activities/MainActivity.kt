@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.demo.R
 
+
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,24 +46,31 @@ class MainActivity : AppCompatActivity() {
         }
 
         // ── Bottom Navigation ──
-        findViewById<LinearLayout>(R.id.tabProfile).setOnClickListener {
-            startActivity(Intent(this, ProfileActivity::class.java))
-        }
-        findViewById<LinearLayout>(R.id.tabSaved).setOnClickListener {
-            startActivity(Intent(this, SavedActivity::class.java))
-        }
         val tabProfile = findViewById<LinearLayout>(R.id.tabProfile)
+        val tabSaved = findViewById<LinearLayout>(R.id.tabSaved)
+        val btnHome = findViewById<ImageButton>(R.id.btnHome)
 
         tabProfile.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, ProfileActivity::class.java))
         }
 
-        val btnHome = findViewById<ImageButton>(R.id.btnHome)
+        tabSaved.setOnClickListener {
+            startActivity(Intent(this, SavedActivity::class.java))
+        }
+
 
         btnHome.setOnClickListener {
 
             val intent = Intent(this, FeedActivity::class.java)
+            startActivity(intent)
+
+        }
+        // ── Notification button ──
+        val btnNotification = findViewById<ImageButton>(R.id.btnNotification)
+
+        btnNotification.setOnClickListener {
+
+            val intent = Intent(this, NotificationActivity::class.java)
             startActivity(intent)
 
         }
