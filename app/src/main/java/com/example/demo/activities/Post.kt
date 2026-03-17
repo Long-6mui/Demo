@@ -3,9 +3,11 @@ package com.example.demo.activities
 import android.media.Image
 
 data class Post(
-    val imgAvatar: Int,
-    val name: String,
-    val content: String,
-    var likes: Int,
-    val image: Int
+    var id: String = "",
+    val imgAvatar: Int = 0,
+    val name: String = "",
+    var content: String = "",
+    var likes: Int = 0,
+    var image: String? = null,
+    var imageUrl: String? = null
 )

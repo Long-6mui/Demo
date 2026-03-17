@@ -1,5 +1,6 @@
 package com.example.demo.activities
 
+import android.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,8 +9,17 @@ import android.widget.TextView
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import android.content.Intent
+import android.net.Uri
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.PopupMenu
+import android.widget.Toast
+import com.bumptech.glide.Glide
 import kotlin.jvm.java
 import com.example.demo.R
+import com.google.firebase.firestore.FirebaseFirestore
+
+
 class PostAdapter(private val list: MutableList<Post>) :
     RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
@@ -22,6 +32,8 @@ class PostAdapter(private val list: MutableList<Post>) :
         val image: ImageView = itemView.findViewById(R.id.image)
         val likeBtn: Button = itemView.findViewById(R.id.btnLike)
         val commentBtn: Button = itemView.findViewById(R.id.btnComment)
+
+        val btnMenu: ImageButton = itemView.findViewById(R.id.btnMenu)
 
 
 
@@ -43,20 +55,106 @@ class PostAdapter(private val list: MutableList<Post>) :
         holder.name.text = post.name
         holder.content.text = post.content
         holder.likes.text = "${post.likes} likes"
-        holder.image.setImageResource(post.image)
+
+
+        if (!post.imageUrl.isNullOrEmpty()) {
+
+            holder.image.visibility = View.VISIBLE
+
+            Glide.with(holder.itemView.context)
+                .load(post.imageUrl)
+                .into(holder.image)
+
+        } else if (post.image != null) {
+
+            holder.image.visibility = View.VISIBLE
+
+            Glide.with(holder.itemView.context)
+                .load(post.image)
+                .into(holder.image)
+
+        } else {
+
+            holder.image.visibility = View.GONE
+
+        }
 
         holder.likeBtn.setOnClickListener {
             post.likes++
             notifyItemChanged(position)
         }
 
+
+
         holder.commentBtn.setOnClickListener {
 
-            val intent = Intent(holder.itemView.context, CommentActivity::class.java)
-            holder.itemView.context.startActivity(intent)
+            Toast.makeText(
+                holder.itemView.context,
+                "Click comment",
+                Toast.LENGTH_SHORT
+            ).show()
 
+            val intent = Intent(holder.itemView.context, CommentActivity::class.java)
+            intent.putExtra("postId", post.id)
+
+            holder.itemView.context.startActivity(intent)
         }
 
+        holder.btnMenu.setOnClickListener {
+
+            // nếu là bài mẫu thì không cho chỉnh sửa
+            if(post.id.isEmpty()){
+                Toast.makeText(
+                    holder.itemView.context,
+                    "Chỉ chỉnh sửa được bài bạn đăng",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
+            val popup = PopupMenu(holder.itemView.context, holder.btnMenu)
+
+            popup.menu.add("Edit")
+            popup.menu.add("Delete")
+
+            popup.setOnMenuItemClickListener {
+
+                if(it.title == "Delete"){
+
+                    val db = FirebaseFirestore.getInstance()
+
+                    db.collection("posts")
+                        .document(post.id)
+                        .delete()
+                        .addOnSuccessListener {
+
+                            val pos = holder.adapterPosition
+
+                            list.removeAt(pos)
+                            notifyItemRemoved(pos)
+
+                        }
+
+                }
+
+                if(it.title == "Edit"){
+
+                    val intent = Intent(holder.itemView.context, EditPostActivity::class.java)
+
+                    intent.putExtra("postId", post.id)
+                    intent.putExtra("content", post.content)
+                    intent.putExtra("image", post.imageUrl)
+                    intent.putExtra("position", position)
+
+                    holder.itemView.context.startActivity(intent)
+
+                }
+
+                true
+            }
+
+            popup.show()
+        }
 
     }
 
