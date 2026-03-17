@@ -61,17 +61,14 @@ class editInfoActivity : AppCompatActivity() {
                     val date = String.format("%02d/%02d/%d", selectedDay, selectedMonth + 1, selectedYear)
                     edtBirth.setText(date)
                 },
-                year,
-                month,
-                day
+                year, month, day
             )
             datePicker.show()
         }
         //Quay lại
         val btnBack = findViewById<Button>(R.id.btnBack)
         btnBack.setOnClickListener {
-            val intent = Intent(this, ProfileActivity::class.java)
-            startActivity(intent)
+            finish()
         }
 
         edtName = findViewById(R.id.edtName)

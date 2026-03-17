@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<LinearLayout>(R.id.tabProfile).setOnClickListener {
             startActivity(Intent(this, ProfileActivity::class.java))
         }
+        val tabSaved = findViewById<LinearLayout>(R.id.tabSaved)
         findViewById<LinearLayout>(R.id.tabSaved).setOnClickListener {
             startActivity(Intent(this, SavedActivity::class.java))
         }
@@ -58,11 +59,30 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
         val btnHome = findViewById<ImageButton>(R.id.btnHome)
+
+        tabProfile.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+        }
+
+        tabSaved.setOnClickListener {
+            startActivity(Intent(this, SavedActivity::class.java))
+        }
+
 
         btnHome.setOnClickListener {
 
             val intent = Intent(this, FeedActivity::class.java)
+            startActivity(intent)
+
+        }
+        // ── Notification button ──
+        val btnNotification = findViewById<ImageButton>(R.id.btnNotification)
+
+        btnNotification.setOnClickListener {
+
+            val intent = Intent(this, NotificationActivity::class.java)
             startActivity(intent)
 
         }
