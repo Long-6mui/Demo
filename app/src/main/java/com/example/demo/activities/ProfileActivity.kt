@@ -35,6 +35,10 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         btnLogout.setOnClickListener {
+            //Đăng xuất Firebase trước
+            com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
+
+            // Sau đó mới chuyển màn
             val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)

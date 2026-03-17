@@ -11,18 +11,31 @@
     android:paddingTop="40dp">
 
     <!-- TITLE -->
-    <TextView
-        android:id="@+id/txtTitle"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="NewFeeds"
-        android:textSize="30sp"
-        android:textColor="#333333"
-        android:textStyle="bold"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="20dp"
-        />
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp">
 
+        <ImageView
+            android:id="@+id/btnBackHome"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/btnback" />
+
+        <TextView
+            android:id="@+id/txtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="NewFeeds"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            android:textColor="#333333"
+            android:gravity="end"/>
+
+    </LinearLayout>
 
 
     <!-- KHUNG ĐĂNG BÀI -->
@@ -55,14 +68,36 @@
                     android:hint="What are you thinking about today?"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:maxLines="4"
                     android:minHeight="48dp"/>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="10dp">
+                <ImageView
+                    android:id="@+id/imgPick"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/daucong"
+                    android:scaleType="centerCrop"/>
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"/>
                 <Button
                     android:id="@+id/btnPost"
                     android:text="Post"
                     android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content" />
+                </LinearLayout>
+
 
             </LinearLayout>
         </RelativeLayout>
@@ -73,7 +108,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerFeed"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
 
 </LinearLayout>
