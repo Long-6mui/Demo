@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp">
+
+    <androidx.cardview.widget.CardView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/chipCard"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        app:cardCornerRadius="18dp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardElevation="1dp">
+
+        <TextView
+            android:id="@+id/txtIngredientName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingHorizontal="14dp"
+            android:textSize="13sp"
+            android:textColor="#1A3A2A"/>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
+
+<!--    ```-->
+
+<!--    -&#45;&#45;-->
+
+<!--    ## Firestore structure theo đúng DB-->
+<!--    ```-->
+<!--    category_ingre/-->
+<!--    {cateinID}: { cateName: "🥩 Thịt & Hải sản" }-->
+<!--    {cateinID}: { cateName: "🥦 Rau củ" }-->
+<!--    {cateinID}: { cateName: "🧄 Gia vị" }-->
+<!--    {cateinID}: { cateName: "🌾 Gạo & Bột" }-->
+<!--    {cateinID}: { cateName: "🍄 Nấm" }-->
+<!--    {cateinID}: { cateName: "🥚 Trứng & Đậu hũ" }-->
+<!--    {cateinID}: { cateName: "🫘 Đậu & Hạt" }-->
+<!--    {cateinID}: { cateName: "🍋 Trái cây" }-->
+
+<!--    ingredients/-->
+<!--    {ingreID}: { nameIngre: "Thịt bò", cateinID: "...", imgUrl: "" }-->
+<!--    {ingreID}: { nameIngre: "Tôm",     cateinID: "...", imgUrl: "" }-->
+<!--    ...-->
+
+<!--    user_ingredients/-->
+<!--    {userID}: { ingredients: ["ingreID_1", "ingreID_3", ...] }-->
