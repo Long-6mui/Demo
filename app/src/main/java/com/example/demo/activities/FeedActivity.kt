@@ -10,13 +10,21 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.demo.Database.DatabaseHelper
 import kotlin.text.isNotEmpty
 import com.example.demo.R
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import java.util.UUID
 
 class FeedActivity : AppCompatActivity() {
+
+    private lateinit var imgAvatar: ImageView
+    lateinit var auth: FirebaseAuth
+    lateinit var dbHelper: DatabaseHelper
+
 
     lateinit var recyclerView: RecyclerView
 
@@ -54,6 +62,25 @@ class FeedActivity : AppCompatActivity() {
         edtPost = findViewById(R.id.edtPost)
         btnPost = findViewById(R.id.btnPost)
         imgPick = findViewById(R.id.imgPick)
+
+        //Đồng bộ avatar
+        dbHelper = DatabaseHelper(this)
+        imgAvatar = findViewById(R.id.avatarUser)
+        auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser
+        if (user != null) {
+            val userID = user.uid
+            val userData = dbHelper.getUserByUID(userID)
+            if (userData != null) {
+                if (userData.avatar.isEmpty()) {
+                    imgAvatar.setImageResource(R.drawable.avtque)
+                } else {
+                    Glide.with(this)
+                        .load(userData.avatar)
+                        .into(imgAvatar)
+                }
+            }
+        }
 
         //Post mẫu
         if(list.isEmpty()){

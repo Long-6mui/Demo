@@ -1,6 +1,7 @@
 package com.example.demo.activities
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
@@ -10,13 +11,25 @@ import com.example.demo.R
 import android.widget.LinearLayout
 import android.widget.ImageView
 import android.view.View
+import android.widget.EditText
+import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.demo.Database.DatabaseHelper
 import com.example.demo.adapters.RecipeAdapter
 import com.example.demo.Recipe
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class ProfileActivity : AppCompatActivity() {
+
+    private lateinit var imgAvatar: ImageView
+    lateinit var txtUserID: TextView
+    lateinit var txtUserName: TextView
+    lateinit var auth: FirebaseAuth
+    lateinit var dbHelper: DatabaseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +42,29 @@ class ProfileActivity : AppCompatActivity() {
         val menuCategory = findViewById<LinearLayout>(R.id.menuCategory)
         val menuContent = findViewById<LinearLayout>(R.id.menuAccountContent)
         val iconArrow = findViewById<ImageView>(R.id.iconArrow)
+
+        //Đồng bộ avtar, tên, username
+        dbHelper = DatabaseHelper(this)
+        imgAvatar = findViewById(R.id.imgAvatar)
+        txtUserName = findViewById(R.id.txtUserName)
+        txtUserID = findViewById(R.id.txtUserID)
+        auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser
+        if (user != null) {
+            val userID = user.uid
+            val userData = dbHelper.getUserByUID(userID)
+            if (userData != null) {
+                txtUserName.setText(userData.hoten)
+                txtUserID.setText(userData.name)
+                if (userData.avatar.isEmpty()) {
+                    imgAvatar.setImageResource(R.drawable.avtque)
+                } else {
+                    Glide.with(this)
+                        .load(userData.avatar)
+                        .into(imgAvatar)
+                }
+            }
+        }
 
         btnBack.setOnClickListener {
             finish()
