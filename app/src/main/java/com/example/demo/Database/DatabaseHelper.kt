@@ -21,6 +21,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         const val COL_BIRTHDAY = "birthday"
         const val COL_GENDER = "gender"
 
+        const val TABLE_SAVED = "saved_recipes"
+        const val SAVED_ID = "id"
+        const val SAVED_NAME = "name"
+        const val SAVED_INFO = "info"
+
         //Comment
         val CREATE_COMMENT_TABLE = """
 CREATE TABLE comments(
@@ -53,6 +58,14 @@ CREATE TABLE comments(
 
         //Comment
         db.execSQL(CREATE_COMMENT_TABLE)
+        val sqlSaved = """
+    CREATE TABLE $TABLE_SAVED (
+        $SAVED_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+        $SAVED_NAME TEXT,
+        $SAVED_INFO TEXT
+    )
+""".trimIndent()
+        db.execSQL(sqlSaved)
     }
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion:
     Int) {
@@ -75,6 +88,20 @@ CREATE TABLE comments(
         val changed = if (c.moveToFirst()) c.getInt(0) else 0
         c.close()
         return changed
+    }
+    fun addSavedRecipe(name: String, info: String) {
+        val db = writableDatabase
+        val values = android.content.ContentValues().apply {
+            put(SAVED_NAME, name)
+            put(SAVED_INFO, info)
+        }
+        db.insert(TABLE_SAVED, null, values)
+    }
+
+    // --- Hàm lấy toàn bộ danh sách món đã lưu ---
+    fun getAllSavedRecipes(): android.database.Cursor {
+        val db = readableDatabase
+        return db.rawQuery("SELECT * FROM $TABLE_SAVED ORDER BY $SAVED_ID DESC", null)
     }
 
 
