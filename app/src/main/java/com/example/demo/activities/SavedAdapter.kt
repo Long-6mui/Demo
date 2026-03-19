@@ -13,10 +13,9 @@ class SavedAdapter(private val dishList: List<Dish>) :
     RecyclerView.Adapter<SavedAdapter.DishViewHolder>() {
 
     class DishViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        // Ánh xạ đúng ID từ file XML bạn vừa gửi
-        val imgDish: ImageView = view.findViewById(R.id.imgRecipe)
-        val tvName: TextView = view.findViewById(R.id.tvRecipeName)
-        val tvInfo: TextView = view.findViewById(R.id.tvInfo) // Đã sửa từ tvRecipeInfo thành tvInfo
+        val imgDish: ImageView = view.findViewById(R.id.imgAvatar) // Đổi ở đây
+        val tvName: TextView = view.findViewById(R.id.txtContent) // Đổi ở đây
+        val tvInfo: TextView = view.findViewById(R.id.txtTime)    // Đổi ở đây
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DishViewHolder {
