@@ -68,14 +68,16 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
 """.trimIndent()
         db.execSQL(sqlSaved)
     }
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion:
-    Int) {
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_USER")
-
-        //Comment
         db.execSQL("DROP TABLE IF EXISTS comments")
-
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_SAVED") // Phải thêm dòng này để không bị crash
         onCreate(db)
+    }
+
+    fun deleteSavedRecipe(name: String) {
+        val db = writableDatabase
+        db.delete(TABLE_SAVED, "$SAVED_NAME=?", arrayOf(name))
     }
     fun getAllUsers(): Cursor {
         val db = readableDatabase

@@ -24,22 +24,12 @@ class SavedActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_saved)
-
         dbHelper = DatabaseHelper(this)
-
-        // 1. Ánh xạ View từ layout mới
         rvSavedRecipes = findViewById(R.id.rvSavedRecipes)
         etSearch = findViewById(R.id.etSearchSaved)
-
         rvSavedRecipes.layoutManager = LinearLayoutManager(this)
-
-        // 2. Kiểm tra và nạp dữ liệu mẫu nếu bảng trống
         checkInitialData()
-
-        // 3. Tải dữ liệu từ SQLite vào RecyclerView
         loadData()
-
-        // 4. Thiết lập bộ lọc tìm kiếm thời gian thực
         setupSearch()
     }
 
@@ -65,13 +55,12 @@ class SavedActivity : AppCompatActivity() {
                 val name = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.SAVED_NAME))
                 val info = cursor.getString(cursor.getColumnIndexOrThrow(DatabaseHelper.SAVED_INFO))
 
-                // Tự động khớp ảnh dựa trên tên món ăn (lấy từ drawable của bạn)
                 val imgRes = when {
                     name.contains("Bún bò", ignoreCase = true) -> R.drawable.bunbo
                     name.contains("Bánh xèo", ignoreCase = true) -> R.drawable.banhxeo
                     name.contains("Gỏi cuốn", ignoreCase = true) -> R.drawable.goicuon
                     name.contains("Phở", ignoreCase = true) -> R.drawable.pho
-                    else -> R.drawable.choco
+                    else -> R.drawable.miy
                 }
 
                 fullList.add(Dish(0, name, imgRes, info))

@@ -42,6 +42,8 @@ class ProfileActivity : AppCompatActivity() {
         val menuCategory = findViewById<LinearLayout>(R.id.menuCategory)
         val menuContent = findViewById<LinearLayout>(R.id.menuAccountContent)
         val iconArrow = findViewById<ImageView>(R.id.iconArrow)
+        val menuSetting = findViewById<LinearLayout>(R.id.menuSetting)
+        val recyclerMyPosts = findViewById<RecyclerView>(R.id.recyclerMyPosts)
 
         //Đồng bộ avtar, tên, username
         dbHelper = DatabaseHelper(this)
@@ -71,10 +73,7 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         btnLogout.setOnClickListener {
-            //Đăng xuất Firebase trước
             com.google.firebase.auth.FirebaseAuth.getInstance().signOut()
-
-            // Sau đó mới chuyển màn
             val intent = Intent(this, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
@@ -83,16 +82,12 @@ class ProfileActivity : AppCompatActivity() {
         editProfile.setOnClickListener {
             startActivity(Intent(this, editInfoActivity::class.java))
         }
+
         menuFeedback.setOnClickListener {
-
-            val intent = Intent(this, FeedbackActivity::class.java)
-            startActivity(intent)
-
+            startActivity(Intent(this, FeedbackActivity::class.java))
         }
 
-
         menuCategory.setOnClickListener {
-
             if (menuContent.visibility == View.GONE) {
                 menuContent.visibility = View.VISIBLE
                 iconArrow.rotation = 180f
@@ -100,18 +95,11 @@ class ProfileActivity : AppCompatActivity() {
                 menuContent.visibility = View.GONE
                 iconArrow.rotation = 0f
             }
-
         }
-        val menuSetting = findViewById<LinearLayout>(R.id.menuSetting)
 
         menuSetting.setOnClickListener {
-
-            val intent = Intent(this, SettingActivity::class.java)
-            startActivity(intent)
-
+            startActivity(Intent(this, SettingActivity::class.java))
         }
-
-        val recyclerMyPosts = findViewById<RecyclerView>(R.id.recyclerMyPosts)
 
         recyclerMyPosts.isNestedScrollingEnabled = false
 
@@ -121,9 +109,7 @@ class ProfileActivity : AppCompatActivity() {
             Recipe(R.drawable.cua, "Cua Rang Me", "Trái Banh")
         )
 
-        recyclerMyPosts.layoutManager =
-            GridLayoutManager(this, 2)
-
+        recyclerMyPosts.layoutManager = GridLayoutManager(this, 2)
         recyclerMyPosts.adapter = RecipeAdapter(list)
     }
 }
