@@ -14,7 +14,6 @@ import com.example.demo.models.Dish
 
 class SavedActivity : AppCompatActivity() {
 
-    private lateinit var adapter: SavedAdapter
     private lateinit var rvSavedRecipes: RecyclerView
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var etSearch: EditText
@@ -68,8 +67,7 @@ class SavedActivity : AppCompatActivity() {
         }
         cursor.close()
 
-        adapter = SavedAdapter(fullList)
-        rvSavedRecipes.adapter = adapter
+        rvSavedRecipes.adapter = SavedAdapter(fullList)
     }
 
     private fun setupSearch() {
@@ -78,7 +76,7 @@ class SavedActivity : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 val query = s.toString()
                 val filteredList = fullList.filter { it.name.contains(query, ignoreCase = true) }
-                adapter.updateList(filteredList)
+                //rvSavedRecipes.adapter = SavedAdapter.(filteredList)
             }
             override fun afterTextChanged(s: Editable?) {}
         })
