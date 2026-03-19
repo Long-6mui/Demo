@@ -48,7 +48,7 @@
                 android:id="@+id/edtUser"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
-                android:hint="Username"
+                android:hint="Email"
                 android:textColor="#FFFFFF"
                 android:textColorHint="#AAFFFFFF"
                 android:backgroundTint="#AAFFFFFF"
