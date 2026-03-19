@@ -9,13 +9,18 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.demo.R
 import com.example.demo.models.Dish
 
-class SavedAdapter(private val dishList: List<Dish>) :
+class SavedAdapter(private var dishList: List<Dish>) :
     RecyclerView.Adapter<SavedAdapter.DishViewHolder>() {
 
+    fun updateList(newList: List<Dish>) {
+        dishList = newList
+        notifyDataSetChanged()
+    }
+
     class DishViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val imgDish: ImageView = view.findViewById(R.id.imgAvatar) // Đổi ở đây
-        val tvName: TextView = view.findViewById(R.id.txtContent) // Đổi ở đây
-        val tvInfo: TextView = view.findViewById(R.id.txtTime)    // Đổi ở đây
+        val imgDish: ImageView = view.findViewById(R.id.imgRecipe) // Đổi ở đây
+        val tvName: TextView = view.findViewById(R.id.tvRecipeName) // Đổi ở đây
+        val tvInfo: TextView = view.findViewById(R.id.tvInfo)    // Đổi ở đây
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DishViewHolder {
@@ -33,6 +38,8 @@ class SavedAdapter(private val dishList: List<Dish>) :
         // Sử dụng imgRes cho khớp với model Dish.kt của bạn
         holder.imgDish.setImageResource(dish.imgRes)
     }
+
+
 
     override fun getItemCount(): Int = dishList.size
 }
