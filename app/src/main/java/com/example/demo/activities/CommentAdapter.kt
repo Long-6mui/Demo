@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.demo.Database.DatabaseHelper
 import com.example.demo.R
+import com.google.firebase.auth.FirebaseAuth
 
 class CommentAdapter(
     private val list: MutableList<Comment>,
@@ -22,8 +23,10 @@ class CommentAdapter(
     private val reload: () -> Unit
 ) : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
 
+
     class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
+        val imgAvatar: ImageView = itemView.findViewById(R.id.imgAvatar)
         val txtUser: TextView = itemView.findViewById(R.id.txtUser)
         val txtContent: TextView = itemView.findViewById(R.id.txtContent)
         val imgComment: ImageView = itemView.findViewById(R.id.imgComment)
@@ -36,6 +39,7 @@ class CommentAdapter(
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_comment, parent, false)
 
+
         return CommentViewHolder(view)
     }
 
@@ -43,8 +47,22 @@ class CommentAdapter(
 
         val comment = list[position]
 
-        holder.txtUser.text = comment.user
+        holder.txtUser.text = comment.userId
         holder.txtContent.text = comment.content
+
+
+        val userData = db.getUserByUID(comment.userId)
+        if (userData != null) {
+            holder.txtUser.text = userData.name
+
+            if (userData.avatar.isEmpty()) {
+                holder.imgAvatar.setImageResource(R.drawable.avtque)
+            } else {
+                Glide.with(holder.itemView.context)
+                    .load(userData.avatar)
+                    .into(holder.imgAvatar)
+            }
+        }
 
         if (comment.image.isNotEmpty()) {
 

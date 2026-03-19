@@ -6,17 +6,17 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import com.example.demo.activities.Comment
+import com.example.demo.activities.User
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null, DB_VERSION){
     companion object {
         const val DB_NAME = "user.db"
-        const val DB_VERSION = 2
+        const val DB_VERSION = 3
         const val TABLE_USER = "user"
         const val COL_ID = "id"
-
         const val COL_USER_ID = "userID"  // Firebase UID
         const val COL_NAME = "name"
-
+        const val COL_HOTEN = "hoten"
         const val COL_EMAIL = "email"
         const val COL_BIRTHDAY = "birthday"
         const val COL_GENDER = "gender"
@@ -28,14 +28,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
 
         //Comment
         val CREATE_COMMENT_TABLE = """
-CREATE TABLE comments(
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    postId TEXT,
-    user TEXT,
-    content TEXT,
-    image TEXT
-)
-"""
+        CREATE TABLE comments(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            postId TEXT,
+            user TEXT,
+            content TEXT,
+            image TEXT
+        )
+        """
 
         const val COL_ROLE = "role"
 
@@ -47,6 +47,7 @@ CREATE TABLE comments(
                 $COL_ID       INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COL_USER_ID  TEXT NOT NULL UNIQUE,
                 $COL_NAME     TEXT NOT NULL,
+                $COL_HOTEN     TEXT NOT NULL,
                 $COL_EMAIL    TEXT NOT NULL,
                 $COL_BIRTHDAY TEXT DEFAULT '',
                 $COL_GENDER   TEXT DEFAULT '',
@@ -67,14 +68,16 @@ CREATE TABLE comments(
 """.trimIndent()
         db.execSQL(sqlSaved)
     }
-    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion:
-    Int) {
+    override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         db.execSQL("DROP TABLE IF EXISTS $TABLE_USER")
-
-        //Comment
         db.execSQL("DROP TABLE IF EXISTS comments")
-
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_SAVED") // Phải thêm dòng này để không bị crash
         onCreate(db)
+    }
+
+    fun deleteSavedRecipe(name: String) {
+        val db = writableDatabase
+        db.delete(TABLE_SAVED, "$SAVED_NAME=?", arrayOf(name))
     }
     fun getAllUsers(): Cursor {
         val db = readableDatabase
@@ -112,7 +115,7 @@ CREATE TABLE comments(
 
         val values = ContentValues()
         values.put("postId", comment.postId)
-        values.put("user", comment.user)
+        values.put("userId", comment.userId)
         values.put("content", comment.content)
         values.put("image", comment.image)
 
@@ -135,7 +138,7 @@ CREATE TABLE comments(
                 val c = Comment(
                     id = cursor.getInt(0),
                     postId = cursor.getString(1),
-                    user = cursor.getString(2),
+                    userId = cursor.getString(2),
                     content = cursor.getString(3),
                     image = cursor.getString(4)
                 )
@@ -185,6 +188,7 @@ CREATE TABLE comments(
         val values = ContentValues().apply {
             put(COL_USER_ID, userID)
             put(COL_NAME, name)
+            put(COL_HOTEN, "")
             put(COL_EMAIL, email)
             put(COL_ROLE, role)
             put(COL_AVATAR, avatar)
@@ -195,28 +199,32 @@ CREATE TABLE comments(
     }
 
     // Lấy thông tin user theo Firebase UID
-    fun getUserByUID(userID: String): Map<String, String>? {
+    fun getUserByUID(userID: String): User? {
         val db = readableDatabase
         val cursor = db.query(
-            TABLE_USER, null,
-            "$COL_USER_ID=?", arrayOf(userID),
-            null, null, null
-        )
-        return if (cursor.moveToFirst()) {
-            mapOf(
-                "id"       to cursor.getString(cursor.getColumnIndexOrThrow(COL_ID)),
-                "userID"   to cursor.getString(cursor.getColumnIndexOrThrow(COL_USER_ID)),
-                "name"     to cursor.getString(cursor.getColumnIndexOrThrow(COL_NAME)),
-                "email"    to cursor.getString(cursor.getColumnIndexOrThrow(COL_EMAIL)),
-                "birthday" to cursor.getString(cursor.getColumnIndexOrThrow(COL_BIRTHDAY)),
-                "gender"   to cursor.getString(cursor.getColumnIndexOrThrow(COL_GENDER)),
-                "role"     to cursor.getString(cursor.getColumnIndexOrThrow(COL_ROLE)),
-                "avatar"   to cursor.getString(cursor.getColumnIndexOrThrow(COL_AVATAR))
-            ).also { cursor.close() }
-        } else {
-            cursor.close()
+            TABLE_USER,
+            null,
+            "$COL_USER_ID=?",
+            arrayOf(userID),
+            null,
+            null,
             null
+        )
+        if (cursor.moveToFirst()) {
+            val user = User(
+                userID = cursor.getString(cursor.getColumnIndexOrThrow(COL_USER_ID)),
+                name = cursor.getString(cursor.getColumnIndexOrThrow(COL_NAME)),
+                hoten = cursor.getString(cursor.getColumnIndexOrThrow(COL_HOTEN)),
+                email = cursor.getString(cursor.getColumnIndexOrThrow(COL_EMAIL)),
+                birthday = cursor.getString(cursor.getColumnIndexOrThrow(COL_BIRTHDAY)),
+                gender = cursor.getString(cursor.getColumnIndexOrThrow(COL_GENDER)),
+                avatar = cursor.getString(cursor.getColumnIndexOrThrow(COL_AVATAR))
+            )
+            cursor.close()
+            return user
         }
+        cursor.close()
+        return null
     }
 
     // Kiểm tra đã có user chưa
@@ -230,6 +238,25 @@ CREATE TABLE comments(
         db.delete(TABLE_USER, "$COL_USER_ID=?", arrayOf(userID))
     }
 
-
+    //cập nhật SQLite sau khi update Firebase
+    fun updateUserByUID(
+        userID: String,
+        name: String,
+        hoten: String,
+        birthday: String,
+        gender: String,
+        avatar: String
+    ) {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COL_NAME, name)
+            put(COL_HOTEN, hoten)
+            put(COL_BIRTHDAY, birthday)
+            put(COL_GENDER, gender)
+            put(COL_AVATAR, avatar)
+        }
+        db.update(TABLE_USER, values, "$COL_USER_ID=?", arrayOf(userID)
+        )
+    }
 
 }

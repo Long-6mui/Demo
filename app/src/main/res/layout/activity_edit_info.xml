@@ -29,14 +29,26 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Họ và tên"
+            android:text="Họ tên"
             android:textStyle="bold"/>
 
         <EditText
-            android:id="@+id/edtName"
+            android:id="@+id/edtTen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nhập họ tên"
+            android:layout_marginBottom="15dp"
+            android:padding="10dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:textStyle="bold"/>
+
+        <EditText
+            android:id="@+id/edtUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:padding="10dp"/>
 
@@ -44,16 +56,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ID"
+            android:text="Email"
             android:textStyle="bold"/>
 
         <EditText
-            android:id="@+id/edtID"
+            android:id="@+id/edtEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nhập ID"
             android:layout_marginBottom="15dp"
-            android:padding="10dp"/>
+            android:padding="10dp"
+            android:enabled="false"/>
 
 
         <LinearLayout
@@ -74,13 +86,12 @@
 
                 <EditText
                     android:id="@+id/edtBirthDay"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
                     android:clickable="true"
                     android:drawableEnd="@android:drawable/ic_menu_my_calendar"
                     android:focusable="false"
-                    android:hint="Chọn ngày sinh"
                     android:padding="10dp" />
             </LinearLayout>
 
@@ -118,21 +129,6 @@
                 </RadioGroup>
             </LinearLayout>
         </LinearLayout>
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tiểu sử"
-            android:textStyle="bold"/>
-
-        <EditText
-            android:id="@+id/edtBio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:background="@android:drawable/edit_text"
-            android:padding="10dp"/>
 
 
         <LinearLayout

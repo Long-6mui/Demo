@@ -14,12 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demo.Database.DatabaseHelper
 import com.example.demo.R
+import com.google.firebase.auth.FirebaseAuth
 
 class CommentActivity : AppCompatActivity() {
 
     lateinit var edtComment: EditText
     lateinit var btnSend: ImageView
     lateinit var btnPickImage: ImageView
+    lateinit var auth: FirebaseAuth
 
     lateinit var recyclerView: RecyclerView
     lateinit var adapter: CommentAdapter
@@ -38,6 +40,7 @@ class CommentActivity : AppCompatActivity() {
 
 
         db = DatabaseHelper(this)
+        auth = FirebaseAuth.getInstance()
 
         recyclerView = findViewById(R.id.recyclerComment)
 
@@ -74,10 +77,10 @@ class CommentActivity : AppCompatActivity() {
         btnSend.setOnClickListener {
 
             val content = edtComment.text.toString()
-
+            val user = auth.currentUser
             val comment = Comment(
                 postId = postId,
-                user = "User",
+                userId = user?.uid ?: "",
                 content = content,
                 image = imageUri?.toString() ?: ""
             )
