@@ -7,6 +7,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView // Thêm import này
 import com.example.demo.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -20,56 +21,48 @@ class AdminActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin)
 
-        val btnBack       = findViewById<ImageButton>(R.id.btnBack)
+
+
         val txtUserName   = findViewById<TextView>(R.id.txtUserName)
         val txtUserID     = findViewById<TextView>(R.id.txtUserID)
-        val btnAddRecipe  = findViewById<LinearLayout>(R.id.btnAddRecipe)
-        val btnEditRecipe = findViewById<LinearLayout>(R.id.btnEditRecipe)
-        val btnDeleteRecipe = findViewById<LinearLayout>(R.id.btnDeleteRecipe)
-        val btnManageUser = findViewById<LinearLayout>(R.id.btnManageUser)
+        val btnLogout     = findViewById<LinearLayout>(R.id.btnLogout)
 
-        // Load thông tin admin từ Firestore
+        // Đổi từ LinearLayout thành CardView để khớp với XML
+        val btnAddRecipe  = findViewById<CardView>(R.id.btnAddRecipe)
+        val btnEditRecipe = findViewById<CardView>(R.id.btnEditRecipe)
+        val btnManageFeedback = findViewById<CardView>(R.id.btnManageFeedback)
+        val btnManageUser = findViewById<CardView>(R.id.btnManageUser)
+
+        // Load thông tin admin
         val uid = auth.currentUser?.uid
         if (uid != null) {
-            db.collection("users").document(uid)
+            db.collection("Users").document(uid) // Lưu ý chữ "Users" viết hoa hay thường cho khớp DB
                 .get()
                 .addOnSuccessListener { doc ->
-                    val name  = doc.getString("nameUser") ?: "Admin"
-                    val email = doc.getString("email") ?: ""
-                    txtUserName.text = name
-                    txtUserID.text   = email
+                    txtUserName.text = doc.getString("nameUser") ?: "Admin"
+                    txtUserID.text   = doc.getString("email") ?: "admin@demo.com"
                 }
         }
 
-        // Back → đăng xuất về Login
-        btnBack.setOnClickListener {
+
+
+        btnLogout.setOnClickListener {
             auth.signOut()
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
 
-        // Thêm công thức
-        btnAddRecipe.setOnClickListener {
-            // TODO: mở AddRecipeActivity
-            Toast.makeText(this, "Thêm công thức", Toast.LENGTH_SHORT).show()
+        findViewById<CardView>(R.id.btnAddRecipe).setOnClickListener {
+            startActivity(Intent(this, AddRecipeActivity::class.java))
         }
-
-        // Sửa công thức
-        btnEditRecipe.setOnClickListener {
-            // TODO: mở EditRecipeActivity
-            Toast.makeText(this, "Sửa công thức", Toast.LENGTH_SHORT).show()
+        findViewById<CardView>(R.id.btnEditRecipe).setOnClickListener {
+            startActivity(Intent(this, EditRecipeActivity::class.java))
         }
-
-        // xóa công thức
-        btnDeleteRecipe.setOnClickListener {
-            // TODO: mở DeleteRecipeActivity
-            Toast.makeText(this, "Xoá công thức", Toast.LENGTH_SHORT).show()
+        findViewById<CardView>(R.id.btnManageUser).setOnClickListener {
+            startActivity(Intent(this, ManageUserActivity::class.java))
         }
-
-        // Quản lý user
-        btnManageUser.setOnClickListener {
-            // TODO: mở ManageUserActivity
-            Toast.makeText(this, "Quản lý user", Toast.LENGTH_SHORT).show()
+        findViewById<CardView>(R.id.btnManageFeedback).setOnClickListener {
+            Toast.makeText(this, "Tính năng đang phát triển", Toast.LENGTH_SHORT).show()
         }
     }
 }

@@ -49,6 +49,15 @@
             android:name=".activities.FeedbackActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.AddRecipeActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activities.EditRecipeActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".activities.ManageUserActivity"
+            android:exported="false"/>
+        <activity
             android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
