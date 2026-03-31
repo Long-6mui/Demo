@@ -118,8 +118,10 @@ class ProfileActivity : AppCompatActivity() {
         val iconArrow = findViewById<ImageView>(R.id.iconArrow)
         val recyclerMyPosts = findViewById<RecyclerView>(R.id.recyclerMyPosts)
 
-        // Sửa lỗi menuSetting: Dùng đúng ID đang có trong XML (btnEditRecipe)
-        val menuSetting = findViewById<LinearLayout>(R.id.btnEditRecipe)
+
+
+
+        val menuSetting = findViewById<LinearLayout>(R.id.menuSetting)
 
         // 1. Load dữ liệu User
         dbHelper = DatabaseHelper(this)
