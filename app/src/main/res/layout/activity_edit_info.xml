@@ -29,11 +29,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Họ tên"
+            android:text="Username"
             android:textStyle="bold"/>
 
         <EditText
-            android:id="@+id/edtTen"
+            android:id="@+id/edtUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
@@ -42,11 +42,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Username"
+            android:text="Họ tên"
             android:textStyle="bold"/>
 
         <EditText
-            android:id="@+id/edtUserName"
+            android:id="@+id/edtTen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
@@ -65,7 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
             android:padding="10dp"
-            android:enabled="false"/>
+            />
 
 
         <LinearLayout
