@@ -44,9 +44,9 @@ class CommentAdapter(
         val comment = list[position]
 
         // Hiển thị thông tin comment
-        holder.txtUser.text = comment.userId
-        holder.txtContent.text = comment.content
+        holder.txtUser.text = "Đang tải..."
         holder.imgAvatar.setImageResource(R.drawable.avtque)
+        holder.txtContent.text = comment.content
 
         // Nếu comment có ảnh → hiển thị ảnh
         if (comment.image.isNotEmpty()) {
@@ -54,6 +54,45 @@ class CommentAdapter(
             Glide.with(holder.itemView.context).load(comment.image).into(holder.imgComment)
         } else {
             holder.imgComment.visibility = View.GONE
+        }
+
+        val firestore = FirebaseFirestore.getInstance()
+
+        if (!comment.userId.isNullOrEmpty()) {
+            firestore.collection("Users")
+                .document(comment.userId)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val hoten = document.getString("hoten") ?: ""
+                        val name = document.getString("name") ?: ""
+                        val avatarUrl = document.getString("avatar") ?: ""
+
+                        // Ưu tiên hiển thị họ tên (giống trang Post)
+                        holder.txtUser.text = if (hoten.isNotEmpty()) hoten else name
+
+                        // Load avatar
+                        if (avatarUrl.isNotEmpty()) {
+                            Glide.with(holder.itemView.context)
+                                .load(avatarUrl)
+                                .placeholder(R.drawable.avtque)
+                                .error(R.drawable.avtque)
+                                .circleCrop()
+                                .into(holder.imgAvatar)
+                        } else {
+                            holder.imgAvatar.setImageResource(R.drawable.avtque)
+                        }
+                    } else {
+                        // Fallback
+                        holder.txtUser.text = comment.userId.take(8) + "..." // rút gọn UID nếu không tìm thấy
+                    }
+                }
+                .addOnFailureListener {
+                    holder.txtUser.text = "Unknown User"
+                    holder.imgAvatar.setImageResource(R.drawable.avtque)
+                }
+        } else {
+            holder.txtUser.text = "Unknown User"
         }
 
         // Nút menu (Edit/Delete)

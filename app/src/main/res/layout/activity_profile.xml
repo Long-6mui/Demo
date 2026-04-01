@@ -46,7 +46,7 @@
                         android:id="@+id/imgAvatar"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ava1"
+                        android:src="@drawable/avtque"
                         android:scaleType="centerCrop"/>
 
                 </androidx.cardview.widget.CardView>
@@ -55,7 +55,6 @@
                     android:id="@+id/txtUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Chef traibanh"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -65,7 +64,6 @@
                     android:id="@+id/txtUserID"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="traibanh_686868"
                     android:textColor="#CCFFFFFF"
                     android:textSize="13sp"/>
 

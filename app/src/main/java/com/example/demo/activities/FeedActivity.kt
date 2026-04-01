@@ -21,6 +21,7 @@ import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.UploadCallback
 import com.cloudinary.android.callback.ErrorInfo
 import android.util.Log
+import android.widget.Toast
 
 class FeedActivity : AppCompatActivity() {
 
@@ -82,19 +83,19 @@ class FeedActivity : AppCompatActivity() {
         }
 
         // ====== TẠO 3 POST MẪU (CHỈ CHẠY 1 LẦN KHI LIST RỖNG) ======
-        if(list.isEmpty()){
-            list.add(Post("", R.drawable.ava1,"Anna",
-                "Hôm nay mình nấu mì Ý 😚",3,
-                "https://daubepgiadinh.vn/wp-content/uploads/2018/05/hinh-mi-y-ngon.jpg"))
-
-            list.add(Post("", R.drawable.ava2,"John",
-                "Gà rán siêu giòn tự làm ở nhà 🤤",5,
-                "https://cdn.eva.vn//upload/3-2016/images/2016-07-22/uc-ga-kfc-mon-ngon-be-thich-uc-ga-kfc--6--1469194272-width500height375.jpg"))
-
-            list.add(Post("", R.drawable.ava3,"Lisa",
-                "Tự thưởng cho mình sau 1 ngày dài 😍",8,
-                "https://images2.thanhnien.vn/528068263637045248/2023/2/14/6-pan-cake-16763820419171669639791.jpg"))
-        }
+//        if(list.isEmpty()){
+//            list.add(Post("", R.drawable.ava1,"Anna",
+//                "Hôm nay mình nấu mì Ý 😚",3,
+//                "https://daubepgiadinh.vn/wp-content/uploads/2018/05/hinh-mi-y-ngon.jpg"))
+//
+//            list.add(Post("", R.drawable.ava2,"John",
+//                "Gà rán siêu giòn tự làm ở nhà 🤤",5,
+//                "https://cdn.eva.vn//upload/3-2016/images/2016-07-22/uc-ga-kfc-mon-ngon-be-thich-uc-ga-kfc--6--1469194272-width500height375.jpg"))
+//
+//            list.add(Post("", R.drawable.ava3,"Lisa",
+//                "Tự thưởng cho mình sau 1 ngày dài 😍",8,
+//                "https://images2.thanhnien.vn/528068263637045248/2023/2/14/6-pan-cake-16763820419171669639791.jpg"))
+//        }
 
         // ====== SETUP RECYCLERVIEW ======
         adapter = PostAdapter(list)
@@ -111,18 +112,56 @@ class FeedActivity : AppCompatActivity() {
 
         // ====== SỰ KIỆN ĐĂNG BÀI ======
         btnPost.setOnClickListener {
-            val content = edtPost.text.toString()
+            val content = edtPost.text.toString().trim()
 
-            if (content.isNotEmpty()) {
-                if(imageUri != null){
-                    uploadImageCloudinary(content, imageUri!!) // Cloudinary thay cho Storage
-                }else{
-                    savePost(content,"") // Không có ảnh
-                }
-                edtPost.setText("")
-                imageUri = null
-                imgPick.setImageResource(R.drawable.daucong) // Reset icon ảnh
+                if (content.isEmpty()) {
+            Toast.makeText(this, "Vui lòng nhập nội dung bài viết", Toast.LENGTH_SHORT).show()
+            return@setOnClickListener
             }
+
+            val auth = FirebaseAuth.getInstance()
+            val currentUser = auth.currentUser
+
+            if (currentUser == null) {
+                Toast.makeText(this, "Bạn chưa đăng nhập", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val userId = currentUser.uid
+            val firestore = FirebaseFirestore.getInstance()
+
+            // Lấy thông tin người dùng từ Firestore
+            firestore.collection("Users")
+                .document(userId)
+                .get()
+                .addOnSuccessListener { document ->
+                    val username = document.getString("name")
+                        ?: currentUser.email?.substringBefore("@")
+                        ?: "user"
+
+                    val hoten = document.getString("hoten") ?: username   // Ưu tiên họ tên
+
+                    // Tạo dữ liệu bài viết
+                    val newPost = hashMapOf<String, Any>(
+                        "userId" to userId,
+                        "name" to username,        // Giữ username để dễ query
+                        "hoten" to hoten,          // Lưu họ tên để hiển thị đẹp
+                        "content" to content,
+                        "likes" to 0,
+                    )
+
+                    // Xử lý đăng bài
+                    if (imageUri != null) {
+                        uploadImageCloudinary(content, imageUri!!, newPost)   // Truyền thêm newPost
+                    } else {
+                        savePost(newPost)                                     // Không có ảnh
+                    }
+
+                    // Reset sau khi đăng
+                    edtPost.setText("")
+                    imageUri = null
+                    imgPick.setImageResource(R.drawable.daucong)
+                }
         }
 
         // ====== NÚT QUAY LẠI ======
@@ -132,26 +171,34 @@ class FeedActivity : AppCompatActivity() {
     }
 
     // ====== UPLOAD ẢNH LÊN CLOUDINARY ======
-    fun uploadImageCloudinary(content: String, uri: Uri) {
+    fun uploadImageCloudinary(content: String, uri: Uri, postData: HashMap<String, Any>) {
         MediaManager.get().upload(uri)
-            .option("folder", "posts") // lưu trong folder posts
+            .option("folder", "posts")
             .callback(object : UploadCallback {
                 override fun onStart(requestId: String?) {
                     Log.d("Cloudinary", "Upload started")
                 }
 
                 override fun onProgress(requestId: String?, bytes: Long, totalBytes: Long) {
-                    // Có thể hiển thị progress nếu muốn
+                    // Có thể thêm progress bar nếu muốn
                 }
 
                 override fun onSuccess(requestId: String?, resultData: MutableMap<Any?, Any?>?) {
-                    val url = resultData?.get("secure_url")?.toString() ?: ""
-                    Log.d("Cloudinary", "Upload success: $url")
-                    savePost(content, url) // Lưu post với URL Cloudinary
+                    val imageUrl = resultData?.get("secure_url")?.toString() ?: ""
+
+                    Log.d("Cloudinary", "Upload success: $imageUrl")
+
+                    // Thêm imageUrl vào postData
+                    postData["imageUrl"] = imageUrl
+
+                    // Lưu bài viết lên Firestore
+                    savePost(postData)
                 }
 
                 override fun onError(requestId: String?, error: ErrorInfo?) {
                     Log.e("Cloudinary", "Upload error: ${error?.description}")
+                    // Vẫn lưu bài dù upload ảnh lỗi
+                    savePost(postData)
                 }
 
                 override fun onReschedule(requestId: String?, error: ErrorInfo?) {}
@@ -161,32 +208,33 @@ class FeedActivity : AppCompatActivity() {
 
 
     // ====== LƯU POST VÀO LIST + FIRESTORE ======
-    fun savePost(content: String, imageUrl: String){
-
-        val post = Post(
-            imgAvatar = R.drawable.ava5,
-            name = "User",
-            content = content,
-            likes = 0,
-            imageUrl = imageUrl
-        )
-
-        // Hiển thị ngay lên feed (không chờ Firebase)
-        list.add(0, post)
-        adapter.notifyDataSetChanged()
-
-        // Lưu lên Firestore
-        val data = hashMapOf(
-            "name" to "User",
-            "content" to content,
-            "likes" to 0,
-            "imageUrl" to imageUrl
-        )
+    fun savePost(postData: HashMap<String, Any>){
 
         db.collection("posts")
-            .add(data)
-            .addOnSuccessListener { document ->
-                post.id = document.id   // Lưu id Firebase vào post
+            .add(postData)
+            .addOnSuccessListener { documentReference ->
+                val postId = documentReference.id
+
+                // Tạo đối tượng Post để hiển thị ngay trên Feed
+                val post = Post(
+                    id = postId,
+                    userId = postData["userId"] as? String ?: "",
+                    name = postData["name"] as? String ?: "",
+                    hoten = postData["hoten"] as? String ?: "",
+                    content = postData["content"] as? String ?: "",
+                    likes = 0,
+                    imageUrl = postData["imageUrl"] as? String
+                )
+
+                // Thêm vào đầu danh sách để hiện ngay
+                list.add(0, post)
+                adapter.notifyDataSetChanged()
+
+                Toast.makeText(this, "Đăng bài thành công!", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Đăng bài thất bại: ${e.message}", Toast.LENGTH_SHORT).show()
+                Log.e("SavePost", "Error: ${e.message}")
             }
     }
 
@@ -209,6 +257,39 @@ class FeedActivity : AppCompatActivity() {
                 }
 
                 adapter.notifyDataSetChanged()
+            }
+    }
+
+
+    // Hàm lưu bài viết không có ảnh
+    private fun savePostToFirestore(postData: HashMap<String, Any>) {
+        FirebaseFirestore.getInstance()
+            .collection("posts")
+            .add(postData)
+            .addOnSuccessListener { documentReference ->
+                Toast.makeText(this, "Đăng bài thành công!", Toast.LENGTH_SHORT).show()
+                finish()   // hoặc quay về Feed
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Lỗi khi đăng bài: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    // Hàm upload ảnh rồi mới lưu bài viết (nếu có ảnh)
+    private fun uploadImageAndPost(imageUri: Uri, postData: HashMap<String, Any>, content: String) {
+        val storageRef = FirebaseStorage.getInstance().reference
+        val imageRef = storageRef.child("posts/${System.currentTimeMillis()}.jpg")
+
+        imageRef.putFile(imageUri)
+            .addOnSuccessListener {
+                imageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                    postData["imageUrl"] = downloadUrl.toString()
+                    savePostToFirestore(postData)
+                }
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Upload ảnh thất bại", Toast.LENGTH_SHORT).show()
+                savePostToFirestore(postData) // vẫn lưu bài dù ảnh lỗi
             }
     }
 }

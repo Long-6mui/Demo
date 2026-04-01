@@ -10,13 +10,17 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
+import android.util.Log.e
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.Toast
 import com.bumptech.glide.Glide
+import com.example.demo.Database.DatabaseHelper
 import kotlin.jvm.java
 import com.example.demo.R
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -54,9 +58,81 @@ class PostAdapter(private val list: MutableList<Post>) :
 
         val post = list[position]
 
+        // Reset trước khi load
+        holder.name.text = "Đang tải..."
+        holder.imgAvatar.setImageResource(R.drawable.avtque)
+
         // Hiển thị avatar, tên, nội dung, số like
-        holder.imgAvatar.setImageResource(post.imgAvatar)
-        holder.name.text = post.name
+        val firestore = FirebaseFirestore.getInstance()
+
+        if (!post.userId.isNullOrEmpty()) {
+            firestore.collection("Users")
+                .document(post.userId)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val hoten = document.getString("hoten") ?: ""
+                        val name = document.getString("name") ?: ""           // username
+                        val avatarUrl = document.getString("avatar") ?: ""
+
+                        // Hiển thị tên (ưu tiên hoten, nếu rỗng thì lấy name)
+                        holder.name.text = if (hoten.isNotEmpty()) hoten else name
+
+                        // Hiển thị avatar
+                        if (avatarUrl.isNotEmpty()) {
+                            Glide.with(holder.itemView.context)
+                                .load(avatarUrl)
+                                .placeholder(R.drawable.avtque)
+                                .error(R.drawable.avtque)
+                                .into(holder.imgAvatar)
+                        } else {
+                            holder.imgAvatar.setImageResource(R.drawable.avtque)
+                        }
+                    } else {
+                        // Fallback nếu không tìm thấy user trong Firestore
+                        holder.name.text = post.name ?: "Unknown User"
+                    }
+                }
+                .addOnFailureListener {
+                    holder.name.text = post.name ?: "Unknown User"
+                    holder.imgAvatar.setImageResource(R.drawable.avtque)
+                }
+        }
+        else if (!post.name.isNullOrEmpty()) {
+            firestore.collection("Users")
+                .whereEqualTo("name", post.name)
+                .get()
+                .addOnSuccessListener { querySnapshot ->
+                    val document = querySnapshot.documents.firstOrNull()
+
+                    if (document != null) {
+                        val hoten = document.getString("hoten") ?: ""
+                        val username = document.getString("name") ?: ""
+                        val avatarUrl = document.getString("avatar") ?: ""
+
+                        holder.name.text = if (hoten.isNotEmpty()) hoten else username
+
+                        if (avatarUrl.isNotEmpty()) {
+                            Glide.with(holder.itemView.context)
+                                .load(avatarUrl)
+                                .placeholder(R.drawable.avtque)
+                                .error(R.drawable.avtque)
+                                .circleCrop()
+                                .into(holder.imgAvatar)
+                        } else {
+                            holder.imgAvatar.setImageResource(R.drawable.avtque)
+                        }
+                    } else {
+                        holder.name.text = post.name
+                    }
+                }
+                .addOnFailureListener {
+                    holder.name.text = post.name ?: "Unknown User"
+                    holder.imgAvatar.setImageResource(R.drawable.avtque)
+                }
+        }
+
+
         holder.content.text = post.content
         holder.likes.text = "${post.likes} likes"
 

@@ -126,21 +126,60 @@ class ProfileActivity : AppCompatActivity() {
         // 1. Load dữ liệu User
         dbHelper = DatabaseHelper(this)
         imgAvatar = findViewById(R.id.imgAvatar)
-        txtUserName = findViewById(R.id.txtUserName)
-        txtUserID = findViewById(R.id.txtUserID)
+        txtUserName = findViewById(R.id.txtUserName)   // Họ tên
+        txtUserID = findViewById(R.id.txtUserID)       // Username
+
         auth = FirebaseAuth.getInstance()
 
-        auth.currentUser?.let { user ->
-            val userData = dbHelper.getUserByUID(user.uid)
-            userData?.let {
-                txtUserName.text = it.hoten
-                txtUserID.text = it.name
-                if (it.avatar.isNotEmpty()) {
-                    Glide.with(this).load(it.avatar).into(imgAvatar)
-                } else {
-                    imgAvatar.setImageResource(R.drawable.avtque)
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            val userID = currentUser.uid
+
+            // Ưu tiên lấy dữ liệu mới nhất từ Firestore
+            FirebaseFirestore.getInstance()
+                .collection("Users")
+                .document(userID)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        val hoten = document.getString("hoten") ?: ""
+                        val name = document.getString("name") ?: ""
+                        val avatarUrl = document.getString("avatar") ?: ""
+
+                        // Hiển thị
+                        txtUserName.text = if (hoten.isNotEmpty()) hoten else name
+                        txtUserID.text = name
+
+                        // Avatar
+                        if (avatarUrl.isNotEmpty()) {
+                            Glide.with(this)
+                                .load(avatarUrl)
+                                .placeholder(R.drawable.avtque)
+                                .error(R.drawable.avtque)
+                                .into(imgAvatar)
+                        } else {
+                            imgAvatar.setImageResource(R.drawable.avtque)
+                        }
+
+                        // Đồng bộ lại SQLite (tùy chọn nhưng nên làm để nhất quán)
+                        dbHelper.updateUserByUID(
+                            userID,
+                            name,
+                            hoten,
+                            document.getString("email") ?: "",
+                            document.getString("birth") ?: "",
+                            document.getString("gender") ?: "",
+                            avatarUrl
+                        )
+                    } else {
+                        // Nếu Firestore chưa có dữ liệu → fallback về SQLite
+                        loadFromSQLite(userID)
+                    }
                 }
-            }
+                .addOnFailureListener {
+                    // Lỗi mạng hoặc Firestore → fallback SQLite
+                    loadFromSQLite(userID)
+                }
         }
 
         // 2. Cấu hình RecyclerView (Phải chạy ngay khi mở màn hình)
@@ -182,6 +221,19 @@ class ProfileActivity : AppCompatActivity() {
             } else {
                 menuContent.visibility = View.GONE
                 iconArrow.rotation = 0f
+            }
+        }
+    }
+    private fun loadFromSQLite(userID: String) {
+        val userData = dbHelper.getUserByUID(userID)
+        userData?.let {
+            txtUserName.text = if (it.hoten.isNotEmpty()) it.hoten else it.name
+            txtUserID.text = it.name
+
+            if (it.avatar.isNotEmpty()) {
+                Glide.with(this).load(it.avatar).into(imgAvatar)
+            } else {
+                imgAvatar.setImageResource(R.drawable.avtque)
             }
         }
     }
