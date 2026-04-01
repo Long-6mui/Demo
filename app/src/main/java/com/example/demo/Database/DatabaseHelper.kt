@@ -165,48 +165,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         return db.rawQuery("SELECT * FROM $TABLE_SAVED ORDER BY $SAVED_ID DESC", null)
     }
 
-    fun addComment(comment: Comment){
-        val db = writableDatabase
-        val values = ContentValues()
-        values.put("postId", comment.postId)
-        values.put("userId", comment.userId)
-        values.put("content", comment.content)
-        values.put("image", comment.image)
-        db.insert("comments", null, values)
-    }
 
-    fun getComments(postId: String): MutableList<Comment>{
-        val list = mutableListOf<Comment>()
-        val db = readableDatabase
-        val cursor = db.rawQuery("SELECT * FROM comments WHERE postId=? ORDER BY id DESC", arrayOf(postId))
-        if(cursor.moveToFirst()){
-            do{
-                val c = Comment(
-                    id = cursor.getInt(0),
-                    postId = cursor.getString(1),
-                    userId = cursor.getString(2),
-                    content = cursor.getString(3),
-                    image = cursor.getString(4)
-                )
-                list.add(c)
-            }while(cursor.moveToNext())
-        }
-        cursor.close()
-        return list
-    }
-
-    fun deleteComment(id:Int){
-        val db = writableDatabase
-        db.delete("comments", "id=?", arrayOf(id.toString()))
-    }
-
-    fun updateComment(comment: Comment){
-        val db = writableDatabase
-        val values = ContentValues()
-        values.put("content", comment.content)
-        values.put("image", comment.image)
-        db.update("comments", values, "id=?", arrayOf(comment.id.toString()))
-    }
 
     fun saveUser(userID: String, name: String, email: String, role: String = "user", avatar: String = ""): Long {
         val db = writableDatabase

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutEditComment"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    >
+
+    <!-- EditText nhập nội dung comment -->
+    <EditText
+        android:id="@+id/edtEditComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nhập nội dung comment"
+        android:inputType="textMultiLine"
+        android:minLines="2"
+
+        android:padding="12dp"
+        android:textColor="#000"
+        android:textSize="16sp"/>
+
+    <!-- ImageView hiển thị ảnh comment -->
+    <ImageView
+        android:id="@+id/imgEditComment"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="12dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone"
+        android:background="@color/colorBackground"/>
+
+    <!-- Nút chọn ảnh -->
+    <ImageView
+        android:id="@+id/btnPickImageDialog"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="end"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/daucong"
+        android:contentDescription="Chọn ảnh"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:padding="8dp"/>
+</LinearLayout>
