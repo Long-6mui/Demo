@@ -3,96 +3,159 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#DDDDDD">
+    android:background="@color/colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_gravity="center"
-        android:padding="20dp">
+        android:padding="24dp">
 
-        <ImageView
-            android:id="@+id/imgAvatar"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+        <!-- NÚT TRỞ VỀ GÓC TRÁI -->
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="fitCenter"
+            android:src="@drawable/btnback"
+            android:layout_marginBottom="16dp" />
+
+        <!-- AVATAR -->
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/avtque"
-            android:scaleType="centerCrop"
-            android:background="@drawable/circle_white_bg"
-            android:clipToOutline="true"
-            android:clickable="true"
-            android:focusable="true"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginBottom="32dp">
 
+            <!-- Avatar chính -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                app:cardCornerRadius="60dp"
+                app:cardElevation="4dp"
+                app:cardBackgroundColor="@color/colorSurface">
+
+                <ImageView
+                    android:id="@+id/imgAvatar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/avtque"
+                    android:clickable="true"
+                    android:focusable="true" />
+            </androidx.cardview.widget.CardView>
+
+            <!-- Icon nhỏ (máy ảnh hoặc chỉnh sửa) - nằm phía trước -->
+            <ImageView
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="bottom|end"
+                android:src="@drawable/ic_camera"
+                android:background="@drawable/circle_white_bg"
+                android:backgroundTint="@color/colorSecondary"
+                android:padding="6dp"
+                app:tint="@color/colorOnSecondary"
+                android:elevation="6dp"
+                android:translationZ="6dp" />
+        </FrameLayout>
+
+        <!-- HỌ TÊN -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Họ tên"
+            android:textColor="@color/colorOnBackground"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:alpha="0.7" />
+
+        <!-- USERNAME -->
+        <EditText
+            android:id="@+id/edtTen"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/colorSurface"
+            android:hint="Nhập họ tên"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/colorOnSurface"
+            android:textColorHint="#666666"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Username"
-            android:textStyle="bold"/>
+            android:textColor="@color/colorOnBackground"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:alpha="0.7" />
 
         <EditText
             android:id="@+id/edtUserName"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:padding="10dp"/>
+            android:layout_height="50dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/colorSurface"
+            android:hint="Nhập username"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/colorOnSurface"
+            android:textColorHint="#666666"
+            android:textSize="16sp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Họ tên"
-            android:textStyle="bold"/>
-
-        <EditText
-            android:id="@+id/edtTen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:padding="10dp"/>
-
-
+        <!-- EMAIL (DISABLED) -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Email"
-            android:textStyle="bold"/>
+            android:textColor="@color/colorOnBackground"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:alpha="0.7" />
 
         <EditText
             android:id="@+id/edtEmail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:padding="10dp"
-            />
+            android:layout_height="50dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/colorSurface"
+            android:enabled="false"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/colorOnSurface"
+            android:alpha="0.5"
+            android:textSize="16sp" />
 
-
+        <!-- NGÀY SINH & GIỚI TÍNH -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="15dp">
+            android:orientation="horizontal">
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Ngày sinh"
-                    android:textStyle="bold"/>
+                    android:textColor="@color/colorOnBackground"
+                    android:textStyle="bold"
+                    android:alpha="0.7" />
 
                 <EditText
                     android:id="@+id/edtBirthDay"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
+                    android:layout_height="50dp"
+                    android:background="@color/colorSurface"
                     android:clickable="true"
-                    android:drawableEnd="@android:drawable/ic_menu_my_calendar"
+                    android:drawableEnd="@drawable/ic_calendar"
                     android:focusable="false"
-                    android:padding="10dp" />
+                    android:paddingHorizontal="16dp"
+                    android:textColor="@color/colorOnSurface" />
             </LinearLayout>
 
             <LinearLayout
@@ -100,13 +163,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical"
-                android:layout_marginStart="10dp">
+                android:layout_marginStart="16dp">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Giới tính"
+                    android:textColor="@color/colorOnBackground"
                     android:textStyle="bold"
-                    android:layout_marginBottom="5dp"/>
+                    android:alpha="0.7" />
 
                 <RadioGroup
                     android:id="@+id/radioGender"
@@ -118,44 +183,30 @@
                         android:id="@+id/radioMale"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nam"/>
+                        android:text="Nam"
+                        android:textColor="@color/colorOnSurface" />
 
                     <RadioButton
                         android:id="@+id/radioFemale"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Nữ"
-                        android:layout_marginStart="20dp"/>
+                        android:layout_marginStart="16dp"
+                        android:textColor="@color/colorOnSurface" />
                 </RadioGroup>
             </LinearLayout>
         </LinearLayout>
 
-
-        <LinearLayout
+        <!-- NÚT CẬP NHẬT (ĐÃ XÓA NÚT TRỞ VỀ CŨ) -->
+        <Button
+            android:id="@+id/btnUpdate"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="25dp">
+            android:layout_height="55dp"
+            android:layout_marginTop="40dp"
+            android:text="Cập nhật thông tin"
+            android:backgroundTint="@color/colorSecondary"
+            android:textColor="@color/colorOnSecondary"
+            android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btnBack"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:text="Quay lại"
-                android:backgroundTint="#9E9E9E"
-                android:textColor="#FFFFFF"/>
-
-            <Button
-                android:id="@+id/btnUpdate"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:layout_marginStart="10dp"
-                android:text="Cập nhật thông tin"
-                android:backgroundTint="#2196F3"
-                android:textColor="#FFFFFF"/>
-
-        </LinearLayout>
     </LinearLayout>
 </ScrollView>

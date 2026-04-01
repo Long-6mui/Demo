@@ -3,9 +3,9 @@ package com.example.demo.activities
 import android.app.DatePickerDialog
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.Toast
@@ -53,11 +53,13 @@ class editInfoActivity : AppCompatActivity() {
         setContentView(R.layout.activity_edit_info)
 
         dbHelper = DatabaseHelper(this)
+
         //chọn avatar
         imgAvatar = findViewById(R.id.imgAvatar)
         imgAvatar.setOnClickListener {
             imagePicker.launch("image/*")
         }
+
         //chọn ngày sinh
         edtBirth = findViewById(R.id.edtBirthDay)
         edtBirth.setOnClickListener {
@@ -76,7 +78,7 @@ class editInfoActivity : AppCompatActivity() {
             datePicker.show()
         }
         //Quay lại
-        val btnBack = findViewById<Button>(R.id.btnBack)
+        val btnBack = findViewById<ImageButton>(R.id.btnBack)
         btnBack.setOnClickListener {
             finish()
         }
@@ -92,35 +94,72 @@ class editInfoActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
         storage = FirebaseStorage.getInstance()
         storageRef = storage.reference
-        loadUserProfile()
         //Hiện thông tin
-//        val user = auth.currentUser
-//        if (user != null) {
-//            val userID = user.uid
-//            val userData = dbHelper.getUserByUID(userID)
-//            if (userData != null) {
-//                if (userData.hoten.isEmpty()) {
-//                    edtHoTen.setText(userData.name)
-//                } else {
-//                    edtHoTen.setText(userData.hoten)
-//                }
-//                edtUserName.setText(userData.name)
-//                edtBirth.setText(userData.birthday)
-//                edtEmail.setText(userData.email)
-//                if (userData.gender == "Nam") {
-//                    radioMale.isChecked = true
-//                } else {
-//                    radioFemale.isChecked = true
-//                }
-//                if (userData.avatar.isEmpty()) {
-//                    imgAvatar.setImageResource(R.drawable.avtque)
-//                } else {
-//                    Glide.with(this)
-//                        .load(userData.avatar)
-//                        .into(imgAvatar)
-//                }
-//            }
-//        }
+        val user = auth.currentUser
+        if (user != null) {
+            val userID = user.uid
+
+            // 1. Lấy dữ liệu từ Firestore (ưu tiên)
+            database.collection("Users")
+                .document(userID)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        // Lấy dữ liệu từ Firestore
+                        val name = document.getString("name") ?: ""
+                        val hoten = document.getString("hoten") ?: ""
+                        val email = document.getString("email") ?: ""
+                        val birth = document.getString("birth") ?: ""
+                        val gender = document.getString("gender") ?: ""
+                        val avatarUrl = document.getString("avatar") ?: ""
+
+                        // Hiển thị lên UI
+                        edtHoTen.setText(hoten.ifEmpty { name })   // Ưu tiên họ tên, nếu rỗng thì lấy username
+                        edtUserName.setText(name)
+                        edtBirth.setText(birth)
+                        edtEmail.setText(user.email)               // Email lấy từ FirebaseAuth
+
+                        if (gender == "Nam") {
+                            radioMale.isChecked = true
+                        } else if (gender == "Nữ") {
+                            radioFemale.isChecked = true
+                        }
+
+                        // Load avatar
+                        if (avatarUrl.isNotEmpty()) {
+                            Glide.with(this)
+                                .load(avatarUrl)
+                                .placeholder(R.drawable.avtque)
+                                .into(imgAvatar)
+                        } else {
+                            imgAvatar.setImageResource(R.drawable.avtque)
+                        }
+
+                        // Đồng bộ lại vào SQLite để đồng bộ dữ liệu
+                        dbHelper.updateUserByUID(
+                            userID,
+                            name,
+                            hoten,
+                            email,
+                            birth,
+                            gender,
+                            avatarUrl
+                        )
+
+                    } else {
+                        // Trường hợp Firestore chưa có document → fallback về SQLite
+                        loadFromSQLite(userID)
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Toast.makeText(this, "Lỗi tải thông tin: ${e.message}", Toast.LENGTH_SHORT).show()
+                    // Fallback về SQLite khi lỗi mạng hoặc Firestore
+                    loadFromSQLite(userID)
+                }
+        } else {
+            Toast.makeText(this, "Không tìm thấy người dùng", Toast.LENGTH_SHORT).show()
+            finish()
+        }
         //nút cập nhật thông tin
         btnUpdate.setOnClickListener {
             val user = auth.currentUser
@@ -165,66 +204,7 @@ class editInfoActivity : AppCompatActivity() {
             }
         }
     }
-    private fun loadUserProfile() {
-        val firebaseUser = auth.currentUser ?: run {
-            Toast.makeText(this, "Vui lòng đăng nhập lại!", Toast.LENGTH_SHORT).show()
-            finish()
-            return
-        }
 
-        val userID = firebaseUser.uid
-        val localUser = dbHelper.getUserByUID(userID)   // lấy dữ liệu từ SQLite
-
-        // ==================== USERNAME (giữ nguyên từ lúc đăng ký) ====================
-        val username = when {
-            !localUser?.name.isNullOrEmpty() -> localUser!!.name                    // Từ SQLite (ưu tiên)
-            !firebaseUser.displayName.isNullOrEmpty() -> firebaseUser.displayName!! // Từ Firebase
-            else -> firebaseUser.email?.substringBefore("@") ?: ""                 // Fallback từ email
-        }
-
-        edtUserName.setText(username)
-
-        // ==================== HỌ TÊN (ưu tiên hoten đã chỉnh sửa) ====================
-        val hoTen = when {
-            !localUser?.hoten.isNullOrEmpty() -> localUser!!.hoten          // Đã từng chỉnh sửa → hiển thị hoten
-            !localUser?.name.isNullOrEmpty() -> localUser!!.name            // Lần đầu: giống username
-            !firebaseUser.displayName.isNullOrEmpty() -> firebaseUser.displayName!!
-            else -> username                                                // fallback về username
-        }
-
-        edtHoTen.setText(hoTen)
-
-        // ==================== Các trường còn lại ====================
-        edtEmail.setText(firebaseUser.email ?: localUser?.email ?: "")
-        edtEmail.isEnabled = false                                      // Không cho sửa email
-
-        edtBirth.setText(localUser?.birthday ?: "")
-
-        // Giới tính
-        when (localUser?.gender?.trim()) {
-            "Nam" -> radioMale.isChecked = true
-            "Nữ"  -> radioFemale.isChecked = true
-            else -> {
-                radioMale.isChecked = false
-                radioFemale.isChecked = false
-            }
-        }
-
-        // Avatar
-        val avatarUrl = localUser?.avatar?.takeIf { it.isNotEmpty() }
-            ?: firebaseUser.photoUrl?.toString()
-
-        if (avatarUrl.isNullOrEmpty()) {
-            imgAvatar.setImageResource(R.drawable.avtque)
-        } else {
-            Glide.with(this)
-                .load(avatarUrl)
-                .circleCrop()
-                .placeholder(R.drawable.avtque)
-                .error(R.drawable.avtque)
-                .into(imgAvatar)
-        }
-    }
     fun saveUserData(
         userId: String,
         name: String,
@@ -233,36 +213,67 @@ class editInfoActivity : AppCompatActivity() {
         gender: String,
         avatarUrl: String?
     ) {
+        val user = auth.currentUser
+        val email = user?.email ?: ""
+
         val userData = hashMapOf<String, Any>(
             "name" to name,
             "hoten" to hoten,
             "birth" to birth,
             "gender" to gender,
+            "email" to email
         )
-        if (avatarUrl != null) {
+
+        if (!avatarUrl.isNullOrEmpty()) {
             userData["avatar"] = avatarUrl
         }
+
         database.collection("Users")
             .document(userId)
-            .set(userData)
+            .set(userData, com.google.firebase.firestore.SetOptions.merge())
             .addOnSuccessListener {
-                val finalAvatar = avatarUrl
-                    ?: dbHelper.getUserByUID(userId)?.avatar
-                    ?: ""
-                // ✅ update SQLite
+                val finalAvatar = avatarUrl ?: dbHelper.getUserByUID(userId)?.avatar ?: ""
+
+                // ✅ SỬA Ở ĐÂY: Cập nhật đầy đủ vào SQLite (bao gồm email)
                 dbHelper.updateUserByUID(
-                    userId,
-                    name,
-                    hoten,
-                    birth,
-                    gender,
-                    finalAvatar
+                    userId = userId,
+                    name = name,
+                    hoten = hoten,
+                    email = email,
+                    birthday = birth,
+                    gender = gender,
+                    avatar = finalAvatar
                 )
+
                 Toast.makeText(this, "Cập nhật thành công", Toast.LENGTH_SHORT).show()
                 finish()
             }
-            .addOnFailureListener {
-                Toast.makeText(this, "Lỗi cập nhật", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { e ->
+                Toast.makeText(this, "Lỗi cập nhật: ${e.message}", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun loadFromSQLite(userID: String) {
+        val userData = dbHelper.getUserByUID(userID)
+        if (userData != null) {
+            edtHoTen.setText(if (userData.hoten.isEmpty()) userData.name else userData.hoten)
+            edtUserName.setText(userData.name)
+            edtBirth.setText(userData.birthday)
+            edtEmail.setText(userData.email)
+
+            if (userData.gender == "Nam") {
+                radioMale.isChecked = true
+            } else {
+                radioFemale.isChecked = true
+            }
+
+            if (userData.avatar.isEmpty()) {
+                imgAvatar.setImageResource(R.drawable.avtque)
+            } else {
+                Glide.with(this)
+                    .load(userData.avatar)
+                    .into(imgAvatar)
+            }
+        }
     }
 }

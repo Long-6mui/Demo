@@ -250,16 +250,25 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         db.delete(TABLE_USER, "$COL_USER_ID=?", arrayOf(userID))
     }
 
-    fun updateUserByUID(userID: String, name: String, hoten: String, birthday: String, gender: String, avatar: String) {
+    fun updateUserByUID(
+        userId: String,
+        name: String,
+        hoten: String,
+        email: String,
+        birthday: String,
+        gender: String,
+        avatar: String
+    ) {
         val db = writableDatabase
         val values = ContentValues().apply {
             put(COL_NAME, name)
             put(COL_HOTEN, hoten)
+            put(COL_EMAIL, email)
             put(COL_BIRTHDAY, birthday)
             put(COL_GENDER, gender)
             put(COL_AVATAR, avatar)
         }
-        db.update(TABLE_USER, values, "$COL_USER_ID=?", arrayOf(userID))
+        db.update(TABLE_USER, values, "$COL_USER_ID=?", arrayOf(userId))
     }
 
     // --- CÁC HÀM MỚI ĐỂ LẤY DỮ LIỆU THẬT ---

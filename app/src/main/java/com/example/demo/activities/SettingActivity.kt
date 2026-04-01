@@ -1,7 +1,9 @@
 package com.example.demo.activities
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Switch
@@ -63,10 +65,10 @@ class SettingActivity : AppCompatActivity() {
         }
 
         // đổi mật khẩu
+        val menuChangePassword = findViewById<LinearLayout>(R.id.menuChangePassword)
         btnChangePassword.setOnClickListener {
-
-            Toast.makeText(this,"Chức năng đổi mật khẩu đang phát triển",Toast.LENGTH_SHORT).show()
-
+            val intent = Intent(this, changePasswordActivity::class.java)
+            startActivity(intent)
         }
     }
 }
