@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 class PostAdapter(private val list: MutableList<Post>) :
     RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
 
+    // ViewHolder giữ các view của 1 item post
     class PostViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imgAvatar: ImageView = itemView.findViewById(R.id.imgAvatar)
 
@@ -40,6 +41,7 @@ class PostAdapter(private val list: MutableList<Post>) :
 
     }
 
+    // Tạo view cho mỗi post
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
 
         val view = LayoutInflater.from(parent.context)
@@ -51,12 +53,14 @@ class PostAdapter(private val list: MutableList<Post>) :
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
 
         val post = list[position]
+
+        // Hiển thị avatar, tên, nội dung, số like
         holder.imgAvatar.setImageResource(post.imgAvatar)
         holder.name.text = post.name
         holder.content.text = post.content
         holder.likes.text = "${post.likes} likes"
 
-
+        // Hiển thị ảnh post
         if (!post.imageUrl.isNullOrEmpty()) {
 
             holder.image.visibility = View.VISIBLE
@@ -67,6 +71,7 @@ class PostAdapter(private val list: MutableList<Post>) :
 
         } else if (post.image != null) {
 
+            // Ảnh mẫu trong drawable
             holder.image.visibility = View.VISIBLE
 
             Glide.with(holder.itemView.context)
@@ -79,6 +84,7 @@ class PostAdapter(private val list: MutableList<Post>) :
 
         }
 
+        //Like
         holder.likeBtn.setOnClickListener {
             post.likes++
             notifyItemChanged(position)
@@ -86,6 +92,7 @@ class PostAdapter(private val list: MutableList<Post>) :
 
 
 
+        //Comment
         holder.commentBtn.setOnClickListener {
 
             Toast.makeText(
@@ -94,12 +101,13 @@ class PostAdapter(private val list: MutableList<Post>) :
                 Toast.LENGTH_SHORT
             ).show()
 
-            val intent = Intent(holder.itemView.context, CommentActivity::class.java)
-            intent.putExtra("postId", post.id)
-
-            holder.itemView.context.startActivity(intent)
+            val context = holder.itemView.context
+            val intent = Intent(context, CommentActivity::class.java)
+            intent.putExtra("postId", post.id)  // post.id là id của bài viết hiện tại
+            context.startActivity(intent)
         }
 
+        //Menu Edit/Delete
         holder.btnMenu.setOnClickListener {
 
             // nếu là bài mẫu thì không cho chỉnh sửa
@@ -119,6 +127,7 @@ class PostAdapter(private val list: MutableList<Post>) :
 
             popup.setOnMenuItemClickListener {
 
+                //Delete post
                 if(it.title == "Delete"){
 
                     val db = FirebaseFirestore.getInstance()
@@ -130,13 +139,14 @@ class PostAdapter(private val list: MutableList<Post>) :
 
                             val pos = holder.adapterPosition
 
-                            list.removeAt(pos)
-                            notifyItemRemoved(pos)
+                            list.removeAt(pos)  // xóa khỏi list
+                            notifyItemRemoved(pos) // cập nhật RecyclerView
 
                         }
 
                 }
 
+                //Edit Post
                 if(it.title == "Edit"){
 
                     val intent = Intent(holder.itemView.context, EditPostActivity::class.java)

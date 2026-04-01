@@ -85,7 +85,7 @@ class SuggestActivity : AppCompatActivity() {
             n.contains("phở") -> R.drawable.pho
             n.contains("bánh xèo") -> R.drawable.banhxeo
             n.contains("gỏi cuốn") -> R.drawable.goicuon
-            else -> R.drawable.choco
+            else -> R.drawable.healthy
         }
     }
 }

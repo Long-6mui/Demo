@@ -8,129 +8,144 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.demo.Database.DatabaseHelper
+import com.cloudinary.android.MediaManager
+import com.cloudinary.android.callback.ErrorInfo
+import com.cloudinary.android.callback.UploadCallback
 import com.example.demo.R
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
+// Adapter hiển thị danh sách comment
 class CommentAdapter(
-    private val list: MutableList<Comment>,
-    private val db: DatabaseHelper,
-    private val reload: () -> Unit
+    private val list: MutableList<Comment>,           // danh sách comment
+    private val reload: () -> Unit,                   // callback để reload comment từ Activity
+    private val pickImageLauncher: ((Uri) -> Unit) -> Unit // callback để chọn ảnh khi edit comment
 ) : RecyclerView.Adapter<CommentAdapter.CommentViewHolder>() {
 
-
+    // ViewHolder cho mỗi item comment
     class CommentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        val imgAvatar: ImageView = itemView.findViewById(R.id.imgAvatar)
-        val txtUser: TextView = itemView.findViewById(R.id.txtUser)
-        val txtContent: TextView = itemView.findViewById(R.id.txtContent)
-        val imgComment: ImageView = itemView.findViewById(R.id.imgComment)
-        val btnMenu: ImageButton = itemView.findViewById(R.id.btnMenuComment)
-
+        val imgAvatar: ImageView = itemView.findViewById(R.id.imgAvatar) // avatar user
+        val txtUser: TextView = itemView.findViewById(R.id.txtUser)      // tên user
+        val txtContent: TextView = itemView.findViewById(R.id.txtContent) // nội dung comment
+        val imgComment: ImageView = itemView.findViewById(R.id.imgComment) // ảnh comment
+        val btnMenu: ImageButton = itemView.findViewById(R.id.btnMenuComment) // menu edit/delete
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommentViewHolder {
-
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_comment, parent, false)
-
-
+            .inflate(R.layout.item_comment, parent, false) // inflate layout item comment
         return CommentViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: CommentViewHolder, position: Int) {
-
         val comment = list[position]
 
+        // Hiển thị thông tin comment
         holder.txtUser.text = comment.userId
         holder.txtContent.text = comment.content
+        holder.imgAvatar.setImageResource(R.drawable.avtque)
 
-
-        val userData = db.getUserByUID(comment.userId)
-        if (userData != null) {
-            holder.txtUser.text = userData.name
-
-            if (userData.avatar.isEmpty()) {
-                holder.imgAvatar.setImageResource(R.drawable.avtque)
-            } else {
-                Glide.with(holder.itemView.context)
-                    .load(userData.avatar)
-                    .into(holder.imgAvatar)
-            }
-        }
-
+        // Nếu comment có ảnh → hiển thị ảnh
         if (comment.image.isNotEmpty()) {
-
             holder.imgComment.visibility = View.VISIBLE
-
-            try {
-                Glide.with(holder.itemView.context)
-                    .load(Uri.parse(comment.image))
-                    .into(holder.imgComment)
-            } catch (e: Exception) {
-                holder.imgComment.visibility = View.GONE
-            }
-
+            Glide.with(holder.itemView.context).load(comment.image).into(holder.imgComment)
         } else {
-
             holder.imgComment.visibility = View.GONE
         }
 
+        // Nút menu (Edit/Delete)
         holder.btnMenu.setOnClickListener {
-
-            val popup = PopupMenu(holder.itemView.context, holder.btnMenu)
-
+            val popup = android.widget.PopupMenu(holder.itemView.context, holder.btnMenu)
             popup.menu.add("Edit")
             popup.menu.add("Delete")
 
             popup.setOnMenuItemClickListener {
+                val db = FirebaseFirestore.getInstance()
 
+                // Xử lý Delete comment
                 if (it.title == "Delete") {
-
-                    val pos = holder.adapterPosition
-                    if (pos == RecyclerView.NO_POSITION) return@setOnMenuItemClickListener true
-
-                    db.deleteComment(comment.id)
-
-                    reload()
-
+                    db.collection("comments").document(comment.id)
+                        .delete()
+                        .addOnSuccessListener { reload() } // reload danh sách sau khi xóa
                 }
 
+                // Xử lý Edit comment
                 if (it.title == "Edit") {
+                    val context = holder.itemView.context
+                    val dialogView = LayoutInflater.from(context)
+                        .inflate(R.layout.activity_edit_comment, null) // layout edit comment
+                    val edtContent = dialogView.findViewById<EditText>(R.id.edtEditComment)
+                    val imgCommentView = dialogView.findViewById<ImageView>(R.id.imgEditComment)
+                    val btnPickImage = dialogView.findViewById<ImageView>(R.id.btnPickImageDialog)
 
-                    val edit = EditText(holder.itemView.context)
-                    edit.setText(comment.content)
+                    edtContent.setText(comment.content) // hiển thị nội dung cũ
+                    var selectedImageUri: Uri? = null // URI ảnh mới nếu chọn
 
-                    AlertDialog.Builder(holder.itemView.context)
-                        .setTitle("Edit Comment")
-                        .setView(edit)
-                        .setPositiveButton("Save") { _, _ ->
+                    // Nếu comment đã có ảnh → hiển thị
+                    if (comment.image.isNotEmpty()) {
+                        imgCommentView.visibility = View.VISIBLE
+                        Glide.with(context).load(comment.image).into(imgCommentView)
+                    } else {
+                        imgCommentView.visibility = View.GONE
+                    }
 
-                            val pos = holder.adapterPosition
-                            if (pos == RecyclerView.NO_POSITION) return@setPositiveButton
-
-                            comment.content = edit.text.toString()
-
-                            db.updateComment(comment)
-
-                            reload()
+                    // Chọn ảnh mới → callback sang Activity
+                    btnPickImage.setOnClickListener {
+                        pickImageLauncher { uri ->
+                            selectedImageUri = uri
+                            imgCommentView.setImageURI(uri) // hiển thị ảnh mới
+                            imgCommentView.visibility = View.VISIBLE
                         }
-                        .setNegativeButton("Cancel", null)
+                    }
+
+                    // Hiển thị dialog edit comment
+                    AlertDialog.Builder(context)
+                        .setTitle("Edit Comment")
+                        .setView(dialogView)
+                        .setPositiveButton("Save") { _, _ ->
+                            val newContent = edtContent.text.toString().trim()
+                            if (newContent.isEmpty() && selectedImageUri == null) return@setPositiveButton
+
+                            // Nếu chọn ảnh mới → upload Cloudinary trước rồi update Firestore
+                            if (selectedImageUri != null) {
+                                MediaManager.get().upload(selectedImageUri)
+                                    .option("folder", "comments")
+                                    .callback(object : UploadCallback {
+                                        override fun onStart(requestId: String?) {}
+                                        override fun onProgress(requestId: String?, bytes: Long, totalBytes: Long) {}
+                                        override fun onSuccess(
+                                            requestId: String?,
+                                            resultData: MutableMap<Any?, Any?>?
+                                        ) {
+                                            val newUrl = resultData?.get("secure_url")?.toString() ?: ""
+                                            db.collection("comments").document(comment.id)
+                                                .update(mapOf("content" to newContent, "image" to newUrl))
+                                                .addOnSuccessListener { reload() } // reload comment
+                                        }
+                                        override fun onError(requestId: String?, error: ErrorInfo?) {
+                                            Toast.makeText(context, "Upload ảnh thất bại", Toast.LENGTH_SHORT).show()
+                                        }
+                                        override fun onReschedule(requestId: String?, error: ErrorInfo?) {}
+                                    }).dispatch()
+                            } else {
+                                // Chỉ update nội dung comment
+                                db.collection("comments").document(comment.id)
+                                    .update("content", newContent)
+                                    .addOnSuccessListener { reload() } // reload comment
+                            }
+                        }
+                        .setNegativeButton("Cancel", null) // hủy edit
                         .show()
                 }
 
                 true
             }
-
-            popup.show()
+            popup.show() // hiển thị popup menu
         }
     }
 
-
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = list.size // số lượng comment
 }

@@ -146,9 +146,9 @@ class ProfileActivity : AppCompatActivity() {
         // 2. Cấu hình RecyclerView (Phải chạy ngay khi mở màn hình)
         recyclerMyPosts.isNestedScrollingEnabled = false
         val list = listOf(
-            Recipe(R.drawable.goicuon, "Gỏi Cuốn Miền Tây", "Trái Banh"),
-            Recipe(R.drawable.garan, "Gà Rán", "Trái Banh"),
-            Recipe(R.drawable.cua, "Cua Rang Me", "Trái Banh")
+            Recipe(R.drawable.goicuon, "Gỏi Cuốn Miền Tây", ""),
+            Recipe(R.drawable.garan, "Gà Rán", ""),
+            Recipe(R.drawable.cua, "Cua Rang Me", "")
         )
         recyclerMyPosts.layoutManager = GridLayoutManager(this, 2)
         recyclerMyPosts.adapter = RecipeAdapter(list)

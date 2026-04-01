@@ -15,7 +15,9 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
     }
+
 
     buildTypes {
         release {
@@ -57,4 +59,8 @@ dependencies {
     // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+    // Cloudinary
+    implementation("com.cloudinary:cloudinary-android:2.3.1")
+    implementation("com.squareup.okhttp3:okhttp:4.9.3")
 }

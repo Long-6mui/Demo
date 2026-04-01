@@ -24,6 +24,8 @@ class AdminActivity : AppCompatActivity() {
         val txtUserID = findViewById<TextView>(R.id.txtUserID)
         val btnLogout = findViewById<LinearLayout>(R.id.btnLogout)
 
+
+
         // Load thông tin admin từ Firestore
         val uid = auth.currentUser?.uid
         if (uid != null) {
@@ -50,8 +52,15 @@ class AdminActivity : AppCompatActivity() {
         // Nút QUẢN LÝ USER
         findViewById<CardView>(R.id.btnManageUser).setOnClickListener {
             // Mở màn hình quản lý User nếu mày đã có file ManageUserActivity
-            // startActivity(Intent(this, ManageUserActivity::class.java))
+            startActivity(Intent(this, ManageUserActivity::class.java))
             Toast.makeText(this, "Tính năng quản lý User", Toast.LENGTH_SHORT).show()
+        }
+
+        //Nút Quản Lý Góp Ý
+        findViewById<CardView>(R.id.btnManageFeedback).setOnClickListener {
+            // Mở màn hình quản lý User nếu mày đã có file ManageUserActivity
+            //startActivity(Intent(this, ManageFeedbackActivity::class.java))
+            Toast.makeText(this, "Tính năng quản lý góp ý đang phát triển", Toast.LENGTH_SHORT).show()
         }
 
         // Đăng xuất
