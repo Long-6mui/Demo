@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout 
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground">
+    android:background="#FFFFFF">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorBackground"
+        android:background="#FFFFFF"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
@@ -22,23 +22,22 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_arrow_back"
-                app:tint="@color/colorOnBackground" />
+                android:src="@drawable/ic_arrow_back" />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:gravity="center_vertical"
+                android:gravity="end|center_vertical"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/btnPublish"
-                    style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Lên sóng"
-                    android:textColor="#FFFFFF" />
+                    android:backgroundTint="#E6E6FA"
+                    android:textColor="#1A3A2A"
+                    android:textStyle="bold" />
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
@@ -61,8 +60,7 @@
                 android:background="@null"
                 android:hint="Tên món ăn"
                 android:textSize="22sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorOnBackground" />
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edtDescription"
@@ -71,8 +69,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@null"
                 android:hint="Mô tả..."
-                android:textSize="15sp"
-                android:textColor="@color/colorOnBackground" />
+                android:textSize="15sp" />
 
             <EditText
                 android:id="@+id/edtCookTime"
@@ -81,8 +78,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@null"
                 android:hint="Thời gian nấu"
-                android:textSize="15sp"
-                android:textColor="@color/colorOnBackground" />
+                android:textSize="15sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -90,13 +86,13 @@
                 android:layout_marginTop="32dp"
                 android:text="Nguyên Liệu"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorOnBackground" />
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/layoutIngredients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:orientation="vertical" />
 
             <LinearLayout
@@ -110,14 +106,14 @@
                     android:layout_height="wrap_content"
                     android:text="+ Phần"
                     android:padding="12dp"
-                    android:textColor="@color/colorOnBackground" />
+                    android:textColor="#4A8C5C" />
                 <TextView
                     android:id="@+id/btnAddIngredient"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="+ Nguyên liệu"
                     android:padding="12dp"
-                    android:textColor="@color/colorOnBackground" />
+                    android:textColor="#4A8C5C" />
             </LinearLayout>
 
             <TextView
@@ -126,13 +122,13 @@
                 android:layout_marginTop="32dp"
                 android:text="Cách Làm"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/colorOnBackground" />
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/layoutSteps"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:orientation="vertical" />
 
             <TextView
@@ -142,7 +138,7 @@
                 android:layout_gravity="center"
                 android:text="+ Thêm bước"
                 android:padding="12dp"
-                android:textColor="@color/colorOnBackground" />
+                android:textColor="#4A8C5C" />
 
             <View android:layout_width="match_parent" android:layout_height="100dp" />
         </LinearLayout>

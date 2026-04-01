@@ -58,22 +58,18 @@ class IngredientsActivity : AppCompatActivity() {
                         cateName = doc.getString("cateName") ?: ""
                     )
                 }.toMutableList()
-
-                // 2: load Ingredient rồi gắn vào đúng category
                 db.collection("ingredients")
                     .get()
                     .addOnSuccessListener { ingreResult ->
                         val allIngredients = ingreResult.documents.map { doc ->
                             Ingredient(
-                                ingreID = doc.id,
+                                // Thay doc.id thành nameIngre để lấy CHỮ thay vì lấy MÃ
+                                ingreID = doc.getString("nameIngre") ?: "",
                                 nameIngre = doc.getString("nameIngre") ?: "",
                                 cateinID = doc.getString("cateinID") ?: ""
-
                             )
                         }
 
-                        // Gắn nguyên liệu vào đúng category
-                        // Thay đoạn filledCategories
                         val filledCategories = categoryList.map { cat ->
                             cat.apply {
                                 ingredients.addAll(
@@ -98,8 +94,6 @@ class IngredientsActivity : AppCompatActivity() {
 
     private fun saveAndSuggest() {
         val userId = auth.currentUser?.uid
-
-        // Lưu user_ingredients lên Firestore nếu đã login
         if (userId != null) {
             db.collection("user_ingredients").document(userId)
                 .set(mapOf("ingredients" to selectedIds.toList()))
@@ -107,7 +101,6 @@ class IngredientsActivity : AppCompatActivity() {
                     goToSuggest()
                 }
                 .addOnFailureListener {
-                    // Vẫn chuyển màn dù lưu lỗi
                     goToSuggest()
                 }
         } else {

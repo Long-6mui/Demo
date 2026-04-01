@@ -19,8 +19,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_toStartOf="@+id/cardNotify">
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvTitle"
@@ -36,7 +35,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Danh sách món ăn yêu thích của bạn"
+                    android:text="Món ăn yêu thích của bạn"
                     android:textColor="#828282"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -66,7 +65,7 @@
             android:layout_marginHorizontal="24dp"
             android:layout_marginBottom="16dp"
             app:cardCornerRadius="20dp"
-            app:cardElevation="6dp"
+            app:cardElevation="2dp"
             app:cardBackgroundColor="#FFFFFF">
 
             <EditText
@@ -77,6 +76,7 @@
                 android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="15dp"
                 android:hint="Tìm món ăn..."
+                android:inputType="text"
                 android:paddingHorizontal="20dp"
                 android:textSize="16sp" />
         </androidx.cardview.widget.CardView>
@@ -86,7 +86,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingHorizontal="20dp"
+            android:paddingHorizontal="16dp"
             android:paddingBottom="40dp" />
 
     </LinearLayout>
