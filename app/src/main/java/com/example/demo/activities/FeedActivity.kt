@@ -114,9 +114,9 @@ class FeedActivity : AppCompatActivity() {
         btnPost.setOnClickListener {
             val content = edtPost.text.toString().trim()
 
-                if (content.isEmpty()) {
-            Toast.makeText(this, "Vui lòng nhập nội dung bài viết", Toast.LENGTH_SHORT).show()
-            return@setOnClickListener
+            if (content.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập nội dung bài viết", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
 
             val auth = FirebaseAuth.getInstance()
