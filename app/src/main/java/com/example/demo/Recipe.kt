@@ -1,4 +1,4 @@
-package com.example.demo.activities
+package com.example.demo
 
 data class Recipe(
     val id: String = "",
