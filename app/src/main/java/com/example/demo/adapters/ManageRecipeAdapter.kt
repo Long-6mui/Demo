@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.demo.R
 import com.example.demo.Recipe
 
@@ -18,7 +19,6 @@ class ManageRecipeAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val imgRecipe: ImageView = view.findViewById(R.id.imgRecipe)
         val txtRecipeName: TextView = view.findViewById(R.id.txtRecipeName)
-        // Đổi từ ImageButton sang TextView để khớp với XML
         val btnEdit: TextView = view.findViewById(R.id.btnEdit)
         val btnDelete: TextView = view.findViewById(R.id.btnDelete)
     }
@@ -31,7 +31,14 @@ class ManageRecipeAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val recipe = list[position]
-        holder.imgRecipe.setImageResource(recipe.image)
+
+        // Sử dụng Glide để load ảnh từ URL
+        Glide.with(holder.itemView.context)
+            .load(recipe.image)
+            .placeholder(R.drawable.choco)
+            .error(R.drawable.choco)
+            .into(holder.imgRecipe)
+
         holder.txtRecipeName.text = recipe.name
 
         // Xử lý sự kiện Sửa
@@ -42,6 +49,12 @@ class ManageRecipeAdapter(
     }
 
     override fun getItemCount(): Int = list.size
+
+    fun updateList(newList: List<Recipe>) {
+        list.clear()
+        list.addAll(newList)
+        notifyDataSetChanged()
+    }
 
     fun removeItem(position: Int) {
         if (position in 0 until list.size) {

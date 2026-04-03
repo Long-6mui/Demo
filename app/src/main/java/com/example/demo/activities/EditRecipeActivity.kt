@@ -8,54 +8,66 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.demo.Database.DatabaseHelper
 import com.example.demo.R
 import com.example.demo.Recipe
 import com.example.demo.adapters.ManageRecipeAdapter
-import kotlin.jvm.java
+import com.google.firebase.firestore.FirebaseFirestore
 
 class EditRecipeActivity : AppCompatActivity() {
 
     private lateinit var adapter: ManageRecipeAdapter
     private val recipeList = mutableListOf<Recipe>()
+    private val db = FirebaseFirestore.getInstance()
+    private lateinit var dbHelper: DatabaseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_recipe)
 
-        // Setup Toolbar
+        dbHelper = DatabaseHelper(this)
+
         val toolbar = findViewById<Toolbar>(R.id.toolbarManage)
         toolbar.setNavigationOnClickListener { finish() }
 
-        // Setup RecyclerView
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerManageRecipes)
         recyclerView.layoutManager = LinearLayoutManager(this)
-
-        // Dữ liệu mẫu (Sau này bạn sẽ load từ Firebase/Database)
-        loadRecipes()
 
         adapter = ManageRecipeAdapter(
             recipeList,
             onEditClick = { recipe ->
-                // Xử lý Sửa: Chuyển sang AddRecipeActivity kèm dữ liệu
                 val intent = Intent(this, AddRecipeActivity::class.java)
-                intent.putExtra("MODE", "EDIT")
-                intent.putExtra("RECIPE_NAME", recipe.name)
+                intent.putExtra("RECIPE_ID", recipe.id)
                 startActivity(intent)
             },
             onDeleteClick = { recipe, position ->
-                // Xử lý Xóa: Hiện thông báo xác nhận
                 showDeleteDialog(recipe, position)
             }
         )
         
         recyclerView.adapter = adapter
+        loadRecipesFromFirebase()
     }
 
-    private fun loadRecipes() {
-        // Tạm thời lấy dữ liệu mẫu giống trang Profile
-        recipeList.add(Recipe(R.drawable.goicuon, "Gỏi Cuốn Miền Tây", "Admin"))
-        recipeList.add(Recipe(R.drawable.garan, "Gà Rán", "Admin"))
-        recipeList.add(Recipe(R.drawable.cua, "Cua Rang Me", "Admin"))
+    private fun loadRecipesFromFirebase() {
+        db.collection("recipes")
+            .get()
+            .addOnSuccessListener { result ->
+                recipeList.clear()
+                for (document in result) {
+                    val name = document.getString("name") ?: ""
+                    val image = document.getString("image") ?: ""
+                    val description = document.getString("description") ?: ""
+                    val author = document.getString("author") ?: "Admin"
+                    val ingredients = document.get("ingredients") as? List<String> ?: emptyList()
+                    val steps = document.get("steps") as? List<String> ?: emptyList()
+                    val createdAt = document.getLong("createdAt") ?: 0L
+
+                    val recipe = Recipe(document.id, name, image, author, description, ingredients, steps, createdAt)
+                    recipeList.add(recipe)
+                }
+                adapter.notifyDataSetChanged()
+            }
     }
 
     private fun showDeleteDialog(recipe: Recipe, position: Int) {
@@ -63,10 +75,24 @@ class EditRecipeActivity : AppCompatActivity() {
             .setTitle("Xóa công thức")
             .setMessage("Bạn có chắc chắn muốn xóa món '${recipe.name}' không?")
             .setPositiveButton("Xóa") { _, _ ->
-                adapter.removeItem(position)
-                Toast.makeText(this, " Đã xóa ${recipe.name}", Toast.LENGTH_SHORT).show()
+                // 1. Xóa trên Firebase
+                db.collection("recipes").document(recipe.id)
+                    .delete()
+                    .addOnSuccessListener {
+                        // 2. Xóa trên SQLite (Dùng tên món vì SQLite của bạn đang quản lý theo tên/id int)
+                        // Bạn nên có hàm deleteRecipeByName hoặc xóa theo ID nếu đã đồng bộ
+                        dbHelper.deleteSavedRecipeByName(recipe.name) 
+                        
+                        adapter.removeItem(position)
+                        Toast.makeText(this, "✅ Đã xóa hoàn toàn!", Toast.LENGTH_SHORT).show()
+                    }
             }
             .setNegativeButton("Hủy", null)
             .show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        loadRecipesFromFirebase()
     }
 }
