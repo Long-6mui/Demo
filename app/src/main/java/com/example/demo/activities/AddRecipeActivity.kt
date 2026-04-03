@@ -14,7 +14,6 @@ import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.example.demo.Database.DatabaseHelper
 import com.example.demo.R
-import com.example.demo.Recipe
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AddRecipeActivity : AppCompatActivity() {
@@ -46,7 +45,7 @@ class AddRecipeActivity : AppCompatActivity() {
         imgFood = findViewById(R.id.imgFood)
         layoutIngredients = findViewById(R.id.layoutIngredients)
         layoutSteps = findViewById(R.id.layoutSteps)
-        progressBar = findViewById(R.id.progressBar) // Hãy đảm bảo có ProgressBar trong XML
+        progressBar = findViewById(R.id.progressBar)
 
         val btnPublish = findViewById<Button>(R.id.btnPublish)
         val btnClose = findViewById<ImageButton>(R.id.btnClose)
@@ -131,8 +130,7 @@ class AddRecipeActivity : AppCompatActivity() {
 
     private fun uploadImageToCloudinary() {
         progressBar.visibility = View.VISIBLE
-        Toast.makeText(this, "Đang tải ảnh lên Cloudinary...", Toast.LENGTH_SHORT).show()
-
+        
         MediaManager.get().upload(selectedImageUri)
             .callback(object : UploadCallback {
                 override fun onStart(requestId: String?) {}
@@ -144,7 +142,7 @@ class AddRecipeActivity : AppCompatActivity() {
                 }
                 override fun onError(requestId: String?, error: ErrorInfo?) {
                     progressBar.visibility = View.GONE
-                    Toast.makeText(this@AddRecipeActivity, "Lỗi upload: ${error?.description}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@AddRecipeActivity, "Lỗi upload!", Toast.LENGTH_SHORT).show()
                 }
                 override fun onReschedule(requestId: String?, error: ErrorInfo?) {}
             }).dispatch()
@@ -173,11 +171,11 @@ class AddRecipeActivity : AppCompatActivity() {
         docRef.set(recipeData)
             .addOnSuccessListener {
                 dbHelper.addRecipe(name, ingredientsList.joinToString(", "), imageUrl, desc)
-                Toast.makeText(this, "✅ Đã lưu công thức!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "✅ Đã lưu!", Toast.LENGTH_SHORT).show()
                 finish()
             }
             .addOnFailureListener {
-                Toast.makeText(this, "Lỗi Firebase: ${it.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Lỗi Firebase!", Toast.LENGTH_SHORT).show()
             }
     }
 
