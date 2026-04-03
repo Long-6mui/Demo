@@ -91,6 +91,7 @@ class ProfileActivity : AppCompatActivity() {
         val menuCategory = findViewById<LinearLayout>(R.id.menuCategory)
         val menuContent = findViewById<LinearLayout>(R.id.menuAccountContent)
         val iconArrow = findViewById<ImageView>(R.id.iconArrow)
+        val menuSetting = findViewById<LinearLayout>(R.id.menuSetting)
         
         // Gỡ bỏ phần RecyclerView trong code
 
@@ -125,6 +126,9 @@ class ProfileActivity : AppCompatActivity() {
         }
         editProfile?.setOnClickListener { startActivity(Intent(this, editInfoActivity::class.java)) }
         menuFeedback?.setOnClickListener { startActivity(Intent(this, FeedbackActivity::class.java)) }
+        menuSetting?.setOnClickListener {
+            startActivity(Intent(this, SettingActivity::class.java))
+        }
 
         menuCategory?.setOnClickListener {
             if (menuContent?.visibility == View.GONE) {

@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         setupCategories()
 
         // 2. Nút Home (Giữa) -> FeedActivity
-        findViewById<ImageButton>(R.id.btnHome)?.setOnClickListener {
+        findViewById<LinearLayout>(R.id.btnHome)?.setOnClickListener {
             startActivity(Intent(this, FeedActivity::class.java))
         }
 
