@@ -35,7 +35,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DB_NAME, null
         const val COL_RECIPE_DESC = "description"
 
         //Comment
-        val CREATE_COMMENT_TABLE = """
+       val CREATE_COMMENT_TABLE = """
         CREATE TABLE comments(
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             postId TEXT,

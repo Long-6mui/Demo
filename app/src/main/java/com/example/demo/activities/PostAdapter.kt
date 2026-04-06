@@ -9,6 +9,8 @@ import android.widget.TextView
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
 import android.util.Log
 import android.util.Log.e
@@ -20,6 +22,7 @@ import com.bumptech.glide.Glide
 import com.example.demo.Database.DatabaseHelper
 import kotlin.jvm.java
 import com.example.demo.R
+import com.google.android.material.button.MaterialButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
@@ -36,7 +39,7 @@ class PostAdapter(private val list: MutableList<Post>) :
         val content: TextView = itemView.findViewById(R.id.txtContent)
         val likes: TextView = itemView.findViewById(R.id.txtLikes)
         val image: ImageView = itemView.findViewById(R.id.image)
-        val likeBtn: Button = itemView.findViewById(R.id.btnLike)
+        val likeBtn: MaterialButton = itemView.findViewById(R.id.btnLike)
         val commentBtn: Button = itemView.findViewById(R.id.btnComment)
 
         val btnMenu: ImageButton = itemView.findViewById(R.id.btnMenu)
@@ -104,14 +107,17 @@ class PostAdapter(private val list: MutableList<Post>) :
         val isLiked = post.likedBy.contains(currentUserId)
         if (isLiked) {
             // Trạng thái ĐÃ LIKE
-            holder.likeBtn.text = "UnLike"
-
+            //holder.likeBtn.text = "UnLike"
+            holder.likeBtn.setIconResource(R.drawable.ic_heart_filled)
+            holder.likeBtn.setIconTint(ColorStateList.valueOf(Color.parseColor("#FF4B4B")))
 
         } else {
             // Trạng thái CHƯA LIKE
-            holder.likeBtn.text = "Like"
+            //holder.likeBtn.text = "Like"
+            holder.likeBtn.setIconResource(R.drawable.ic_heart_outline)
 
         }
+
         holder.likeBtn.setOnClickListener {
             if (currentUserId.isEmpty()) {
                 Toast.makeText(holder.itemView.context, "Vui lòng đăng nhập!", Toast.LENGTH_SHORT).show()
@@ -129,6 +135,8 @@ class PostAdapter(private val list: MutableList<Post>) :
                 post.likedBy.add(currentUserId)
                 postRef.update("likedBy", FieldValue.arrayUnion(currentUserId))
             }
+
+
             // Cập nhật giao diện ngay lập tức tại vị trí này
             notifyItemChanged(position)
         }
