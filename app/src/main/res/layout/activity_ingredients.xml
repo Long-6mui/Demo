@@ -21,8 +21,9 @@
             android:id="@+id/btnBack"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/btnback"
+            android:src="@drawable/ic_arrow_back"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="#1A3A2A"
             android:contentDescription="Back"/>
 
         <LinearLayout

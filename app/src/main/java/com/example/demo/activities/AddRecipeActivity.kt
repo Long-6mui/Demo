@@ -12,8 +12,8 @@ import com.bumptech.glide.Glide
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
-import com.example.demo.Database.DatabaseHelper
 import com.example.demo.R
+import com.example.demo.Recipe
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AddRecipeActivity : AppCompatActivity() {
@@ -31,14 +31,11 @@ class AddRecipeActivity : AppCompatActivity() {
     private var uploadedImageUrl: String = ""
     private var recipeId: String? = null
 
-    private lateinit var dbHelper: DatabaseHelper
     private val firestore = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_recipe)
-
-        dbHelper = DatabaseHelper(this)
 
         edtRecipeName = findViewById(R.id.edtRecipeName)
         edtDescription = findViewById(R.id.edtDescription)
@@ -170,7 +167,6 @@ class AddRecipeActivity : AppCompatActivity() {
 
         docRef.set(recipeData)
             .addOnSuccessListener {
-                dbHelper.addRecipe(name, ingredientsList.joinToString(", "), imageUrl, desc)
                 Toast.makeText(this, "✅ Đã lưu!", Toast.LENGTH_SHORT).show()
                 finish()
             }

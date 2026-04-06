@@ -68,6 +68,9 @@
             android:name=".activities.ManageRecipesActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.RecipeDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>

@@ -4,69 +4,59 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.demo.Database.DatabaseHelper
 import com.example.demo.R
-import com.example.demo.adapters.SavedAdapter
-import com.example.demo.models.Dish
-
+import com.example.demo.Recipe
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class SavedActivity : AppCompatActivity() {
 
     private lateinit var rvSavedRecipes: RecyclerView
-    private lateinit var dbHelper: DatabaseHelper
     private lateinit var etSearch: EditText
-    private var fullList = mutableListOf<Dish>()
+    private var fullList = mutableListOf<Recipe>()
     private lateinit var adapter: SavedAdapter
+    private val db = FirebaseFirestore.getInstance()
+    private val auth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_saved)
 
-        dbHelper = DatabaseHelper(this)
         rvSavedRecipes = findViewById(R.id.rvSavedRecipes)
         etSearch = findViewById(R.id.etSearchSaved)
 
+        // Bỏ dòng btnBack vì layout không có nút này
+        
         rvSavedRecipes.layoutManager = LinearLayoutManager(this)
 
-        loadData()
+        loadSavedFromFirebase()
         setupSearch()
     }
 
-    private fun loadData() {
-        fullList.clear()
-        val cursor = dbHelper.getAllSavedRecipes()
+    private fun loadSavedFromFirebase() {
+        val userId = auth.currentUser?.uid ?: return
 
-        if (cursor.moveToFirst()) {
-            // Lấy index cẩn thận để tránh lỗi crash
-            val idIndex = cursor.getColumnIndex(DatabaseHelper.SAVED_ID)
-            val nameIndex = cursor.getColumnIndex(DatabaseHelper.SAVED_NAME)
-            val infoIndex = cursor.getColumnIndex(DatabaseHelper.SAVED_INFO)
+        db.collection("Users").document(userId)
+            .collection("SavedRecipes")
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    Toast.makeText(this, "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show()
+                    return@addSnapshotListener
+                }
 
-            if (idIndex != -1 && nameIndex != -1 && infoIndex != -1) {
-                do {
-                    val id = cursor.getInt(idIndex)
-                    val name = cursor.getString(nameIndex) ?: ""
-                    val info = cursor.getString(infoIndex) ?: ""
-
-                    val imgRes = when {
-                        name.contains("Bún bò", ignoreCase = true) -> R.drawable.bunbo
-                        name.contains("Bánh xèo", ignoreCase = true) -> R.drawable.banhxeo
-                        name.contains("Phở", ignoreCase = true) -> R.drawable.pho
-                        else -> R.drawable.choco
-                    }
-                    fullList.add(Dish(id, name, imgRes, info))
-                } while (cursor.moveToNext())
+                fullList.clear()
+                snapshots?.forEach { doc ->
+                    val recipe = doc.toObject(Recipe::class.java).copy(id = doc.id)
+                    fullList.add(recipe)
+                }
+                
+                adapter = SavedAdapter(fullList, true)
+                rvSavedRecipes.adapter = adapter
             }
-        }
-        cursor.close()
-
-        // QUAN TRỌNG: Truyền true vào tham số thứ 2 để hiện nút XÓA
-        adapter = SavedAdapter(fullList.toMutableList(), true)
-        rvSavedRecipes.adapter = adapter
     }
 
     private fun setupSearch() {
@@ -79,8 +69,6 @@ class SavedActivity : AppCompatActivity() {
                 } else {
                     fullList.filter { it.name.contains(query, ignoreCase = true) }
                 }
-
-                // Cập nhật lại adapter với list đã lọc và vẫn giữ chế độ màn hình Saved (true)
                 rvSavedRecipes.adapter = SavedAdapter(filteredList.toMutableList(), true)
             }
             override fun afterTextChanged(s: Editable?) {}

@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.demo.R
+import com.example.demo.Recipe
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
@@ -72,6 +73,19 @@ class MainActivity : AppCompatActivity() {
         img?.let {
             Glide.with(this).load(recipe.image).placeholder(R.drawable.choco).into(it)
         }
+
+        // Thêm sự kiện click để vào trang chi tiết
+        view.setOnClickListener {
+            val intent = Intent(this, RecipeDetailActivity::class.java)
+            intent.putExtra("recipe_name", recipe.name)
+            intent.putExtra("recipe_image", recipe.image)
+            intent.putExtra("recipe_author", recipe.author)
+            intent.putExtra("recipe_description", recipe.description)
+            intent.putStringArrayListExtra("recipe_ingredients", ArrayList(recipe.ingredients))
+            intent.putStringArrayListExtra("recipe_steps", ArrayList(recipe.steps))
+            startActivity(intent)
+        }
+
         parent.addView(view)
     }
 

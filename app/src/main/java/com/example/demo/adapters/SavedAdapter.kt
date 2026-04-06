@@ -1,4 +1,4 @@
-package com.example.demo.activities
+package com.example.demo.adapters
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.demo.R
 import com.example.demo.Recipe
+import com.example.demo.activities.RecipeDetailActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -64,6 +65,7 @@ class SavedAdapter(
         if (isSavedScreen) {
             holder.btnAction.setImageResource(R.drawable.ic_delete)
             holder.btnAction.setOnClickListener {
+                // Xóa khỏi danh sách yêu thích trên Firebase
                 db.collection("Users").document(userId)
                     .collection("SavedRecipes").document(recipe.id)
                     .delete()
@@ -74,6 +76,7 @@ class SavedAdapter(
                     }
             }
         } else {
+            // Màn hình Gợi ý: Kiểm tra xem món này đã lưu chưa
             db.collection("Users").document(userId)
                 .collection("SavedRecipes").document(recipe.id)
                 .get()
