@@ -127,6 +127,19 @@
             android:layout_marginTop="4dp"
             android:orientation="horizontal">
 
+<!--            <Button-->
+<!--                android:id="@+id/btnLike"-->
+<!--                style="@style/Widget.MaterialComponents.Button.TextButton"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:text="Like"-->
+<!--                android:textColor="#666666"-->
+<!--                android:textStyle="bold"-->
+<!--                app:icon="@drawable/ic_heart_outline"-->
+<!--                app:iconGravity="textStart"-->
+<!--                app:iconTint="#666666" />-->
+
             <Button
                 android:id="@+id/btnLike"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -136,9 +149,9 @@
                 android:text="Like"
                 android:textColor="#666666"
                 android:textStyle="bold"
-                app:icon="@drawable/ic_heart_outline"
-                app:iconGravity="textStart"
-                app:iconTint="#666666" />
+                android:gravity="center"             app:icon="@drawable/ic_heart_outline"
+                app:iconGravity="textStart"          app:iconPadding="8dp"                app:iconTint="#666666"
+                android:textAllCaps="false" />
 
             <Button
                 android:id="@+id/btnComment"
