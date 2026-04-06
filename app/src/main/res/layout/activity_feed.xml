@@ -1,125 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-
-    android:orientation="vertical"
-    android:background="#C0C0C0"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingTop="40dp">
+    android:background="#C0C0C0">
 
-    <!-- TITLE -->
-
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="16dp">
+        android:background="#FFFFFF"
+        app:elevation="0dp">
 
-        <ImageView
-            android:id="@+id/btnBackHome"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:src="@drawable/btnback" />
-
-        <TextView
-            android:id="@+id/txtTitle"
+        <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="NewFeeds"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="#333333"
-            android:gravity="end"/>
+            android:layout_height="?attr/actionBarSize"
+            app:contentInsetStart="0dp">
 
-    </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="16dp">
 
+                <ImageView
+                    android:id="@+id/btnBackHome"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:src="@drawable/btnback"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- KHUNG ĐĂNG BÀI -->
-    <androidx.cardview.widget.CardView
+                <TextView
+                    android:id="@+id/txtTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:ellipsize="end"
+                    android:gravity="end"
+                    android:maxLines="1"
+                    android:text="NewFeeds"
+                    android:textColor="#333333"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btnBackHome"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp">
-            <!-- Ava User -->
+            android:orientation="vertical">
+
             <androidx.cardview.widget.CardView
-                android:id="@+id/cardAvatar"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="16dp"
-                app:cardCornerRadius="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                app:cardCornerRadius="12dp"
                 app:cardElevation="2dp">
 
-                <ImageView
-                    android:id="@+id/avatarUser"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_alignParentEnd="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ava5" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="12dp">
+
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/cardAvatar"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        app:cardCornerRadius="22.5dp"
+                        app:cardElevation="0dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/avatarUser"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/avtque" />
+                    </androidx.cardview.widget.CardView>
+
+                    <EditText
+                        android:id="@+id/edtPost"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="12dp"
+                        android:background="@drawable/bg_edittext_rounded"
+                        android:hint="What are you thinking about today?"
+                        android:inputType="textMultiLine"
+                        android:maxLines="4"
+                        android:minHeight="48dp"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="8dp"
+                        android:textSize="15sp"
+                        app:layout_constraintEnd_toStartOf="@id/cardAvatar"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/imgPick"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="12dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_image"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/edtPost" />
+
+                    <Button
+                        android:id="@+id/btnPost"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Post"
+                        android:textAllCaps="false"
+                        app:layout_constraintBottom_toBottomOf="@id/imgPick"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/imgPick" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
-            <LinearLayout
-                android:orientation="vertical"
-                android:padding="10dp"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerFeed"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/items_post" />
 
-                <EditText
-                    android:id="@+id/edtPost"
-                    android:hint="What are you thinking about today?"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textMultiLine"
-                    android:maxLines="4"
-                    android:minHeight="48dp"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="10dp">
-                <ImageView
-                    android:id="@+id/imgPick"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginTop="8dp"
-                    android:src="@drawable/daucong"
-                    android:scaleType="centerCrop"/>
-
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"/>
-                <Button
-                    android:id="@+id/btnPost"
-                    android:text="Post"
-                    android:layout_marginTop="5dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-                </LinearLayout>
-
-
-            </LinearLayout>
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-
-
-    <!-- DANH SÁCH POST -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerFeed"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

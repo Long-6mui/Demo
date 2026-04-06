@@ -26,7 +26,7 @@ import android.widget.Toast
 class FeedActivity : AppCompatActivity() {
 
     // ====== VIEW + AUTH + DATABASE LOCAL ======
-    private lateinit var imgAvatar: ImageView   // Avatar người dùng trên thanh đầu
+    private lateinit var avatarUser: ImageView   // Avatar người dùng trên thanh đầu
     lateinit var auth: FirebaseAuth            // Xác thực người dùng
     lateinit var dbHelper: DatabaseHelper      // Lấy dữ liệu user từ SQLite
 
@@ -59,28 +59,34 @@ class FeedActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feed)
 
+
         // ====== ÁNH XẠ VIEW ======
         recyclerView = findViewById(R.id.recyclerFeed)
         edtPost = findViewById(R.id.edtPost)
         btnPost = findViewById(R.id.btnPost)
         imgPick = findViewById(R.id.imgPick)
 
-        // ====== ĐỒNG BỘ AVATAR TỪ SQLITE LÊN UI ======
-        dbHelper = DatabaseHelper(this)
-        imgAvatar = findViewById(R.id.avatarUser)
+        // ====== ĐỒNG BỘ AVATAR TỪ FIREBASE LÊN UI ======
+        avatarUser = findViewById(R.id.avatarUser)
         auth = FirebaseAuth.getInstance()
 
-        val user = auth.currentUser
-        if (user != null) {
-            val userData = dbHelper.getUserByUID(user.uid)
-            if (userData != null) {
-                if (userData.avatar.isEmpty()) {
-                    imgAvatar.setImageResource(R.drawable.avtque)
-                } else {
-                    Glide.with(this).load(userData.avatar).into(imgAvatar)
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            db.collection("Users").document(currentUser.uid).get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val avatarUrl = document.getString("avatar") ?: ""
+
+                        if (avatarUrl.isNotEmpty()) {
+                            avatarUser?.let { Glide.with(this)
+                                .load(avatarUrl)
+                                .placeholder(R.drawable.avtque)
+                                .into(it) }
+                        }
+                    }
                 }
-            }
         }
+
 
         // ====== TẠO 3 POST MẪU (CHỈ CHẠY 1 LẦN KHI LIST RỖNG) ======
 //        if(list.isEmpty()){
@@ -222,7 +228,8 @@ class FeedActivity : AppCompatActivity() {
                     name = postData["name"] as? String ?: "",
                     hoten = postData["hoten"] as? String ?: "",
                     content = postData["content"] as? String ?: "",
-                    likes = 0,
+                    // Thay đổi ở đây: Khởi tạo list rỗng cho bài viết mới
+                    likedBy = mutableListOf(),
                     imageUrl = postData["imageUrl"] as? String
                 )
 

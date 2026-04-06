@@ -21,6 +21,7 @@ import com.example.demo.Database.DatabaseHelper
 import kotlin.jvm.java
 import com.example.demo.R
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 
 
@@ -55,190 +56,131 @@ class PostAdapter(private val list: MutableList<Post>) :
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-
         val post = list[position]
+        val firestore = FirebaseFirestore.getInstance()
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val currentUserId = currentUser?.uid ?: ""
 
-        // Reset trước khi load
+        // --- 1. XỬ LÝ HIỂN THỊ USER (GIỮ NGUYÊN) ---
         holder.name.text = "Đang tải..."
         holder.imgAvatar.setImageResource(R.drawable.avtque)
 
-        // Hiển thị avatar, tên, nội dung, số like
-        val firestore = FirebaseFirestore.getInstance()
-
         if (!post.userId.isNullOrEmpty()) {
-            firestore.collection("Users")
-                .document(post.userId)
-                .get()
+            firestore.collection("Users").document(post.userId).get()
                 .addOnSuccessListener { document ->
                     if (document.exists()) {
                         val hoten = document.getString("hoten") ?: ""
-                        val name = document.getString("name") ?: ""           // username
+                        val name = document.getString("name") ?: ""
                         val avatarUrl = document.getString("avatar") ?: ""
-
-                        // Hiển thị tên (ưu tiên hoten, nếu rỗng thì lấy name)
                         holder.name.text = if (hoten.isNotEmpty()) hoten else name
-
-                        // Hiển thị avatar
                         if (avatarUrl.isNotEmpty()) {
-                            Glide.with(holder.itemView.context)
-                                .load(avatarUrl)
-                                .placeholder(R.drawable.avtque)
-                                .error(R.drawable.avtque)
-                                .into(holder.imgAvatar)
-                        } else {
-                            holder.imgAvatar.setImageResource(R.drawable.avtque)
+                            Glide.with(holder.itemView.context).load(avatarUrl)
+                                .placeholder(R.drawable.avtque).error(R.drawable.avtque).into(holder.imgAvatar)
                         }
                     } else {
-                        // Fallback nếu không tìm thấy user trong Firestore
                         holder.name.text = post.name ?: "Unknown User"
                     }
                 }
-                .addOnFailureListener {
-                    holder.name.text = post.name ?: "Unknown User"
-                    holder.imgAvatar.setImageResource(R.drawable.avtque)
-                }
-        }
-        else if (!post.name.isNullOrEmpty()) {
-            firestore.collection("Users")
-                .whereEqualTo("name", post.name)
-                .get()
-                .addOnSuccessListener { querySnapshot ->
-                    val document = querySnapshot.documents.firstOrNull()
-
-                    if (document != null) {
-                        val hoten = document.getString("hoten") ?: ""
-                        val username = document.getString("name") ?: ""
-                        val avatarUrl = document.getString("avatar") ?: ""
-
-                        holder.name.text = if (hoten.isNotEmpty()) hoten else username
-
-                        if (avatarUrl.isNotEmpty()) {
-                            Glide.with(holder.itemView.context)
-                                .load(avatarUrl)
-                                .placeholder(R.drawable.avtque)
-                                .error(R.drawable.avtque)
-                                .circleCrop()
-                                .into(holder.imgAvatar)
-                        } else {
-                            holder.imgAvatar.setImageResource(R.drawable.avtque)
-                        }
-                    } else {
-                        holder.name.text = post.name
-                    }
-                }
-                .addOnFailureListener {
-                    holder.name.text = post.name ?: "Unknown User"
-                    holder.imgAvatar.setImageResource(R.drawable.avtque)
-                }
         }
 
-
+        // --- 2. XỬ LÝ NỘI DUNG & ẢNH (GIỮ NGUYÊN) ---
         holder.content.text = post.content
-        holder.likes.text = "${post.likes} likes"
-
-        // Hiển thị ảnh post
         if (!post.imageUrl.isNullOrEmpty()) {
-
             holder.image.visibility = View.VISIBLE
-
-            Glide.with(holder.itemView.context)
-                .load(post.imageUrl)
-                .into(holder.image)
-
+            Glide.with(holder.itemView.context).load(post.imageUrl).into(holder.image)
         } else if (post.image != null) {
-
-            // Ảnh mẫu trong drawable
             holder.image.visibility = View.VISIBLE
+            Glide.with(holder.itemView.context).load(post.image).into(holder.image)
+        } else {
+            holder.image.visibility = View.GONE
+        }
 
-            Glide.with(holder.itemView.context)
-                .load(post.image)
-                .into(holder.image)
+        // --- 3. XỬ LÝ LIKE (PHẦN CẬP NHẬT MỚI) ---
+        // Hiển thị số lượng like từ danh sách likedBy
+        val likeCount = post.likedBy.size
+        holder.likes.text = "$likeCount likes"
+
+        // Kiểm tra xem User hiện tại đã like chưa
+        val isLiked = post.likedBy.contains(currentUserId)
+        if (isLiked) {
+            // Trạng thái ĐÃ LIKE
+            holder.likeBtn.text = "UnLike"
+
 
         } else {
-
-            holder.image.visibility = View.GONE
+            // Trạng thái CHƯA LIKE
+            holder.likeBtn.text = "Like"
 
         }
-
-        //Like
         holder.likeBtn.setOnClickListener {
-            post.likes++
+            if (currentUserId.isEmpty()) {
+                Toast.makeText(holder.itemView.context, "Vui lòng đăng nhập!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val postRef = firestore.collection("posts").document(post.id)
+
+            if (isLiked) {
+                // Nếu đã like -> Bỏ like (Xóa UID khỏi mảng)
+                post.likedBy.remove(currentUserId)
+                postRef.update("likedBy", FieldValue.arrayRemove(currentUserId))
+            } else {
+                // Nếu chưa like -> Thêm like (Thêm UID vào mảng)
+                post.likedBy.add(currentUserId)
+                postRef.update("likedBy", FieldValue.arrayUnion(currentUserId))
+            }
+            // Cập nhật giao diện ngay lập tức tại vị trí này
             notifyItemChanged(position)
         }
 
-
-
-        //Comment
+        // --- 4. COMMENT (GIỮ NGUYÊN) ---
         holder.commentBtn.setOnClickListener {
-
-            Toast.makeText(
-                holder.itemView.context,
-                "Click comment",
-                Toast.LENGTH_SHORT
-            ).show()
-
             val context = holder.itemView.context
             val intent = Intent(context, CommentActivity::class.java)
-            intent.putExtra("postId", post.id)  // post.id là id của bài viết hiện tại
+            intent.putExtra("postId", post.id)
             context.startActivity(intent)
         }
 
-        //Menu Edit/Delete
+        // --- 5. MENU EDIT/DELETE (GIỮ NGUYÊN) ---
         holder.btnMenu.setOnClickListener {
+            if (post.id.isEmpty()) {
+                Toast.makeText(holder.itemView.context, "Bài viết mẫu không thể chỉnh sửa", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
 
-            // nếu là bài mẫu thì không cho chỉnh sửa
-            if(post.id.isEmpty()){
-                Toast.makeText(
-                    holder.itemView.context,
-                    "Chỉ chỉnh sửa được bài bạn đăng",
-                    Toast.LENGTH_SHORT
-                ).show()
+            if (currentUser == null || post.userId != currentUser.uid) {
+                Toast.makeText(holder.itemView.context, "Bạn không có quyền chỉnh sửa", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             val popup = PopupMenu(holder.itemView.context, holder.btnMenu)
-
             popup.menu.add("Edit")
             popup.menu.add("Delete")
 
-            popup.setOnMenuItemClickListener {
-
-                //Delete post
-                if(it.title == "Delete"){
-
-                    val db = FirebaseFirestore.getInstance()
-
-                    db.collection("posts")
-                        .document(post.id)
-                        .delete()
-                        .addOnSuccessListener {
-
-                            val pos = holder.adapterPosition
-
-                            list.removeAt(pos)  // xóa khỏi list
-                            notifyItemRemoved(pos) // cập nhật RecyclerView
-
-                        }
-
+            popup.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.title) {
+                    "Delete" -> {
+                        firestore.collection("posts").document(post.id).delete()
+                            .addOnSuccessListener {
+                                val pos = holder.adapterPosition
+                                if (pos != RecyclerView.NO_POSITION) {
+                                    list.removeAt(pos)
+                                    notifyItemRemoved(pos)
+                                    Toast.makeText(holder.itemView.context, "Đã xóa", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                    }
+                    "Edit" -> {
+                        val intent = Intent(holder.itemView.context, EditPostActivity::class.java)
+                        intent.putExtra("postId", post.id)
+                        intent.putExtra("content", post.content)
+                        intent.putExtra("image", post.imageUrl)
+                        intent.putExtra("position", position)
+                        holder.itemView.context.startActivity(intent)
+                    }
                 }
-
-                //Edit Post
-                if(it.title == "Edit"){
-
-                    val intent = Intent(holder.itemView.context, EditPostActivity::class.java)
-
-                    intent.putExtra("postId", post.id)
-                    intent.putExtra("content", post.content)
-                    intent.putExtra("image", post.imageUrl)
-                    intent.putExtra("position", position)
-
-                    holder.itemView.context.startActivity(intent)
-
-                }
-
                 true
             }
-
             popup.show()
         }
 

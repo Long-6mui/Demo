@@ -37,7 +37,7 @@
         android:layout_height="40dp"
         android:layout_gravity="end"
         android:layout_marginTop="8dp"
-        android:src="@drawable/daucong"
+        android:src="@drawable/ic_image"
         android:contentDescription="Chọn ảnh"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:padding="8dp"/>
