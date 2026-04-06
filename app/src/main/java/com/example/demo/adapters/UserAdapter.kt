@@ -7,13 +7,19 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.demo.R
+import com.google.firebase.Timestamp
+import java.util.Date
 
 data class UserAdmin(
     val id: String = "",
+    val avatar: String = "",
     val nameUser: String = "",
     val email: String = "",
-    val status: String = "Active" // Active hoặc Blocked
+    val status: String = "Active", // Active hoặc Blocked
+    val isOnline: Boolean = false,
+    val lastSeen: Timestamp? = null
 )
 
 class UserAdapter(
@@ -28,6 +34,7 @@ class UserAdapter(
         val txtStatus: TextView = view.findViewById(R.id.txtStatus)
         val btnBlock: TextView = view.findViewById(R.id.btnBlock)
         val btnDelete: TextView = view.findViewById(R.id.btnDeleteUser)
+        val imgUserAva: ImageView = view.findViewById(R.id.imgUserAva)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -39,11 +46,35 @@ class UserAdapter(
         val user = userList[position]
         holder.txtName.text = user.nameUser
         holder.txtEmail.text = user.email
-        holder.txtStatus.text = if (user.status == "Active") "🟢 Hoạt động" else "🔴 Đã khóa"
-        holder.txtStatus.setTextColor(if (user.status == "Active") Color.GREEN else Color.RED)
+
+        // Load Avatar
+        Glide.with(holder.itemView.context)
+            .load(user.avatar)
+            .placeholder(R.drawable.avtque)
+            .error(R.drawable.avtque)
+            .into(holder.imgUserAva)
+
+        // Logic kiểm tra Online thực tế (ngưỡng 2 phút)
+        val currentTime = System.currentTimeMillis()
+        val lastSeenTime = user.lastSeen?.toDate()?.time ?: 0L
+        val timeout = 1 * 60 * 1000L
+        
+        val isActuallyOnline = user.isOnline && (currentTime - lastSeenTime < timeout)
+
+        if (user.status == "Blocked") {
+            holder.txtStatus.text = "🔴 Đã khóa"
+            holder.txtStatus.setTextColor(Color.RED)
+        } else {
+            if (isActuallyOnline) {
+                holder.txtStatus.text = "🟢 Đang online"
+                holder.txtStatus.setTextColor(Color.parseColor("#4CAF50"))
+            } else {
+                holder.txtStatus.text = "⚪ Ngoại tuyến"
+                holder.txtStatus.setTextColor(Color.GRAY)
+            }
+        }
         
         holder.btnBlock.text = if (user.status == "Active") "Khóa" else "Mở khóa"
-
         holder.btnBlock.setOnClickListener { onBlockClick(user, position) }
         holder.btnDelete.setOnClickListener { onDeleteClick(user, position) }
     }

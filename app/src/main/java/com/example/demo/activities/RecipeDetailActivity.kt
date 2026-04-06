@@ -4,14 +4,17 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.bumptech.glide.Glide
 import com.example.demo.R
 
-class RecipeDetailActivity : AppCompatActivity() {
+class RecipeDetailActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_recipe_detail)
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver())
 
         val imgRecipe = findViewById<ImageView>(R.id.imgRecipe)
         val txtRecipeName = findViewById<TextView>(R.id.txtRecipeName)

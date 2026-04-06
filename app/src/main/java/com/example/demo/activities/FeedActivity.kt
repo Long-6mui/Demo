@@ -22,14 +22,13 @@ import com.cloudinary.android.callback.UploadCallback
 import com.cloudinary.android.callback.ErrorInfo
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.ProcessLifecycleOwner
 
 
-
-class FeedActivity : AppCompatActivity() {
+class FeedActivity : BaseActivity() {
 
     // ====== VIEW + AUTH + DATABASE LOCAL ======
     private lateinit var avatarUser: ImageView   // Avatar người dùng trên thanh đầu
-    lateinit var auth: FirebaseAuth            // Xác thực người dùng
     lateinit var dbHelper: DatabaseHelper      // Lấy dữ liệu user từ SQLite
 
     lateinit var recyclerView: RecyclerView    // Danh sách bài viết (feed)
@@ -45,7 +44,6 @@ class FeedActivity : AppCompatActivity() {
     }
 
     // ====== KẾT NỐI FIREBASE ======
-    val db = FirebaseFirestore.getInstance()
     val storage = FirebaseStorage.getInstance()
 
     var imageUri: Uri? = null                 // Lưu ảnh người dùng chọn
@@ -61,6 +59,8 @@ class FeedActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feed)
 
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver())
+
 
         // ====== ÁNH XẠ VIEW ======
         recyclerView = findViewById(R.id.recyclerFeed)
@@ -70,7 +70,6 @@ class FeedActivity : AppCompatActivity() {
 
         // ====== ĐỒNG BỘ AVATAR TỪ FIREBASE LÊN UI ======
         avatarUser = findViewById(R.id.avatarUser)
-        auth = FirebaseAuth.getInstance()
 
         val currentUser = auth.currentUser
         if (currentUser != null) {

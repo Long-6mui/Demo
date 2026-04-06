@@ -152,44 +152,82 @@ class PostAdapter(private val list: MutableList<Post>) :
         // --- 5. MENU EDIT/DELETE (GIỮ NGUYÊN) ---
         holder.btnMenu.setOnClickListener {
             if (post.id.isEmpty()) {
-                Toast.makeText(holder.itemView.context, "Bài viết mẫu không thể chỉnh sửa", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    holder.itemView.context,
+                    "Bài viết mẫu không thể chỉnh sửa",
+                    Toast.LENGTH_SHORT
+                ).show()
                 return@setOnClickListener
             }
 
-            if (currentUser == null || post.userId != currentUser.uid) {
-                Toast.makeText(holder.itemView.context, "Bạn không có quyền chỉnh sửa", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
+            val context = holder.itemView.context
+            val db = FirebaseFirestore.getInstance()
+            val currentUser = FirebaseAuth.getInstance().currentUser
 
-            val popup = PopupMenu(holder.itemView.context, holder.btnMenu)
-            popup.menu.add("Edit")
-            popup.menu.add("Delete")
+            if (currentUser == null) return@setOnClickListener
 
-            popup.setOnMenuItemClickListener { menuItem ->
-                when (menuItem.title) {
-                    "Delete" -> {
-                        firestore.collection("posts").document(post.id).delete()
-                            .addOnSuccessListener {
-                                val pos = holder.adapterPosition
-                                if (pos != RecyclerView.NO_POSITION) {
-                                    list.removeAt(pos)
-                                    notifyItemRemoved(pos)
-                                    Toast.makeText(holder.itemView.context, "Đã xóa", Toast.LENGTH_SHORT).show()
-                                }
+            // Lấy role của user hiện tại từ Firestore
+            db.collection("Users").document(currentUser.uid).get().addOnSuccessListener { userDoc ->
+                val role = userDoc.getString("role") ?: "user"
+                val isAdmin = role == "admin"
+                val isOwner = post.userId == currentUser.uid
+
+                // Nếu là Admin HOẶC là chủ bài viết thì mới cho hiện Menu
+                if (isAdmin || isOwner) {
+                    val popup = PopupMenu(context, holder.btnMenu)
+
+                    // Chỉ chủ bài viết mới được Edit
+                    if (isOwner) {
+                        popup.menu.add("Edit")
+                    }
+
+                    // Cả Admin và chủ bài viết đều có quyền Delete
+                    popup.menu.add("Delete")
+
+                    popup.setOnMenuItemClickListener { menuItem ->
+                        when (menuItem.title) {
+                            "Delete" -> {
+                                AlertDialog.Builder(context)
+                                    .setTitle("Xác nhận xóa")
+                                    .setMessage("Bạn có chắc chắn muốn xóa bài viết này?")
+                                    .setPositiveButton("Xóa") { _, _ ->
+                                        db.collection("posts").document(post.id).delete()
+                                            .addOnSuccessListener {
+                                                val pos = holder.adapterPosition
+                                                if (pos != RecyclerView.NO_POSITION) {
+                                                    list.removeAt(pos)
+                                                    notifyItemRemoved(pos)
+                                                    Toast.makeText(
+                                                        context,
+                                                        "Đã xóa bài viết",
+                                                        Toast.LENGTH_SHORT
+                                                    ).show()
+                                                }
+                                            }
+                                    }
+                                    .setNegativeButton("Hủy", null)
+                                    .show()
                             }
+
+                            "Edit" -> {
+                                val intent = Intent(context, EditPostActivity::class.java)
+                                intent.putExtra("postId", post.id)
+                                intent.putExtra("content", post.content)
+                                intent.putExtra("image", post.imageUrl)
+                                context.startActivity(intent)
+                            }
+                        }
+                        true
                     }
-                    "Edit" -> {
-                        val intent = Intent(holder.itemView.context, EditPostActivity::class.java)
-                        intent.putExtra("postId", post.id)
-                        intent.putExtra("content", post.content)
-                        intent.putExtra("image", post.imageUrl)
-                        intent.putExtra("position", position)
-                        holder.itemView.context.startActivity(intent)
-                    }
+                    popup.show()
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Bạn không có quyền thực hiện thao tác này",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
-                true
             }
-            popup.show()
         }
 
     }

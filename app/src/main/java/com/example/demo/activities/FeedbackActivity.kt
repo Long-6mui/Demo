@@ -6,13 +6,16 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.example.demo.R
 
-class FeedbackActivity : AppCompatActivity() {
+class FeedbackActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_feedback)
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver())
 
         val btnBack = findViewById<ImageButton>(R.id.btnBackFeedback)
         val btnSend = findViewById<Button>(R.id.btnSendFeedback)

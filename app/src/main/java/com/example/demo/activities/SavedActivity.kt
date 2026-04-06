@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demo.R
@@ -13,18 +14,18 @@ import com.example.demo.Recipe
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class SavedActivity : AppCompatActivity() {
+class SavedActivity : BaseActivity() {
 
     private lateinit var rvSavedRecipes: RecyclerView
     private lateinit var etSearch: EditText
     private var fullList = mutableListOf<Recipe>()
     private lateinit var adapter: SavedAdapter
-    private val db = FirebaseFirestore.getInstance()
-    private val auth = FirebaseAuth.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_saved)
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver())
 
         rvSavedRecipes = findViewById(R.id.rvSavedRecipes)
         etSearch = findViewById(R.id.etSearchSaved)

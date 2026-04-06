@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.ImageView
 import android.view.View
 import android.widget.TextView
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -19,21 +20,19 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 
-class ProfileActivity : AppCompatActivity() {
+class ProfileActivity : BaseActivity() {
 
     private var imgAvatar: ImageView? = null
     private var txtUserID: TextView? = null
     private var txtUserName: TextView? = null
-    private lateinit var auth: FirebaseAuth
-    private val db = FirebaseFirestore.getInstance()
     private lateinit var editProfileLauncher: androidx.activity.result.ActivityResultLauncher<Intent>
 
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        
-        auth = FirebaseAuth.getInstance()
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver())
+
 
         editProfileLauncher = registerForActivityResult(
             androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
@@ -69,31 +68,32 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun setupAdminUI() {
         val btnBack         = findViewById<ImageButton>(R.id.btnBack)
-        val tvName          = findViewById<TextView>(R.id.txtUserName)
-        val tvEmail         = findViewById<TextView>(R.id.txtUserID)
         val btnAddRecipe    = findViewById<View>(R.id.btnAddRecipe)
         val btnEditRecipe   = findViewById<View>(R.id.btnEditRecipe)
         val btnManageUser   = findViewById<View>(R.id.btnManageUser)
         val btnLogout       = findViewById<View>(R.id.btnLogout)
 
-        val uid = auth.currentUser?.uid
-        if (uid != null) {
-            db.collection("Users").document(uid).get()
-                .addOnSuccessListener { doc ->
-                    tvName?.text = doc.getString("name") ?: "Admin"
-                    tvEmail?.text = doc.getString("email") ?: "admin@demo.com"
-                }
-        }
 
         btnBack?.setOnClickListener { finish() }
         btnAddRecipe?.setOnClickListener { startActivity(Intent(this, AddRecipeActivity::class.java)) }
         btnEditRecipe?.setOnClickListener { startActivity(Intent(this, EditRecipeActivity::class.java)) }
         btnManageUser?.setOnClickListener { startActivity(Intent(this, ManageUserActivity::class.java)) }
-        
+
         btnLogout?.setOnClickListener {
-            auth.signOut()
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
+            val uid = auth.currentUser?.uid
+            if (uid != null) {
+                // Cập nhật Offline trước khi SignOut
+                db.collection("Users").document(uid).update("isOnline", false)
+                    .addOnCompleteListener {
+                        auth.signOut()
+                        startActivity(Intent(this, LoginActivity::class.java))
+                        finish()
+                    }
+            } else {
+                auth.signOut()
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }
         }
     }
 

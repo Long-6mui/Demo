@@ -3,15 +3,18 @@ package com.example.demo.activities
 import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demo.R
 
-class NotificationActivity : AppCompatActivity() {
+class NotificationActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notification)
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver())
 
         // Nút quay lại
         val btnBack = findViewById<ImageButton>(R.id.btnBackNotification)

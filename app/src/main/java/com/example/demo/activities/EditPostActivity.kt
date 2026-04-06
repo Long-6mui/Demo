@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.bumptech.glide.Glide
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
@@ -19,7 +20,7 @@ import com.example.demo.R
 import com.google.firebase.firestore.FirebaseFirestore
 
 // Activity chỉnh sửa bài viết
-class EditPostActivity : AppCompatActivity() {
+class EditPostActivity : BaseActivity() {
 
     private lateinit var edtContent: EditText   // ô nhập nội dung bài viết
     private lateinit var imgPost: ImageView     // hiển thị ảnh bài viết
@@ -29,7 +30,6 @@ class EditPostActivity : AppCompatActivity() {
     private var postId: String? = null          // id bài viết cần edit
     private var position: Int = -1              // vị trí bài viết trong FeedActivity (dùng để cập nhật UI ngay)
 
-    private val db = FirebaseFirestore.getInstance() // Firestore
 
     // ActivityResultContract chọn ảnh mới
     private val pickImage =
@@ -44,6 +44,8 @@ class EditPostActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_post)
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver())
 
         // Liên kết UI
         edtContent = findViewById(R.id.edtEditPost)

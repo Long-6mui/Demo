@@ -67,4 +67,7 @@ dependencies {
     // Cloudinary
     implementation("com.cloudinary:cloudinary-android:2.3.1")
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
+
+    //Lifecycle
+    implementation("androidx.lifecycle:lifecycle-process:2.8.0")
 }

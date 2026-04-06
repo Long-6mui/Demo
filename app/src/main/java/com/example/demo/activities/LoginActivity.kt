@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.example.demo.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -20,6 +21,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver())
 
         auth = FirebaseAuth.getInstance()
 
@@ -88,6 +91,14 @@ class LoginActivity : AppCompatActivity() {
             .addOnSuccessListener { doc ->
 
                 if (doc.exists()) {
+                    //Kiểm tra tài khoản có bị khóa không
+                    val status = doc.getString("status") ?: "Active"
+                    if (status == "Blocked") {
+                        auth.signOut() // Đăng xuất ngay lập tức
+                        Toast.makeText(this, "Tài khoản của bạn đã bị khóa!", Toast.LENGTH_LONG).show()
+                        return@addOnSuccessListener // Dừng lại, không chuyển trang
+                    }
+
                     val role = doc.getString("role") ?: "user"
                     Log.d("ROLE_RESULT", "Role: $role")
 

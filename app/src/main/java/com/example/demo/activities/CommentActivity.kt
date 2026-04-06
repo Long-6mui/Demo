@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cloudinary.android.MediaManager
@@ -16,7 +17,7 @@ import com.example.demo.R
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
-class CommentActivity : AppCompatActivity() {
+class CommentActivity : BaseActivity() {
 
     // UI components
     private lateinit var edtComment: EditText // ô nhập nội dung comment
@@ -25,8 +26,6 @@ class CommentActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView // danh sách comment
 
     // Firebase
-    private lateinit var auth: FirebaseAuth // quản lý user đăng nhập
-    private val db = FirebaseFirestore.getInstance() // Firestore
     private var postId: String = "" // id bài viết hiện tại, để load comment đúng bài
 
     // Xử lý ảnh
@@ -56,6 +55,8 @@ class CommentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_comment)
 
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver())
+
         // Liên kết UI
         edtComment = findViewById(R.id.edtComment)
         btnSend = findViewById(R.id.btnSend)
@@ -63,7 +64,6 @@ class CommentActivity : AppCompatActivity() {
         recyclerView = findViewById(R.id.recyclerComment)
 
         // Firebase Auth
-        auth = FirebaseAuth.getInstance()
         postId = intent.getStringExtra("postId") ?: "" // lấy postId từ intent
 
         // Adapter, callback edit ảnh

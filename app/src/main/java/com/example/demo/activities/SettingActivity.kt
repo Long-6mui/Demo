@@ -10,9 +10,10 @@ import android.widget.Switch
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.example.demo.R
 
-class SettingActivity : AppCompatActivity() {
+class SettingActivity : BaseActivity() {
 
     private lateinit var switchNotification: Switch
     private lateinit var switchDarkMode: Switch
@@ -21,6 +22,8 @@ class SettingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver())
 
         val btnBack = findViewById<ImageButton>(R.id.btnBackSetting)
         val btnChangePassword = findViewById<LinearLayout>(R.id.menuChangePassword)

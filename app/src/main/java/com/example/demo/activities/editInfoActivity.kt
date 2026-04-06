@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.bumptech.glide.Glide
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
@@ -24,7 +25,7 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.util.Calendar
 
-class editInfoActivity : AppCompatActivity() {
+class editInfoActivity : BaseActivity() {
 
     private lateinit var imgAvatar: ImageView
     private var imageUri: Uri? = null
@@ -38,7 +39,6 @@ class editInfoActivity : AppCompatActivity() {
     lateinit var btnUpdate: Button
 
     lateinit var database: FirebaseFirestore
-    lateinit var auth: FirebaseAuth
     lateinit var storage: FirebaseStorage
     lateinit var storageRef: StorageReference
 
@@ -56,6 +56,8 @@ class editInfoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_edit_info)
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver())
 
         //chọn avatar
         imgAvatar = findViewById(R.id.imgAvatar)
@@ -96,7 +98,6 @@ class editInfoActivity : AppCompatActivity() {
         btnUpdate = findViewById(R.id.btnUpdate)
 
         database = FirebaseFirestore.getInstance()
-        auth = FirebaseAuth.getInstance()
         storage = FirebaseStorage.getInstance()
         storageRef = storage.reference
 
