@@ -23,6 +23,8 @@ import com.cloudinary.android.callback.ErrorInfo
 import android.util.Log
 import android.widget.Toast
 
+
+
 class FeedActivity : AppCompatActivity() {
 
     // ====== VIEW + AUTH + DATABASE LOCAL ======
@@ -154,6 +156,9 @@ class FeedActivity : AppCompatActivity() {
                         "hoten" to hoten,          // Lưu họ tên để hiển thị đẹp
                         "content" to content,
                         "likes" to 0,
+                        "timestamp" to com.google.firebase.firestore.FieldValue.serverTimestamp()
+                    // QUAN TRỌNG: Mốc thời gian thực tế
+
                     )
 
                     // Xử lý đăng bài
@@ -238,6 +243,8 @@ class FeedActivity : AppCompatActivity() {
                 adapter.notifyDataSetChanged()
 
                 Toast.makeText(this, "Đăng bài thành công!", Toast.LENGTH_SHORT).show()
+                // Chỉ cần gọi hàm này, nó sẽ xóa sạch list và tải lại cả bài mới lẫn cũ
+                loadPosts()
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Đăng bài thất bại: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -245,27 +252,40 @@ class FeedActivity : AppCompatActivity() {
             }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Mỗi khi quay lại trang Feed (ví dụ sau khi sửa bài ở Profile), load lại dữ liệu
+        loadPosts()
+    }
+
     // ====== LOAD POST TỪ FIRESTORE VÀ ADD THÊM VÀO LIST ======
-    fun loadPosts(){
+    fun loadPosts() {
 
         db.collection("posts")
+
+            // .orderBy giúp bài mới (thời gian lớn hơn) nằm trên bài cũ
+            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+
             .get()
             .addOnSuccessListener { result ->
+                // Xóa sạch danh sách cũ để nạp lại từ đầu
+                list.clear()
 
                 for (doc in result) {
                     val post = doc.toObject(Post::class.java)
                     post.id = doc.id
 
-                    // Tránh add trùng
-                    val exists = list.any { it.id == post.id }
-                    if(!exists){
-                        list.add(post)
-                    }
+                    // Nạp bài viết vào list (lúc này chắc chắn là dữ liệu mới nhất từ server)
+                    list.add(post)
                 }
 
                 adapter.notifyDataSetChanged()
             }
+            .addOnFailureListener { e ->
+                Log.e("FeedActivity", "Lỗi tải bài viết: ${e.message}")
+            }
     }
+
 
 
     // Hàm lưu bài viết không có ảnh

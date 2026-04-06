@@ -1,6 +1,8 @@
 package com.example.demo.activities
 
 import android.media.Image
+import com.google.firebase.firestore.ServerTimestamp
+import com.google.firebase.Timestamp
 
 data class Post(
     var id: String = "",
@@ -12,8 +14,16 @@ data class Post(
     // Chuyển đổi từ Int sang List để quản lý danh sách UID
     var likedBy: MutableList<String> = mutableListOf(),
     var image: String? = null,
-    var imageUrl: String? = null
+    var imageUrl: String? = null,
+
+    @ServerTimestamp
+    var timestamp: Timestamp? = null
+
+
 ) {
+    // Constructor mặc định bắt buộc phải có đủ các tham số khớp với bên trên
+    constructor() : this("", "", 0, "", "", "", mutableListOf(), null, null, null)
+
     // Thuận tiện để lấy số lượng like hiển thị lên UI
     val likesCount: Int
         get() = likedBy.size
