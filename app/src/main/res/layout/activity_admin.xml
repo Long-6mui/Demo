@@ -16,7 +16,7 @@
         <!-- HEADER -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="230dp"
+            android:layout_height="250dp"
             android:background="#1A3A2A">
 
 
@@ -38,7 +38,7 @@
                         android:id="@+id/imgAvatar"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:src="@drawable/ava1"
+                        android:src="@drawable/avtque"
                         android:scaleType="centerCrop"/>
 
                 </androidx.cardview.widget.CardView>
@@ -60,6 +60,7 @@
                     android:text="admin@email.com"
                     android:textColor="#CCFFFFFF"
                     android:textSize="13sp"/>
+
 
             </LinearLayout>
 
@@ -237,6 +238,33 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnEditProfile"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@color/colorSurface">
+                <LinearLayout android:gravity="center" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+                    <TextView android:textSize="28sp" android:text="💬" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    <TextView android:textColor="@color/colorOnSurface" android:text="Chỉnh sửa thông tin" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/btnNewFeed"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@color/colorSurface">
+                <LinearLayout android:gravity="center" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+                    <TextView android:textSize="28sp" android:text="💬" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                    <TextView android:textColor="@color/colorOnSurface" android:text="Bài đăng" android:layout_marginTop="8dp" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
         </GridLayout>
 
         <!-- ĐĂNG XUẤT -->

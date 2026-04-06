@@ -26,6 +26,7 @@ class ProfileActivity : AppCompatActivity() {
     private var txtUserName: TextView? = null
     private lateinit var auth: FirebaseAuth
     private val db = FirebaseFirestore.getInstance()
+    private lateinit var editProfileLauncher: androidx.activity.result.ActivityResultLauncher<Intent>
 
 
 
@@ -33,6 +34,14 @@ class ProfileActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         
         auth = FirebaseAuth.getInstance()
+
+        editProfileLauncher = registerForActivityResult(
+            androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                reloadUserProfile()        // Cập nhật lại thông tin
+            }
+        }
 
         val uid = auth.currentUser?.uid
         if (uid == null) {
@@ -187,12 +196,8 @@ class ProfileActivity : AppCompatActivity() {
                 finish()
             }
             editProfile?.setOnClickListener {
-                startActivity(
-                    Intent(
-                        this,
-                        editInfoActivity::class.java
-                    )
-                )
+                val intent = Intent(this, editInfoActivity::class.java)
+                editProfileLauncher.launch(intent)
             }
             menuFeedback?.setOnClickListener {
                 startActivity(
@@ -216,4 +221,76 @@ class ProfileActivity : AppCompatActivity() {
                 }
             }
         }
+
+
+
+
+    // Thêm hàm reload thông tin (sẽ gọi lại khi quay về từ edit)
+    private fun reloadUserProfile() {
+        val currentUser = auth.currentUser ?: return
+
+        // Reload thông tin cá nhân
+        db.collection("Users").document(currentUser.uid)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val hoten = document.getString("hoten") ?: ""
+                    val name = document.getString("name") ?: ""
+                    val avatarUrl = document.getString("avatar") ?: ""
+
+                    txtUserName?.text = if (hoten.isNotEmpty()) hoten else name
+                    txtUserID?.text = name
+
+                    if (avatarUrl.isNotEmpty()) {
+                        imgAvatar?.let {
+                            Glide.with(this).load(avatarUrl)
+                                .placeholder(R.drawable.avtque)
+                                .into(it)
+                        }
+                    }
+                }
+            }
+        loadMyPosts()
     }
+
+    private fun loadMyPosts() {
+        val recyclerMyPosts = findViewById<RecyclerView>(R.id.recyclerMyPosts) ?: return
+        val txtNoPost = findViewById<TextView>(R.id.txtNoPost) ?: return
+        val txtCountPosts = findViewById<TextView>(R.id.txtCountPosts)
+
+        val currentUser = auth.currentUser ?: return
+
+        db.collection("posts")
+            .whereEqualTo("userId", currentUser.uid)
+            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .get()
+            .addOnSuccessListener { documents ->
+                val postList = mutableListOf<Post>()
+
+                if (documents.isEmpty) {
+                    txtNoPost.visibility = View.VISIBLE
+                    recyclerMyPosts.visibility = View.GONE
+                } else {
+                    txtNoPost.visibility = View.GONE
+                    recyclerMyPosts.visibility = View.VISIBLE
+
+                    for (document in documents) {
+                        val post = document.toObject(Post::class.java)
+                        post.id = document.id
+                        postList.add(post)
+                    }
+                }
+
+                // Cập nhật adapter
+                val adapter = recyclerMyPosts.adapter as? PostAdapter
+                adapter?.updatePosts(postList)   // dùng hàm mới thêm
+
+                // Cập nhật số lượng bài viết
+                txtCountPosts?.text = postList.size.toString()
+            }
+            .addOnFailureListener { e ->
+                Log.e("ProfileActivity", "Lỗi load bài viết", e)
+            }
+    }
+
+}

@@ -187,4 +187,10 @@ class PostAdapter(private val list: MutableList<Post>) :
     }
 
     override fun getItemCount(): Int = list.size
+
+    fun updatePosts(newPosts: List<Post>) {
+        list.clear()
+        list.addAll(newPosts)
+        notifyDataSetChanged()
+    }
 }
