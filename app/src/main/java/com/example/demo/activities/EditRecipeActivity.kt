@@ -9,7 +9,6 @@ import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.demo.Database.DatabaseHelper
 import com.example.demo.R
 import com.example.demo.Recipe
 import com.example.demo.adapters.ManageRecipeAdapter
@@ -20,15 +19,12 @@ class EditRecipeActivity : AppCompatActivity() {
     private lateinit var adapter: ManageRecipeAdapter
     private val recipeList = mutableListOf<Recipe>()
     private val db = FirebaseFirestore.getInstance()
-    private lateinit var dbHelper: DatabaseHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_recipe)
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver())
-
-        dbHelper = DatabaseHelper(this)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbarManage)
         toolbar.setNavigationOnClickListener { finish() }
@@ -78,14 +74,10 @@ class EditRecipeActivity : AppCompatActivity() {
             .setTitle("Xóa công thức")
             .setMessage("Bạn có chắc chắn muốn xóa món '${recipe.name}' không?")
             .setPositiveButton("Xóa") { _, _ ->
-                // 1. Xóa trên Firebase
+                // Xóa trên Firebase
                 db.collection("recipes").document(recipe.id)
                     .delete()
                     .addOnSuccessListener {
-                        // 2. Xóa trên SQLite (Dùng tên món vì SQLite của bạn đang quản lý theo tên/id int)
-                        // Bạn nên có hàm deleteRecipeByName hoặc xóa theo ID nếu đã đồng bộ
-                        dbHelper.deleteSavedRecipeByName(recipe.name) 
-                        
                         adapter.removeItem(position)
                         Toast.makeText(this, "✅ Đã xóa hoàn toàn!", Toast.LENGTH_SHORT).show()
                     }
