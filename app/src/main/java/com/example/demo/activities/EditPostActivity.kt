@@ -65,22 +65,20 @@ class EditPostActivity : BaseActivity() {
         edtContent.setText(content) // hiển thị nội dung cũ
 
         // Hiển thị ảnh cũ (nếu có)
+        // Trong onCreate, thay đổi đoạn check imageRes cũ:
         if (imageRes.isNotEmpty()) {
-            imgPost.visibility = View.VISIBLE
+            // Nếu có ảnh cũ, load nó lên
             if (imageRes.startsWith("http")) {
-                // Nếu là URL Cloudinary → dùng Glide load ảnh
-                Glide.with(this)
-                    .load(imageRes)
-                    .into(imgPost)
+                Glide.with(this).load(imageRes).into(imgPost)
             } else {
-                // Nếu là URI cục bộ → hiển thị trực tiếp
                 imgPost.setImageURI(Uri.parse(imageRes))
             }
         } else {
-            imgPost.visibility = View.GONE
+            // Nếu bài viết gốc không có ảnh, hiển thị một ảnh mặc định (placeholder)
+            imgPost.setImageResource(R.drawable.ic_image)
         }
 
-        // Chọn ảnh mới khi click vào ImageView
+// Luôn cho phép click vào ảnh để chọn ảnh mới
         imgPost.setOnClickListener {
             pickImage.launch("image/*")
         }

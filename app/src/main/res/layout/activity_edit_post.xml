@@ -34,12 +34,22 @@
         android:layout_height="wrap_content"
         android:hint="Edit content"/>
 
-    <ImageView
-        android:id="@+id/imgEditPost"
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginTop="20dp"
-        android:scaleType="centerCrop"/>
+        android:background="#F0F0F0">
+
+        <ImageView
+            android:id="@+id/imgEditPost"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_image"
+            android:contentDescription="Click to add/change photo" />
+
+    </FrameLayout>
 
     <Button
         android:id="@+id/btnSaveEdit"
