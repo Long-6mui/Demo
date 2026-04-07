@@ -32,9 +32,9 @@ class SavedActivity : BaseActivity() {
         etSearch = findViewById(R.id.etSearchSaved)
         val btnBack = findViewById<ImageButton>(R.id.btnBackSaved)
 
-        // Xử lý nút Back
         btnBack?.setOnClickListener {
-            finish()
+            // Kết thúc Activity này để quay lại màn hình trước đó
+            onBackPressedDispatcher.onBackPressed()
         }
         
         rvSavedRecipes.layoutManager = LinearLayoutManager(this)
@@ -43,25 +43,27 @@ class SavedActivity : BaseActivity() {
         setupSearch()
     }
 
+    // Trong SavedActivity.kt
     private fun loadSavedFromFirebase() {
         val userId = auth.currentUser?.uid ?: return
 
+        // Thay .addSnapshotListener bằng .get() để tránh tự động load lại khi đang xóa
         db.collection("Users").document(userId)
             .collection("SavedRecipes")
-            .addSnapshotListener { snapshots, e ->
-                if (e != null) {
-                    Toast.makeText(this, "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show()
-                    return@addSnapshotListener
-                }
-
+            .get()
+            .addOnSuccessListener { snapshots ->
                 fullList.clear()
                 snapshots?.forEach { doc ->
                     val recipe = doc.toObject(Recipe::class.java).copy(id = doc.id)
                     fullList.add(recipe)
                 }
-                
+
+                // Khởi tạo adapter một lần
                 adapter = SavedAdapter(fullList, true)
                 rvSavedRecipes.adapter = adapter
+            }
+            .addOnFailureListener {
+                Toast.makeText(this, "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show()
             }
     }
 

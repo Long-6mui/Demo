@@ -43,13 +43,12 @@ class SavedAdapter(
 
         holder.tvName.text = recipe.name
         holder.tvInfo.text = recipe.description
-        
+
         Glide.with(context)
             .load(recipe.image)
             .placeholder(R.drawable.choco)
             .into(holder.imgRecipe)
 
-        // Click xem chi tiết
         holder.itemView.setOnClickListener {
             val intent = Intent(context, RecipeDetailActivity::class.java)
             intent.putExtra("recipe_name", recipe.name)
@@ -64,14 +63,18 @@ class SavedAdapter(
         if (isSavedScreen) {
             holder.btnAction.setImageResource(R.drawable.ic_delete)
             holder.btnAction.setOnClickListener {
-                db.collection("Users").document(userId)
-                    .collection("SavedRecipes").document(recipe.id)
-                    .delete()
-                    .addOnSuccessListener {
-                        recipeList.removeAt(holder.adapterPosition)
-                        notifyItemRemoved(holder.adapterPosition)
-                        Toast.makeText(context, "Đã xóa!", Toast.LENGTH_SHORT).show()
-                    }
+                val currentPos = holder.bindingAdapterPosition
+                if (currentPos != RecyclerView.NO_POSITION) {
+                    db.collection("Users").document(userId)
+                        .collection("SavedRecipes").document(recipe.id)
+                        .delete()
+                        .addOnSuccessListener {
+                            recipeList.removeAt(currentPos)
+                            notifyItemRemoved(currentPos)
+                            notifyItemRangeChanged(currentPos, recipeList.size)
+                            Toast.makeText(context, "Đã xóa!", Toast.LENGTH_SHORT).show()
+                        }
+                }
             }
         } else {
             db.collection("Users").document(userId)
@@ -91,13 +94,15 @@ class SavedAdapter(
 
                 docRef.get().addOnSuccessListener { doc ->
                     if (doc.exists()) {
-                        docRef.delete()
-                        holder.btnAction.setImageResource(R.drawable.ic_heart_outline)
-                        Toast.makeText(context, "Đã bỏ lưu!", Toast.LENGTH_SHORT).show()
+                        docRef.delete().addOnSuccessListener {
+                            holder.btnAction.setImageResource(R.drawable.ic_heart_outline)
+                            Toast.makeText(context, "Đã bỏ lưu!", Toast.LENGTH_SHORT).show()
+                        }
                     } else {
-                        docRef.set(recipe)
-                        holder.btnAction.setImageResource(R.drawable.ic_heart_filled)
-                        Toast.makeText(context, "Đã lưu!", Toast.LENGTH_SHORT).show()
+                        docRef.set(recipe).addOnSuccessListener {
+                            holder.btnAction.setImageResource(R.drawable.ic_heart_filled)
+                            Toast.makeText(context, "Đã lưu!", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             }
