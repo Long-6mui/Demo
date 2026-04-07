@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -29,8 +30,12 @@ class SavedActivity : BaseActivity() {
 
         rvSavedRecipes = findViewById(R.id.rvSavedRecipes)
         etSearch = findViewById(R.id.etSearchSaved)
+        val btnBack = findViewById<ImageButton>(R.id.btnBackSaved)
 
-        // Bỏ dòng btnBack vì layout không có nút này
+        // Xử lý nút Back
+        btnBack?.setOnClickListener {
+            finish()
+        }
         
         rvSavedRecipes.layoutManager = LinearLayoutManager(this)
 

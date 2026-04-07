@@ -2,6 +2,7 @@ package com.example.demo.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -28,18 +29,24 @@ class ManageRecipesActivity : AppCompatActivity() {
 
         val rv = findViewById<RecyclerView>(R.id.rvManageRecipes)
         val fabAdd = findViewById<FloatingActionButton>(R.id.fabAddRecipe)
+        val btnBack = findViewById<ImageButton>(R.id.btnBackManage)
+
+        // Xử lý nút Back
+        btnBack?.setOnClickListener {
+            finish()
+        }
 
         rv.layoutManager = LinearLayoutManager(this)
 
-        // Sử dụng ManageRecipeAdapter (đã hỗ trợ Glide và dữ liệu Firebase)
+        // Sử dụng ManageRecipeAdapter
         adapter = ManageRecipeAdapter(recipeList,
             onEditClick = { recipe ->
                 val intent = Intent(this, AddRecipeActivity::class.java)
                 intent.putExtra("RECIPE_ID", recipe.id)
                 startActivity(intent)
             },
-            onDeleteClick = { recipe, position ->
-                showDeleteDialog(recipe, position)
+            onDeleteClick = { recipe, _ ->
+                showDeleteDialog(recipe)
             }
         )
         rv.adapter = adapter
@@ -52,7 +59,6 @@ class ManageRecipesActivity : AppCompatActivity() {
     }
 
     private fun loadDataFromFirebase() {
-        // Lấy dữ liệu từ Firebase để đồng nhất với User
         firestore.collection("recipes")
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshots, e ->
@@ -70,7 +76,7 @@ class ManageRecipesActivity : AppCompatActivity() {
             }
     }
 
-    private fun showDeleteDialog(recipe: Recipe, position: Int) {
+    private fun showDeleteDialog(recipe: Recipe) {
         AlertDialog.Builder(this)
             .setTitle("Xóa công thức")
             .setMessage("Bạn có chắc chắn muốn xóa món '${recipe.name}' không?")

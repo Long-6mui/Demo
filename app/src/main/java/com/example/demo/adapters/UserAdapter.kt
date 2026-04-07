@@ -57,7 +57,7 @@ class UserAdapter(
         // Logic kiểm tra Online thực tế (ngưỡng 2 phút)
         val currentTime = System.currentTimeMillis()
         val lastSeenTime = user.lastSeen?.toDate()?.time ?: 0L
-        val timeout = 1 * 60 * 1000L
+        val timeout = 1 * 30 * 1000L
         
         val isActuallyOnline = user.isOnline && (currentTime - lastSeenTime < timeout)
 
