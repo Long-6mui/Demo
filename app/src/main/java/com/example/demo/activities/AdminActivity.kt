@@ -75,7 +75,7 @@ class AdminActivity : AppCompatActivity() {
         }
 
         findViewById<CardView>(R.id.btnManageFeedback).setOnClickListener {
-            Toast.makeText(this, "Tính năng quản lý góp ý đang phát triển", Toast.LENGTH_SHORT).show()
+            startActivity(Intent(this, ManageFeedbackActivity::class.java))
         }
 
         btnLogout.setOnClickListener {

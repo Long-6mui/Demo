@@ -10,7 +10,7 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demo.R
-import com.example.demo.Recipe
+import com.example.demo.models.Recipe
 import com.example.demo.adapters.ManageRecipeAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 

@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.demo.R
-import com.example.demo.Recipe
+import com.example.demo.models.Recipe
 
 class ManageRecipeAdapter(
     private var list: MutableList<Recipe>,

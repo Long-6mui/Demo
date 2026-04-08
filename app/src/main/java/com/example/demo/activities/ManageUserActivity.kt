@@ -10,6 +10,7 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demo.R
@@ -39,6 +40,8 @@ class ManageUserActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manage_user)
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver())
 
         val recyclerUsers = findViewById<RecyclerView>(R.id.recyclerUsers)
         edtSearchUser = findViewById(R.id.edtSearchUser)

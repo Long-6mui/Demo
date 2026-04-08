@@ -47,7 +47,6 @@
                     android:id="@+id/txtUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Admin Name"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -57,10 +56,8 @@
                     android:id="@+id/txtUserID"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="admin@email.com"
                     android:textColor="#CCFFFFFF"
                     android:textSize="13sp"/>
-
 
             </LinearLayout>
 

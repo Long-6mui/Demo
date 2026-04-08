@@ -13,7 +13,7 @@ import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.example.demo.R
-import com.example.demo.Recipe
+import com.example.demo.models.Recipe
 import com.google.firebase.firestore.FirebaseFirestore
 
 class AddRecipeActivity : AppCompatActivity() {

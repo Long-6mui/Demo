@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Brand Colors (Dark Mode) -->
+    <color name="colorPrimary">#1A3A2A</color>
+    <color name="colorPrimaryVariant">#2D5A42</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+
+    <color name="colorSecondary">#4CAF50</color>
+    <color name="colorOnSecondary">#121212</color>
+
+    <!-- UI Backgrounds (Dark Mode) -->
+    <color name="windowBackground">#121212</color>
+    <color name="surfaceColor">#1E1E1E</color>
+    <color name="cardBackground">#252525</color>
+    <color name="inputBackground">#2D2D2D</color>
+    <color name="dividerColor">#333333</color>
+
+    <!-- Text Colors (Dark Mode) -->
+    <color name="textPrimary">#E0E0E0</color>
+    <color name="textSecondary">#B0B0B0</color>
+    <color name="textHint">#757575</color>
+
+    <!-- Others -->
+    <color name="heartRed">#FF5252</color>
+    <color name="commentBubble">#2D2D2D</color>
+
+    <!-- Hỗ trợ các tên màu cũ để không bị lỗi build -->
+    <color name="colorBackground">@color/windowBackground</color>
+    <color name="colorSurface">@color/surfaceColor</color>
+    <color name="colorOnSurface">@color/textPrimary</color>
+    <color name="colorOnBackground">@color/textPrimary</color>
+</resources>

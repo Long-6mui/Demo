@@ -13,7 +13,7 @@ import android.widget.Toast
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.bumptech.glide.Glide
 import com.example.demo.R
-import com.example.demo.Recipe
+import com.example.demo.models.Recipe
 import com.google.firebase.firestore.Query
 
 class MainActivity : BaseActivity() {

@@ -1,9 +1,9 @@
-package com.example.demo
+package com.example.demo.models
 
 data class Recipe(
     val id: String = "",
     val name: String = "",
-    val image: String = "", 
+    val image: String = "",
     val author: String = "Admin",
     val description: String = "",
     val ingredients: List<String> = emptyList(),
