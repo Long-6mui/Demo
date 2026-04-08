@@ -4,18 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="?attr/android:windowBackground">
+    android:background="#F5F5F5">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarManageFeedback"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorSurface"
+        android:background="#FFFFFF"
         android:elevation="4dp"
         app:navigationIcon="@drawable/ic_arrow_back"
-        app:navigationIconTint="?attr/colorOnSurface"
         app:title="Quản lý góp ý"
-        app:titleTextColor="?attr/colorOnSurface" />
+        app:titleTextColor="#1A3A2A" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvFeedbacks"
