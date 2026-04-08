@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginVertical="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/txtUserFeedback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nội dung góp ý của bạn..."
+            android:textColor="#333333"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtFeedbackTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="12:30 - 20/10/2023"
+            android:textColor="#888888"
+            android:textSize="12sp" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="12dp"
+            android:background="#EEEEEE"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:id="@+id/layoutAdminReply"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#F1F8E9"
+            android:orientation="vertical"
+            android:padding="12dp"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phản hồi từ Admin:"
+                android:textColor="#2E7D32"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtAdminReply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Cảm ơn bạn, chúng tôi sẽ ghi nhận."
+                android:textColor="#388E3C"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/txtStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="end"
+            android:text="Đang chờ phản hồi..."
+            android:textColor="#FF9800"
+            android:textSize="12sp"
+            android:textStyle="italic" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -71,6 +71,9 @@
             android:name=".activities.RecipeDetailActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.ManageFeedbackActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>

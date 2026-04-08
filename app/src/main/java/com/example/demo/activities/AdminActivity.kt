@@ -75,7 +75,8 @@ class AdminActivity : AppCompatActivity() {
         }
 
         findViewById<CardView>(R.id.btnManageFeedback).setOnClickListener {
-            Toast.makeText(this, "Tính năng quản lý góp ý đang phát triển", Toast.LENGTH_SHORT).show()
+            // ĐÃ SỬA: Mở trang Quản lý góp ý thay vì hiện Toast
+            startActivity(Intent(this, ManageFeedbackActivity::class.java))
         }
 
         btnLogout.setOnClickListener {
@@ -125,13 +126,11 @@ class AdminActivity : AppCompatActivity() {
     }
 
     private fun listenToStats() {
-        // 1. Theo dõi số lượng CÔNG THỨC
         db.collection("recipes").addSnapshotListener { snapshots, e ->
             if (e != null) return@addSnapshotListener
             txtCountRecipes.text = snapshots?.size()?.toString() ?: "0"
         }
 
-        // 2. Theo dõi số lượng NGƯỜI DÙNG (Không tính Admin)
         db.collection("Users").addSnapshotListener { snapshots, e ->
             if (e != null || snapshots == null) return@addSnapshotListener
             
@@ -145,7 +144,6 @@ class AdminActivity : AppCompatActivity() {
             txtCountUsers.text = userCount.toString()
         }
 
-        // 3. Theo dõi số lượng GÓP Ý
         db.collection("feedbacks").addSnapshotListener { snapshots, e ->
             if (e != null) return@addSnapshotListener
             txtCountFeedback.text = snapshots?.size()?.toString() ?: "0"
