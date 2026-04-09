@@ -56,6 +56,9 @@
             android:name=".activities.SettingActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.AdminSettingActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.FeedbackActivity"
             android:exported="false" />
         <activity

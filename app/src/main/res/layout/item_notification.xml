@@ -13,7 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:padding="12dp"
+        android:background="@color/colorSurface">
 
         <ImageView
             android:id="@+id/imgAvatar"
@@ -34,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:text="Nội dung thông báo"
                 android:textSize="14sp"
-                android:textColor="#000"/>
+                android:textColor="@color/colorTextReverse"/>
 
             <TextView
                 android:id="@+id/txtTime"
@@ -42,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/time_demo"
                 android:textSize="12sp"
-                android:textColor="#777"
+                android:textColor="@color/colorTextReverse"
                 android:layout_marginTop="4dp"/>
 
         </LinearLayout>

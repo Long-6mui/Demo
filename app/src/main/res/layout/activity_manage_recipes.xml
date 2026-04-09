@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:background="@color/windowBackground">
 
     <RelativeLayout
         android:id="@+id/layoutHeader"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="#1B3932"
+        android:background="@color/colorPrimary"
         android:paddingHorizontal="16dp">
 
         <ImageButton
@@ -20,6 +20,7 @@
             android:layout_centerVertical="true"
             android:background="@drawable/circle_white_bg"
             android:src="@drawable/ic_arrow_back"
+            app:tint="@color/colorTextReverse"
             android:padding="10dp"
             android:elevation="2dp"/>
 
@@ -31,7 +32,7 @@
             android:text="QUẢN LÝ CÔNG THỨC"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="#FFFFFF"/>
+            android:textColor="@color/colorTextReverse"/>
 
     </RelativeLayout>
 

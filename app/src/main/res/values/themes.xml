@@ -16,7 +16,30 @@
         
         <!-- Divider / Input -->
         <item name="android:divider">@color/dividerColor</item>
+
+        <!-- CHỈNH MÀU VIỀN Ô NHẬP LIỆU KHI CHƯA NHẤN (Mặc định) -->
+        <item name="colorOutline">@color/colorTextReverse</item>
+        <item name="colorControlNormal">@color/colorTextReverse</item>
     </style>
     
     <style name="Theme.Demo" parent="Base.Theme.Demo" />
+
+    <!-- Style cho Dialog Edit Comment -->
+    <style name="CustomDialogTheme" parent="Theme.Material3.DayNight.Dialog">
+        <item name="android:windowMinWidthMinor">95%</item>
+        <item name="android:background">@color/surfaceColor</item>
+        <item name="colorSurface">@color/surfaceColor</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:textColorPrimary">@color/textPrimary</item>
+        <item name="android:buttonBarPositiveButtonStyle">@style/CustomDialogButton</item>
+        <item name="android:buttonBarNegativeButtonStyle">@style/CustomDialogButton</item>
+        <item name="colorPrimary">@color/textPrimary</item>
+        <item name="colorAccent">@color/textPrimary</item>
+    </style>
+
+    <style name="CustomDialogButton" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
 </resources>

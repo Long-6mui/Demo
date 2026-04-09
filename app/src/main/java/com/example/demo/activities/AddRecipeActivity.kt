@@ -7,7 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
@@ -16,7 +16,7 @@ import com.example.demo.R
 import com.example.demo.models.Recipe
 import com.google.firebase.firestore.FirebaseFirestore
 
-class AddRecipeActivity : AppCompatActivity() {
+class AddRecipeActivity : BaseActivity() {
 
     private lateinit var edtRecipeName: EditText
     private lateinit var edtDescription: EditText
@@ -180,15 +180,19 @@ class AddRecipeActivity : AppCompatActivity() {
         tv.text = content
         tv.textSize = 16f
         tv.setPadding(10, 10, 10, 10)
-        tv.setTextColor(android.graphics.Color.BLACK)
+
+        tv.setTextColor(ContextCompat.getColor(this, R.color.colorTextReverse))
         layout.addView(tv)
     }
 
     private fun showInputDialog(title: String, hint: String, onResult: (String) -> Unit) {
-        val builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this, R.style.CustomDialogTheme) // Áp dụng Dark Mode cho Dialog
         builder.setTitle(title)
         val input = EditText(this)
         input.hint = hint
+        // Đảm bảo chữ trong ô nhập liệu của Dialog cũng hiển thị đúng màu
+        input.setTextColor(ContextCompat.getColor(this, R.color.textPrimary))
+        input.setHintTextColor(ContextCompat.getColor(this, R.color.textSecondary))
         builder.setView(input)
         builder.setPositiveButton("Thêm") { _, _ ->
             val text = input.text.toString().trim()

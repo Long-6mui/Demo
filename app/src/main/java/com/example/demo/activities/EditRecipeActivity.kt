@@ -14,11 +14,10 @@ import com.example.demo.models.Recipe
 import com.example.demo.adapters.ManageRecipeAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 
-class EditRecipeActivity : AppCompatActivity() {
+class EditRecipeActivity : BaseActivity() {
 
     private lateinit var adapter: ManageRecipeAdapter
     private val recipeList = mutableListOf<Recipe>()
-    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         app:cardCornerRadius="14dp"
-        app:cardBackgroundColor="#FFFFFF"
+        app:cardBackgroundColor="@color/colorSurface"
         app:cardElevation="2dp">
 
         <LinearLayout
@@ -29,7 +29,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
                 android:textStyle="bold"
-                android:textColor="#1A3A2A"/>
+                android:textColor="@color/colorTextReverse"/>
 
             <TextView
                 android:id="@+id/txtArrow"
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:text="▼"
                 android:textSize="12sp"
-                android:textColor="#4A8C5C"/>
+                android:textColor="@color/colorPrimaryVariant"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

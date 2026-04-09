@@ -1,212 +1,265 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground">
+    android:orientation="vertical"
+    android:background="@color/windowBackground">
 
-    <LinearLayout
+    <!-- Header màu xanh đồng bộ với Newfeed/Setting -->
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:background="@color/colorPrimary"
+        android:paddingTop="20dp"
+        app:elevation="0dp">
 
-        <!-- NÚT TRỞ VỀ GÓC TRÁI -->
-        <ImageButton
-            android:id="@+id/btnBack"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:scaleType="fitCenter"
-            android:src="@drawable/btnback"
-            android:layout_marginBottom="16dp" />
-
-        <!-- AVATAR -->
-        <FrameLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="32dp">
-
-            <!-- Avatar chính -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                app:cardCornerRadius="60dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="@color/colorSurface">
-
-                <ImageView
-                    android:id="@+id/imgAvatar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/avtque"
-                    android:clickable="true"
-                    android:focusable="true" />
-            </androidx.cardview.widget.CardView>
-
-            <!-- Icon nhỏ (máy ảnh hoặc chỉnh sửa) - nằm phía trước -->
-            <ImageView
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_gravity="bottom|end"
-                android:src="@drawable/ic_camera"
-                android:background="@drawable/circle_white_bg"
-                android:backgroundTint="@color/colorSecondary"
-                android:padding="6dp"
-                app:tint="@color/colorOnSecondary"
-                android:elevation="6dp"
-                android:translationZ="6dp" />
-        </FrameLayout>
-
-        <!-- HỌ TÊN -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Họ tên"
-            android:textColor="@color/colorOnBackground"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:alpha="0.7" />
-
-        <!-- USERNAME -->
-        <EditText
-            android:id="@+id/edtTen"
+        <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="20dp"
-            android:background="@color/colorSurface"
-            android:hint="Nhập họ tên"
-            android:paddingHorizontal="16dp"
-            android:textColor="@color/colorOnSurface"
-            android:textColorHint="#666666"
-            android:textSize="16sp" />
+            android:layout_height="?attr/actionBarSize"
+            app:contentInsetStart="0dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Username"
-            android:textColor="@color/colorOnBackground"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:alpha="0.7" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="16dp">
 
-        <EditText
-            android:id="@+id/edtUserName"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="20dp"
-            android:background="@color/colorSurface"
-            android:hint="Nhập username"
-            android:paddingHorizontal="16dp"
-            android:textColor="@color/colorOnSurface"
-            android:textColorHint="#666666"
-            android:textSize="16sp" />
+                <ImageButton
+                    android:id="@+id/btnBack"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/circle_white_bg"
+                    android:src="@drawable/ic_arrow_back"
+                    app:tint="@color/colorTextReverse"
+                    android:padding="6dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- EMAIL (DISABLED) -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Email"
-            android:textColor="@color/colorOnBackground"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:alpha="0.7" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center"
+                    android:maxLines="1"
+                    android:text="Chỉnh sửa thông tin"
+                    android:textColor="@color/colorTextReverse"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btnBack"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
 
-        <EditText
-            android:id="@+id/edtEmail"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginBottom="20dp"
-            android:background="@color/colorSurface"
-            android:enabled="false"
-            android:paddingHorizontal="16dp"
-            android:textColor="@color/colorOnSurface"
-            android:alpha="0.5"
-            android:textSize="16sp" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <!-- NGÀY SINH & GIỚI TÍNH -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="24dp">
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <!-- AVATAR -->
+            <FrameLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:layout_marginBottom="32dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ngày sinh"
-                    android:textColor="@color/colorOnBackground"
-                    android:textStyle="bold"
-                    android:alpha="0.7" />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    app:cardCornerRadius="60dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/surfaceColor">
 
-                <EditText
-                    android:id="@+id/edtBirthDay"
+                    <ImageView
+                        android:id="@+id/imgAvatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/avtque"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </androidx.cardview.widget.CardView>
+
+                <ImageView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="bottom|end"
+                    android:src="@drawable/ic_camera"
+                    android:background="@drawable/circle_white_bg"
+                    android:backgroundTint="@color/colorSecondary"
+                    android:padding="6dp"
+                    app:tint="@color/colorOnSecondary"
+                    android:elevation="6dp" />
+            </FrameLayout>
+
+            <!-- HỌ TÊN -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:boxBackgroundMode="outline"
+                app:boxBackgroundColor="@color/colorSurface"
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:hintEnabled="true"
+                android:hint="Họ tên"
+                app:hintTextColor="@color/colorTextReverse"
+                app:boxStrokeColor="@color/colorTextReverse"
+                app:boxStrokeWidth="1.5dp"
+                app:boxStrokeWidthFocused="2dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtTen"
                     android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:background="@color/colorSurface"
-                    android:clickable="true"
-                    android:drawableEnd="@drawable/ic_calendar"
-                    android:focusable="false"
-                    android:paddingHorizontal="16dp"
-                    android:textColor="@color/colorOnSurface" />
-            </LinearLayout>
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorTextReverse" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <LinearLayout
-                android:layout_width="0dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical"
-                android:layout_marginStart="16dp">
+                android:layout_marginBottom="16dp"
+                app:boxBackgroundMode="outline"
+                app:boxBackgroundColor="@color/colorSurface"
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:hintEnabled="true"
+                android:hint="Username"
+                app:hintTextColor="@color/colorTextReverse"
+                app:boxStrokeColor="@color/colorTextReverse"
+                app:boxStrokeWidth="1.5dp"
+                app:boxStrokeWidthFocused="2dp">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtUserName"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Giới tính"
-                    android:textColor="@color/colorOnBackground"
-                    android:textStyle="bold"
-                    android:alpha="0.7" />
+                    android:textColor="@color/colorTextReverse" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                <RadioGroup
-                    android:id="@+id/radioGender"
-                    android:layout_width="wrap_content"
+            <!-- EMAIL (DISABLED) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:boxBackgroundMode="outline"
+                app:boxBackgroundColor="@color/colorSurface"
+                app:boxCornerRadiusTopStart="16dp"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusBottomStart="16dp"
+                app:boxCornerRadiusBottomEnd="16dp"
+                app:hintEnabled="true"
+                android:hint="Email"
+                app:hintTextColor="@color/colorTextReverse"
+                app:boxStrokeColor="@color/colorTextReverse"
+                app:boxStrokeWidth="1.5dp"
+                app:boxStrokeWidthFocused="2dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/edtEmail"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:textColor="@color/colorTextReverse"
+                    android:enabled="false"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <RadioButton
-                        android:id="@+id/radioMale"
+            <!-- NGÀY SINH & GIỚI TÍNH -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:boxBackgroundMode="outline"
+                    app:boxBackgroundColor="@color/colorSurface"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:hintEnabled="true"
+                    android:hint="Ngày sinh"
+                    app:hintTextColor="@color/colorTextReverse"
+                    app:boxStrokeColor="@color/colorTextReverse"
+                    app:boxStrokeWidth="1.5dp"
+                    app:boxStrokeWidthFocused="2dp"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/ic_calendar"
+                    app:endIconTint="@color/colorTextReverse">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edtBirthDay"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:clickable="true"
+                        android:textColor="@color/colorTextReverse" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp">
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nam"
-                        android:textColor="@color/colorOnSurface" />
+                        android:text="Giới tính"
+                        android:textColor="@color/textPrimary"
+                        android:textStyle="bold"
+                        android:alpha="0.7" />
 
-                    <RadioButton
-                        android:id="@+id/radioFemale"
+                    <RadioGroup
+                        android:id="@+id/radioGender"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nữ"
-                        android:layout_marginStart="16dp"
-                        android:textColor="@color/colorOnSurface" />
-                </RadioGroup>
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/radioMale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Nam"
+                            android:textColor="@color/textPrimary" />
+
+                        <RadioButton
+                            android:id="@+id/radioFemale"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Nữ"
+                            android:layout_marginStart="16dp"
+                            android:textColor="@color/textPrimary" />
+                    </RadioGroup>
+                </LinearLayout>
             </LinearLayout>
+
+            <Button
+                android:id="@+id/btnUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="18dp"
+                android:text="Cập nhật thông tin"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:backgroundTint="@color/colorPrimary"/>
+
         </LinearLayout>
-
-        <!-- NÚT CẬP NHẬT (ĐÃ XÓA NÚT TRỞ VỀ CŨ) -->
-        <Button
-            android:id="@+id/btnUpdate"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginTop="40dp"
-            android:text="Cập nhật thông tin"
-            android:backgroundTint="@color/colorSecondary"
-            android:textColor="@color/colorOnSecondary"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</LinearLayout>

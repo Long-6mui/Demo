@@ -11,12 +11,11 @@ import com.example.demo.models.Feedback
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
-class ManageFeedbackActivity : AppCompatActivity() {
+class ManageFeedbackActivity : BaseActivity() {
 
     private lateinit var rvFeedbacks: RecyclerView
     private lateinit var adapter: ManageFeedbackAdapter
     private val feedbackList = mutableListOf<Feedback>()
-    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

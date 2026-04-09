@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--Dark mode-->
+    <color name="colorText">#000000</color>
+    <color name="colorTextReverse">#FFFFFF</color>
+    <color name="colorTextGreen">#6B8C77</color>
+    <color name="colorLogout">#8B0000</color>
     <!-- Brand Colors (Dark Mode) -->
-    <color name="colorPrimary">#1A3A2A</color>
+    <color name="colorPrimary">#1a3a25</color>
     <color name="colorPrimaryVariant">#2D5A42</color>
     <color name="colorOnPrimary">#FFFFFF</color>
 
@@ -21,12 +26,11 @@
     <color name="textHint">#757575</color>
 
     <!-- Others -->
-    <color name="heartRed">#FF5252</color>
-    <color name="commentBubble">#2D2D2D</color>
+
 
     <!-- Hỗ trợ các tên màu cũ để không bị lỗi build -->
     <color name="colorBackground">@color/windowBackground</color>
     <color name="colorSurface">@color/surfaceColor</color>
-    <color name="colorOnSurface">@color/textPrimary</color>
+    <color name="colorOnSurface">#1A3A2A</color>
     <color name="colorOnBackground">@color/textPrimary</color>
 </resources>

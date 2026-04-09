@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorBackground">
+    android:background="@color/windowBackground">
 
     <!-- Header & Search -->
     <LinearLayout
@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:background="@color/colorSurface">
+        android:background="@color/colorPrimary">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,9 +24,9 @@
                 android:id="@+id/btnBackManageUser"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
+                android:background="@drawable/circle_white_bg"
                 android:src="@drawable/ic_arrow_back"
-                app:tint="@color/colorOnSurface" />
+                app:tint="@color/colorTextReverse" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -45,9 +45,10 @@
             android:layout_marginTop="16dp"
             android:background="@drawable/bg_card"
             android:hint="Tìm kiếm theo tên hoặc email..."
+            android:textColorHint="@android:color/black"
             android:paddingHorizontal="16dp"
             android:textSize="14sp"
-            android:textColor="@color/colorOnSurface"/>
+            android:textColor="@android:color/black"/>
     </LinearLayout>
 
     <!-- List Users -->

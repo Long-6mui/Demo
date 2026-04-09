@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--Light mode-->
+    <color name="colorText">#FFFFFF</color>
+    <color name="colorTextReverse">#000000</color>
+    <color name="colorTextGreen">#6B8C77</color>
+    <color name="colorLogout">#ab1b1b</color>
     <!-- Brand Colors -->
     <color name="colorPrimary">#4A8C5C</color> <!-- Màu xanh lá chủ đạo -->
     <color name="colorPrimaryVariant">#1A3A2A</color>
@@ -21,9 +25,10 @@
     <color name="textSecondary">#666666</color>
     <color name="textHint">#999999</color>
 
+
     <!-- Hỗ trợ các tên màu cũ để không bị lỗi build -->
     <color name="colorBackground">@color/windowBackground</color>
     <color name="colorSurface">@color/surfaceColor</color>
-    <color name="colorOnSurface">@color/textPrimary</color>
+    <color name="colorOnSurface">#FFFFFF</color>
     <color name="colorOnBackground">@color/textPrimary</color>
 </resources>

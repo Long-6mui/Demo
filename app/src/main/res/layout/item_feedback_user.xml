@@ -12,14 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="@color/colorSurface">
 
         <TextView
             android:id="@+id/txtUserFeedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Nội dung góp ý của bạn..."
-            android:textColor="#333333"
+            android:textColor="@color/textPrimary"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -37,35 +38,43 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginVertical="12dp"
-            android:background="#EEEEEE"
+            android:background="@color/dividerColor"
             android:visibility="gone" />
 
-        <LinearLayout
+        <!-- Đã chuyển đổi sang CardView để bo tròn góc -->
+        <androidx.cardview.widget.CardView
             android:id="@+id/layoutAdminReply"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#F1F8E9"
-            android:orientation="vertical"
-            android:padding="12dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/windowBackground"
             android:visibility="gone">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Phản hồi từ Admin:"
-                android:textColor="#2E7D32"
-                android:textSize="13sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/txtAdminReply"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Cảm ơn bạn, chúng tôi sẽ ghi nhận."
-                android:textColor="#388E3C"
-                android:textSize="14sp" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Phản hồi từ Admin:"
+                    android:textColor="@color/colorTextReverse"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtAdminReply"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Cảm ơn bạn, chúng tôi sẽ ghi nhận."
+                    android:textColor="@color/colorTextReverse"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/txtStatus"

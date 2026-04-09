@@ -16,8 +16,7 @@
             android:id="@+id/imgRecipe"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/choco"/>
+            android:scaleType="centerCrop" />
 
         <!-- Dark gradient overlay -->
         <View

@@ -5,12 +5,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#C0C0C0">
+    android:background="@color/windowBackground">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:background="@color/colorPrimary"
+        android:paddingTop="20dp"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
@@ -27,7 +28,9 @@
                     android:id="@+id/btnBackHome"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/btnback"
+                    android:background="@drawable/circle_white_bg"
+                    android:src="@drawable/ic_arrow_back"
+                    app:tint="@color/colorTextReverse"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -41,7 +44,7 @@
                     android:gravity="end"
                     android:maxLines="1"
                     android:text="NewFeeds"
-                    android:textColor="#333333"
+                    android:textColor="@color/colorTextReverse"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -72,7 +75,8 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="12dp">
+                    android:padding="12dp"
+                    android:background="@color/colorSurface">
 
                     <androidx.cardview.widget.CardView
                         android:id="@+id/cardAvatar"
@@ -98,6 +102,7 @@
                         android:layout_marginEnd="12dp"
                         android:background="@drawable/bg_edittext_rounded"
                         android:hint="What are you thinking about today?"
+                        android:textColorHint="@color/colorTextReverse"
                         android:inputType="textMultiLine"
                         android:maxLines="4"
                         android:minHeight="48dp"
@@ -124,6 +129,8 @@
                         android:layout_height="wrap_content"
                         android:text="Post"
                         android:textAllCaps="false"
+                        android:textColor="@color/colorOnBackground"
+                        android:backgroundTint="@color/colorPrimary"
                         app:layout_constraintBottom_toBottomOf="@id/imgPick"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@id/imgPick" />

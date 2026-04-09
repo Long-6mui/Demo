@@ -1,61 +1,124 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="20dp"
-    android:gravity="center_horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/windowBackground">
 
-    <ImageView
-        android:id="@+id/btnBackEditPost"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
-        android:src="@drawable/btnback"
-        android:contentDescription="Back"
-        android:layout_gravity="start"
-        android:padding="4dp"
-        android:layout_marginTop="10dp"
-        android:clickable="true"
-        android:focusable="true" />
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:text="Edit Post"
-        android:textSize="22sp"
-        android:textStyle="bold" />
-
-    <EditText
-        android:id="@+id/edtEditPost"
+    <!-- Header đồng bộ với trang Profile/Saved -->
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Edit content"/>
+        android:layout_height="94dp"
+        android:background="@color/colorPrimary"
+        android:paddingHorizontal="16dp">
 
+        <ImageButton
+            android:id="@+id/btnBackEditPost"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:layout_centerVertical="true"
+            android:background="@drawable/circle_white_bg"
+            android:padding="10dp"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="@color/colorTextReverse" />
 
-    <FrameLayout
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Chỉnh sửa bài đăng"
+            android:textColor="@color/colorTextReverse"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="20dp"
-        android:background="#F0F0F0">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <ImageView
-            android:id="@+id/imgEditPost"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_image"
-            android:contentDescription="Click to add/change photo" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
 
-    </FrameLayout>
+            <!-- Vùng nhập nội dung (Giống Edit Comment) -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/surfaceColor">
 
-    <Button
-        android:id="@+id/btnSaveEdit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Save"
-        android:layout_marginTop="20dp"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <EditText
+                        android:id="@+id/edtEditPost"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Chỉnh sửa nội dung bài viết..."
+                        android:textColorHint="@color/textSecondary"
+                        android:textColor="@color/textPrimary"
+                        android:background="@null"
+                        android:gravity="top"
+                        android:textSize="16sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/dividerColor"
+                        android:layout_marginTop="12dp" />
+
+                    <!-- Khung ảnh "tràn" trong thẻ -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:layout_marginTop="16dp"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="0dp">
+
+                        <ImageView
+                            android:id="@+id/imgEditPost"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_image"
+                            android:background="@color/surfaceColor" />
+
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Nhấn vào ảnh để thay đổi"
+                        android:textSize="12sp"
+                        android:textColor="@color/textSecondary"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="8dp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Nút Lưu thay đổi -->
+            <Button
+                android:id="@+id/btnSaveEdit"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="18dp"
+                android:text="Lưu thay đổi"
+                android:textColor="@android:color/white"
+                android:textSize="15sp"
+                android:backgroundTint="@color/colorPrimary" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
 </LinearLayout>

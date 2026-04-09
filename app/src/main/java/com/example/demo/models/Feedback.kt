@@ -6,5 +6,6 @@ data class Feedback(
     val content: String = "",
     val timestamp: Long = 0,
     @field:JvmField
-    var isInterested: Boolean = false
+    var isInterested: Boolean = false,
+    var adminReply: String = ""
 )

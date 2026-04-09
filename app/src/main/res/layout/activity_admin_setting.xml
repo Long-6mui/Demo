@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:background="@color/windowBackground">
 
-    <!-- Header đồng bộ hoàn toàn với Newfeed -->
+    <!-- Header màu xanh đồng bộ -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
                 android:paddingHorizontal="16dp">
 
                 <ImageButton
-                    android:id="@+id/btnBackSetting"
+                    android:id="@+id/btnBackAdminSetting"
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:background="@drawable/circle_white_bg"
@@ -45,11 +45,11 @@
                     android:maxLines="1"
                     android:text="⚙️ Cài đặt"
                     android:textColor="@color/colorTextReverse"
-                    android:textSize="22sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/btnBackSetting"
+                    app:layout_constraintStart_toEndOf="@id/btnBackAdminSetting"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -64,37 +64,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingTop="16dp">
-
-            <!-- Notification Setting -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="64dp"
-                android:paddingHorizontal="20dp"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:background="?attr/selectableItemBackground"
-                android:clickable="true">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:text="Thông báo ứng dụng"
-                    android:textSize="16sp"
-                    android:textColor="@color/colorTextReverse"/>
-
-                <Switch
-                    android:id="@+id/switchNotification"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/dividerColor"
-                android:layout_marginHorizontal="20dp"/>
 
             <!-- Dark Mode -->
             <LinearLayout
@@ -127,23 +96,24 @@
                 android:background="@color/dividerColor"
                 android:layout_marginHorizontal="20dp"/>
 
-            <!-- Change Password -->
+            <!-- Logout -->
             <LinearLayout
-                android:id="@+id/menuChangePassword"
                 android:layout_width="match_parent"
-                android:layout_height="64dp"
+                android:layout_height="68dp"
                 android:paddingHorizontal="20dp"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
                 android:background="?attr/selectableItemBackground"
                 android:clickable="true">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🔐 Đổi mật khẩu tài khoản"
-                    android:textSize="16sp"
-                    android:textColor="@color/colorTextReverse"/>
+                <Button
+                    android:id="@+id/btnLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:text="Đăng xuất"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp"
+                    android:backgroundTint="@color/colorLogout"/>
 
             </LinearLayout>
 

@@ -18,11 +18,10 @@ import com.example.demo.adapters.UserAdmin
 import com.example.demo.adapters.UserAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ManageUserActivity : AppCompatActivity() {
+class ManageUserActivity : BaseActivity() {
 
     private lateinit var adapter: UserAdapter
     private val fullUserList = mutableListOf<UserAdmin>()
-    private val db = FirebaseFirestore.getInstance()
     private lateinit var edtSearchUser: EditText
     
     //Handler để tự động refresh giao diện nhạy hơn (30 giây)

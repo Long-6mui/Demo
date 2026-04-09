@@ -5,19 +5,19 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    >
+    android:background="@color/surfaceColor">
 
     <!-- EditText nhập nội dung comment -->
     <EditText
         android:id="@+id/edtEditComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nhập nội dung comment"
+        android:hint="ăn pizza nha"
+        android:textColorHint="@color/textSecondary"
         android:inputType="textMultiLine"
         android:minLines="2"
-
         android:padding="12dp"
-        android:textColor="#000"
+        android:textColor="@color/textPrimary"
         android:textSize="16sp"/>
 
     <!-- ImageView hiển thị ảnh comment -->
@@ -27,8 +27,7 @@
         android:layout_height="200dp"
         android:layout_marginTop="12dp"
         android:scaleType="centerCrop"
-        android:visibility="gone"
-        android:background="@color/colorBackground"/>
+        android:visibility="gone" />
 
     <!-- Nút chọn ảnh -->
     <ImageView

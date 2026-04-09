@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FDFDFB">
+    android:background="@color/windowBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,6 +14,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
             android:padding="24dp">
 
             <ImageButton
@@ -24,6 +25,7 @@
                 android:layout_centerVertical="true"
                 android:background="@drawable/circle_white_bg"
                 android:src="@drawable/ic_arrow_back"
+                app:tint="@color/colorTextReverse"
                 android:padding="10dp"
                 android:elevation="2dp"/>
 
@@ -38,8 +40,9 @@
                     android:id="@+id/tvTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:text="Kho lưu trữ"
-                    android:textColor="#1B3932"
+                    android:textColor="@color/colorTextReverse"
                     android:textSize="28sp"
                     android:textStyle="bold"
                     android:letterSpacing="-0.02" />
@@ -49,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="Món ăn yêu thích của bạn"
-                    android:textColor="#828282"
+                    android:textColor="@color/colorTextReverse"
                     android:textSize="13sp" />
 
             </LinearLayout>
@@ -58,24 +61,33 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="2dp"
-            app:cardBackgroundColor="#FFFFFF">
-
-            <EditText
-                android:id="@+id/etSearchSaved"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="10dp"
+            app:cardCornerRadius="25dp"
+            app:cardElevation="2dp">
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:drawableStart="@drawable/ic_search"
-                android:drawablePadding="15dp"
-                android:hint="Tìm món ăn..."
-                android:inputType="text"
-                android:paddingHorizontal="20dp"
-                android:textSize="16sp" />
+                android:gravity="center_vertical"
+                android:paddingHorizontal="16dp"
+                android:background="@color/surfaceColor">
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_search"
+                    android:alpha="0.4"/>
+                <EditText
+                    android:id="@+id/etSearchSaved"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:hint="Tìm kiếm công thức..."
+                    android:textColorHint="@color/colorTextReverse"
+                    android:background="@null"
+                    android:paddingStart="10dp"
+                    android:textSize="14sp"/>
+            </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <androidx.recyclerview.widget.RecyclerView

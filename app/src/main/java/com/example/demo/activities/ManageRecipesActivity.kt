@@ -16,7 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
-class ManageRecipesActivity : AppCompatActivity() {
+class ManageRecipesActivity : BaseActivity() {
     private val firestore = FirebaseFirestore.getInstance()
     private lateinit var adapter: ManageRecipeAdapter
     private var recipeList = mutableListOf<Recipe>()

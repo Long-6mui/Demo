@@ -4,13 +4,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F5F5">
+    android:background="@color/windowBackground">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarManageFeedback"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="#FFFFFF"
+        android:background="@color/colorPrimary"
         android:elevation="4dp"
         app:navigationIcon="@drawable/ic_arrow_back"
         app:title="Quản lý góp ý"

@@ -103,7 +103,7 @@ class ProfileActivity : BaseActivity() {
         val menuContent = findViewById<LinearLayout>(R.id.menuAccountContent)
         val iconArrow = findViewById<ImageView>(R.id.iconArrow)
         val menuSetting = findViewById<LinearLayout>(R.id.menuSetting)
-        val tabSaved = findViewById<LinearLayout>(R.id.tabSaved)
+        val layoutSaved = findViewById<LinearLayout>(R.id.layoutSaved) // Sửa thành layoutSaved khớp với XML
 
         txtCountPosts = findViewById(R.id.txtCountPosts)
         txtCountFavorites = findViewById(R.id.txtCountFavorites)
@@ -195,9 +195,12 @@ class ProfileActivity : BaseActivity() {
                 finish()
             }
         }
-        tabSaved?.setOnClickListener {
+        
+        // Sự kiện click chuyển tới trang Kho lưu
+        layoutSaved?.setOnClickListener {
             startActivity(Intent(this, SavedActivity::class.java))
         }
+
         editProfile?.setOnClickListener {
             val intent = Intent(this, editInfoActivity::class.java)
             editProfileLauncher.launch(intent)
@@ -206,6 +209,7 @@ class ProfileActivity : BaseActivity() {
         menuSetting?.setOnClickListener { startActivity(Intent(this, SettingActivity::class.java)) }
 
         menuCategory?.setOnClickListener {
+            val menuContent = findViewById<LinearLayout>(R.id.menuAccountContent)
             if (menuContent?.visibility == View.GONE) {
                 menuContent.visibility = View.VISIBLE
                 iconArrow?.rotation = 180f

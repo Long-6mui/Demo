@@ -4,12 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="@color/windowBackground">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFF"
+        android:background="@color/colorPrimary"
         app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
@@ -21,8 +21,9 @@
                 android:id="@+id/btnClose"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_arrow_back" />
+                android:background="@drawable/circle_white_bg"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@color/colorTextReverse" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -34,9 +35,9 @@
                     android:id="@+id/btnPublish"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Lên sóng"
-                    android:backgroundTint="#E6E6FA"
-                    android:textColor="#1A3A2A"
+                    android:text="Thêm"
+                    android:backgroundTint="@color/colorPrimaryVariant"
+                    android:textColor="@color/colorText"
                     android:textStyle="bold" />
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>
@@ -53,13 +54,21 @@
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Chọn ảnh -->
-            <ImageView
-                android:id="@+id/imgFood"
+            <!-- Chọn ảnh: Đã thêm CardView để bo tròn góc -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:scaleType="centerCrop"
-                android:background="#F0F0F0" />
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/surfaceColor">
+
+                <ImageView
+                    android:id="@+id/imgFood"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:background="@color/textSecondary" />
+            </androidx.cardview.widget.CardView>
 
             <Button
                 android:id="@+id/btnSelectImage"
@@ -68,7 +77,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="8dp"
                 android:text="Chọn ảnh món ăn"
-                android:backgroundTint="#4A8C5C" />
+                android:backgroundTint="@color/colorPrimary" />
 
             <ProgressBar
                 android:id="@+id/progressBar"
@@ -132,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:text="+ Nguyên liệu"
                     android:padding="12dp"
-                    android:textColor="#4A8C5C" />
+                    android:textColor="@color/colorTextGreen" />
             </LinearLayout>
 
             <TextView
@@ -157,7 +166,7 @@
                 android:layout_gravity="center"
                 android:text="+ Thêm bước"
                 android:padding="12dp"
-                android:textColor="#4A8C5C" />
+                android:textColor="@color/colorTextGreen" />
 
             <View android:layout_width="match_parent" android:layout_height="100dp" />
         </LinearLayout>

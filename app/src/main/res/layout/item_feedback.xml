@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:background="@color/colorSurface">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -23,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="User Name"
-                android:textColor="#1A3A2A"
+                android:textColor="@color/textPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -44,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Nội dung góp ý..."
-            android:textColor="#444444"
+            android:textColor="#888888"
             android:textSize="14sp" />
 
         <TextView
@@ -106,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="Phản hồi"
-                    android:textColor="#1A3A2A"
+                    android:textColor="@color/colorTextReverse"
                     android:textSize="12sp"
                     android:textStyle="bold" />
             </LinearLayout>

@@ -85,11 +85,9 @@ class MainActivity : BaseActivity() {
                     if (document != null && document.exists()) {
                         // Trạng thái ĐÃ LƯU
                         btnFav.setImageResource(R.drawable.ic_heart_filled)
-                        btnFav.imageTintList = ColorStateList.valueOf(Color.parseColor("#FF4B4B"))
                     } else {
                         // Trạng thái CHƯA LƯU
                         btnFav.setImageResource(R.drawable.ic_heart_outline)
-                        btnFav.imageTintList = ColorStateList.valueOf(Color.BLACK)
                     }
                 }
         }

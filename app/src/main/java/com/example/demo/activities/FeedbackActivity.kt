@@ -5,15 +5,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.demo.Feedback
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.example.demo.R
 import com.example.demo.adapters.UserFeedbackAdapter
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.demo.models.Feedback
 import com.google.firebase.firestore.Query
 
 class FeedbackActivity : BaseActivity() {
@@ -33,9 +30,7 @@ class FeedbackActivity : BaseActivity() {
         val edtFeedback = findViewById<EditText>(R.id.edtFeedback)
         rvHistory = findViewById(R.id.rvFeedbackHistory)
 
-        btnBack.setOnClickListener {
-            finish()
-        }
+        btnBack.setOnClickListener { finish() }
 
         // Setup RecyclerView
         adapter = UserFeedbackAdapter(feedbackList)
@@ -44,7 +39,6 @@ class FeedbackActivity : BaseActivity() {
 
         btnSend.setOnClickListener {
             val text = edtFeedback.text.toString().trim()
-
             if (text.isEmpty()) {
                 Toast.makeText(this, "Vui lòng nhập góp ý", Toast.LENGTH_SHORT).show()
             } else {
@@ -58,6 +52,7 @@ class FeedbackActivity : BaseActivity() {
     private fun loadFeedbackHistory() {
         val userId = auth.currentUser?.uid ?: return
 
+        // Lắng nghe thời gian thực
         db.collection("feedbacks")
             .whereEqualTo("userId", userId)
             .orderBy("timestamp", Query.Direction.DESCENDING)
@@ -66,10 +61,10 @@ class FeedbackActivity : BaseActivity() {
 
                 feedbackList.clear()
                 snapshots?.forEach { doc ->
-                    val feedback = doc.toObject(Feedback::class.java)
-                    feedback.id = doc.id
+                    val feedback = doc.toObject(Feedback::class.java).copy(id = doc.id)
                     feedbackList.add(feedback)
                 }
+                // Cập nhật giao diện ngay lập tức
                 adapter.notifyDataSetChanged()
             }
     }
@@ -81,7 +76,7 @@ class FeedbackActivity : BaseActivity() {
         db.collection("Users").document(userId).get().addOnSuccessListener { document ->
             val userName = document.getString("name") ?: "Người dùng ẩn danh"
             
-            val feedback = hashMapOf(
+            val feedbackData = hashMapOf(
                 "userId" to userId,
                 "userName" to userName,
                 "content" to content,
@@ -91,13 +86,13 @@ class FeedbackActivity : BaseActivity() {
             )
 
             db.collection("feedbacks")
-                .add(feedback)
+                .add(feedbackData)
                 .addOnSuccessListener {
                     Toast.makeText(this, "Cảm ơn bạn đã góp ý ❤️", Toast.LENGTH_SHORT).show()
                     editText.setText("")
                 }
                 .addOnFailureListener {
-                    Toast.makeText(this, "Lỗi gửi góp ý, vui lòng thử lại", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Lỗi gửi góp ý", Toast.LENGTH_SHORT).show()
                 }
         }
     }

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F2EE">
+    android:background="@color/windowBackground">
 
     <!-- Header -->
     <LinearLayout
@@ -15,16 +16,18 @@
         android:paddingTop="52dp"
         android:paddingBottom="16dp"
         android:gravity="center_vertical"
-        android:background="#FFFFFF">
+        android:background="@color/colorPrimary">
 
         <ImageButton
             android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/circle_white_bg"
             android:src="@drawable/ic_arrow_back"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:tint="#1A3A2A"
-            android:contentDescription="Back"/>
+            app:tint="@color/colorTextReverse"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <LinearLayout
             android:layout_width="0dp"
@@ -37,9 +40,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="🛒 Chọn nguyên liệu"
+                android:textColor="@color/colorTextReverse"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#1A3A2A"/>
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/txtSelectedCount"
@@ -47,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:text="Chưa chọn nguyên liệu nào"
                 android:textSize="12sp"
-                android:textColor="#4A8C5C"
+                android:textColor="@color/colorTextReverse"
                 android:layout_marginTop="2dp"/>
         </LinearLayout>
 
@@ -56,9 +59,9 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:text="Gợi ý ▶"
-            android:textColor="#FFFFFF"
+            android:textColor="@android:color/white"
             android:textSize="13sp"
-            android:backgroundTint="#1A3A2A"
+            android:backgroundTint="@color/colorPrimaryVariant"
             android:paddingHorizontal="16dp"/>
 
     </LinearLayout>

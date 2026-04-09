@@ -3,11 +3,10 @@ package com.example.demo.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.demo.Feedback
 import com.example.demo.R
+import com.example.demo.models.Feedback
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,7 +17,7 @@ class UserFeedbackAdapter(private val feedbackList: List<Feedback>) :
         val txtContent: TextView = view.findViewById(R.id.txtUserFeedback)
         val txtTime: TextView = view.findViewById(R.id.txtFeedbackTime)
         val txtAdminReply: TextView = view.findViewById(R.id.txtAdminReply)
-        val layoutAdminReply: LinearLayout = view.findViewById(R.id.layoutAdminReply)
+        val layoutAdminReply: androidx.cardview.widget.CardView = view.findViewById(R.id.layoutAdminReply)
         val txtStatus: TextView = view.findViewById(R.id.txtStatus)
         val divider: View = view.findViewById(R.id.divider)
     }
@@ -34,11 +33,10 @@ class UserFeedbackAdapter(private val feedbackList: List<Feedback>) :
 
         holder.txtContent.text = feedback.content
         
-        // Định dạng thời gian
         val sdf = SimpleDateFormat("HH:mm - dd/MM/yyyy", Locale.getDefault())
         holder.txtTime.text = sdf.format(Date(feedback.timestamp))
 
-        // Hiển thị phản hồi Admin
+        // Hiển thị phản hồi Admin ngay lập tức khi adminReply thay đổi
         if (feedback.adminReply.isNotEmpty()) {
             holder.layoutAdminReply.visibility = View.VISIBLE
             holder.divider.visibility = View.VISIBLE
