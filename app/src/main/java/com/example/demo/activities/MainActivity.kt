@@ -1,8 +1,6 @@
 package com.example.demo.activities
 
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.ImageButton
@@ -45,6 +43,11 @@ class MainActivity : BaseActivity() {
         // 5. Nút Notification
         findViewById<ImageButton>(R.id.btnNotification)?.setOnClickListener {
             startActivity(Intent(this, NotificationActivity::class.java))
+        }
+
+        // 6. Nút Xem Tất Cả -> AllRecipesActivity
+        findViewById<TextView>(R.id.txtSeeAll)?.setOnClickListener {
+            startActivity(Intent(this, AllRecipesActivity::class.java))
         }
     }
 

@@ -19,6 +19,20 @@
             android:layout_height="250dp"
             android:background="@color/colorPrimary">
 
+            <!-- Nút Thông báo ở góc phải -->
+            <ImageButton
+                android:id="@+id/btnAdminNotification"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="top|end"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="16dp"
+                android:background="@drawable/circle_white_bg"
+                android:src="@drawable/ic_notifications"
+                android:padding="10dp"
+                app:tint="@color/colorPrimary"
+                android:contentDescription="Admin Notification" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

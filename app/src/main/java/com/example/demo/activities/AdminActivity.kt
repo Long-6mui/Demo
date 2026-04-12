@@ -2,6 +2,7 @@ package com.example.demo.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
@@ -40,6 +41,11 @@ class AdminActivity : BaseActivity() {
             }
         }
         loadAdminInfo()
+
+        // Nút THÔNG BÁO ADMIN (Góc phải trên cùng)
+        findViewById<ImageButton>(R.id.btnAdminNotification)?.setOnClickListener {
+            startActivity(Intent(this, AdminNotificationActivity::class.java))
+        }
 
         // Nút CHỈNH SỬA THÔNG TIN
         findViewById<CardView>(R.id.btnEditProfile).setOnClickListener {
