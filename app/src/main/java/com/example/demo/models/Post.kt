@@ -1,8 +1,7 @@
-package com.example.demo.activities
+package com.example.demo.models
 
-import android.media.Image
-import com.google.firebase.firestore.ServerTimestamp
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.ServerTimestamp
 
 data class Post(
     var id: String = "",

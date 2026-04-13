@@ -12,7 +12,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="@color/colorSurface">
 
         <ImageView
             android:id="@+id/imgFood"
@@ -32,14 +33,14 @@
                 android:layout_height="wrap_content"
                 android:textSize="17sp"
                 android:textStyle="bold"
-                android:textColor="#222222"/>
+                android:textColor="@color/colorTextReverse"/>
 
             <TextView
                 android:id="@+id/txtAuthor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
-                android:textColor="#777777"
+                android:textColor="@color/colorTextReverse"
                 android:layout_marginTop="4dp"/>
 
         </LinearLayout>

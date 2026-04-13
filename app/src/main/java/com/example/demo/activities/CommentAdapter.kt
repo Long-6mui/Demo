@@ -16,6 +16,7 @@ import com.cloudinary.android.MediaManager
 import com.cloudinary.android.callback.ErrorInfo
 import com.cloudinary.android.callback.UploadCallback
 import com.example.demo.R
+import com.example.demo.models.Comment
 import com.google.firebase.firestore.FirebaseFirestore
 
 class CommentAdapter(

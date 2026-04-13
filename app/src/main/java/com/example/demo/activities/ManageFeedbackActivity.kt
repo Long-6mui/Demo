@@ -1,14 +1,14 @@
 package com.example.demo.activities
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import android.view.View
+import android.widget.TextView
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demo.R
 import com.example.demo.adapters.ManageFeedbackAdapter
 import com.example.demo.models.Feedback
-import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
 class ManageFeedbackActivity : BaseActivity() {
@@ -16,6 +16,7 @@ class ManageFeedbackActivity : BaseActivity() {
     private lateinit var rvFeedbacks: RecyclerView
     private lateinit var adapter: ManageFeedbackAdapter
     private val feedbackList = mutableListOf<Feedback>()
+    private lateinit var txtNoFeedback: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +27,7 @@ class ManageFeedbackActivity : BaseActivity() {
         val toolbar = findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbarManageFeedback)
         toolbar.setNavigationOnClickListener { finish() }
 
+        txtNoFeedback = findViewById(R.id.txtNoFeedback)
         rvFeedbacks = findViewById(R.id.rvFeedbacks)
         rvFeedbacks.layoutManager = LinearLayoutManager(this)
         adapter = ManageFeedbackAdapter(feedbackList)
@@ -40,13 +42,24 @@ class ManageFeedbackActivity : BaseActivity() {
             .addSnapshotListener { value, error ->
                 if (error != null) return@addSnapshotListener
 
-                feedbackList.clear()
-                value?.forEach { doc ->
-                    val feedback = doc.toObject(Feedback::class.java)
-                    feedback.id = doc.id
-                    feedbackList.add(feedback)
+                if (value != null) {
+                    feedbackList.clear()
+                    value.forEach { doc ->
+                        val feedback = doc.toObject(Feedback::class.java)
+                        feedback.id = doc.id
+                        feedbackList.add(feedback)
+                    }
+
+                    // HIỂN THỊ THÔNG BÁO NẾU TRỐNG
+                    if (feedbackList.isEmpty()) {
+                        txtNoFeedback.visibility = View.VISIBLE
+                        rvFeedbacks.visibility = View.GONE
+                    } else {
+                        txtNoFeedback.visibility = View.GONE
+                        rvFeedbacks.visibility = View.VISIBLE
+                        adapter.notifyDataSetChanged()
+                    }
                 }
-                adapter.notifyDataSetChanged()
             }
     }
 }

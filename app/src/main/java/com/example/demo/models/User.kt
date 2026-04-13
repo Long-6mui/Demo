@@ -1,4 +1,4 @@
-package com.example.demo.activities
+package com.example.demo.models
 
 data class User(
     val userID: String,

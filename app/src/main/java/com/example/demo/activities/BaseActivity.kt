@@ -12,21 +12,33 @@ open class BaseActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val currentUserId = auth.currentUser?.uid
-        val sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE)
-
         if (currentUserId != null) {
-            // Lấy cài đặt theo UID của từng người dùng/admin
-            val isDarkMode = sharedPreferences.getBoolean("DarkMode_$currentUserId", false)
-            if (isDarkMode) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
+            // 1. Vẫn dùng SharedPreferences để áp dụng màu ngay lập tức khi mở app (không bị nháy trắng)
+            val sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE)
+            val localDarkMode = sharedPreferences.getBoolean("DarkMode_$currentUserId", false)
+            applyDarkMode(localDarkMode)
+
+            // 2. Lắng nghe từ Firestore để đồng bộ giữa các thiết bị
+            db.collection("Users").document(currentUserId)
+                .addSnapshotListener { snapshot, _ ->
+                    if (snapshot != null && snapshot.exists()) {
+                        val remoteDarkMode = snapshot.getBoolean("isDarkMode") ?: false
+                        if (remoteDarkMode != localDarkMode) {
+                            // Cập nhật lại local và áp dụng nếu có sự thay đổi từ máy khác
+                            sharedPreferences.edit().putBoolean("DarkMode_$currentUserId", remoteDarkMode).apply()
+                            applyDarkMode(remoteDarkMode)
+                        }
+                    }
+                }
+        }
+        super.onCreate(savedInstanceState)
+    }
+
+    private fun applyDarkMode(isDark: Boolean) {
+        if (isDark) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         } else {
-            // Nếu logout hoặc chưa đăng nhập, trả về Light Mode mặc định
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         }
-        
-        super.onCreate(savedInstanceState)
     }
 }

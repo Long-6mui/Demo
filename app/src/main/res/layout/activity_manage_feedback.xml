@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/windowBackground">
 
     <androidx.appcompat.widget.Toolbar
@@ -16,11 +15,23 @@
         app:title="Quản lý góp ý"
         app:titleTextColor="#1A3A2A" />
 
+    <!-- Text thông báo khi KHÔNG có góp ý -->
+    <TextView
+        android:id="@+id/txtNoFeedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Chưa có góp ý nào"
+        android:textColor="@color/textSecondary"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvFeedbacks"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/toolbarManageFeedback"
         android:padding="8dp"
         android:clipToPadding="false" />
 
-</LinearLayout>
+</RelativeLayout>

@@ -30,12 +30,13 @@ class SettingActivity : BaseActivity() {
 
             // 2. Xử lý khi người dùng bật/tắt Switch
             switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
-                // Lưu trạng thái vào SharedPreferences theo UID
-                val editor = sharedPreferences.edit()
-                editor.putBoolean("DarkMode_$currentUserId", isChecked)
-                editor.apply()
+                // 1. Lưu local
+                sharedPreferences.edit().putBoolean("DarkMode_$currentUserId", isChecked).apply()
 
-                // Áp dụng Dark Mode ngay lập tức
+                // 2. Lưu lên Firestore để đồng bộ
+                db.collection("Users").document(currentUserId).update("isDarkMode", isChecked)
+
+                // 3. Áp dụng ngay
                 if (isChecked) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 } else {

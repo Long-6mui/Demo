@@ -1,5 +1,4 @@
-package com.example.demo.activities
-
+package com.example.demo.models
 
 data class Comment(
     var id: String = "",

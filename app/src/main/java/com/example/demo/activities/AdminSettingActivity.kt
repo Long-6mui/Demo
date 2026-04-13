@@ -33,8 +33,10 @@ class AdminSettingActivity : BaseActivity() {
             // 2. Xử lý bật/tắt Dark Mode
             switchDarkMode.setOnCheckedChangeListener { _, isChecked ->
                 sharedPreferences.edit().putBoolean("DarkMode_$currentUserId", isChecked).apply()
-                
-                // Cập nhật giao diện ngay lập tức
+
+                // Đồng bộ lên Cloud
+                db.collection("Users").document(currentUserId).update("isDarkMode", isChecked)
+
                 if (isChecked) {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 } else {

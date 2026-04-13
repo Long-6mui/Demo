@@ -22,6 +22,9 @@ import com.cloudinary.android.callback.ErrorInfo
 import android.util.Log
 import android.widget.Toast
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.example.demo.adapters.PostAdapter
+import com.example.demo.models.Post
+import com.google.firebase.firestore.ListenerRegistration
 
 
 class FeedActivity : BaseActivity() {
@@ -45,6 +48,9 @@ class FeedActivity : BaseActivity() {
     val storage = FirebaseStorage.getInstance()
 
     var imageUri: Uri? = null                 // Lưu ảnh người dùng chọn
+
+    // Biến để quản lý listener
+    private var postsListener: ListenerRegistration? = null
 
     // ====== CONTRACT CHỌN ẢNH TỪ GALLERY ======
     val pickImage =
@@ -91,7 +97,7 @@ class FeedActivity : BaseActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
-        // ====== LOAD POST TỪ FIRESTORE ======
+        // ====== BẮT ĐẦU LẮNG NGHE POST TỪ FIRESTORE (REAL-TIME) ======
         loadPosts()
 
         // ====== SỰ KIỆN CHỌN ẢNH ======
@@ -136,7 +142,7 @@ class FeedActivity : BaseActivity() {
                         "name" to username,        // Giữ username để dễ query
                         "hoten" to hoten,          // Lưu họ tên để hiển thị đẹp
                         "content" to content,
-                        "likes" to 0,
+                        "likedBy" to mutableListOf<String>(), // Khởi tạo mảng like rỗng
                         "timestamp" to com.google.firebase.firestore.FieldValue.serverTimestamp()
                     )
 
@@ -150,7 +156,7 @@ class FeedActivity : BaseActivity() {
                     // Reset sau khi đăng
                     edtPost.setText("")
                     imageUri = null
-                    imgPick.setImageResource(R.drawable.daucong)
+                    imgPick.setImageResource(R.drawable.ic_image)
                 }
         }
 
@@ -195,14 +201,13 @@ class FeedActivity : BaseActivity() {
 
 
 
-    // ====== LƯU POST VÀO LIST + FIRESTORE ======
+    // ====== LƯU POST VÀO FIRESTORE ======
     fun savePost(postData: HashMap<String, Any>){
-
         db.collection("posts")
             .add(postData)
             .addOnSuccessListener { documentReference ->
                 Toast.makeText(this, "Đăng bài thành công!", Toast.LENGTH_SHORT).show()
-                loadPosts()
+                // Không cần gọi loadPosts() thủ công vì listener sẽ tự động cập nhật
             }
             .addOnFailureListener { e ->
                 Toast.makeText(this, "Đăng bài thất bại: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -210,30 +215,34 @@ class FeedActivity : BaseActivity() {
             }
     }
 
-    override fun onResume() {
-        super.onResume()
-        loadPosts()
-    }
-
-    // ====== LOAD POST TỪ FIRESTORE VÀ ADD THÊM VÀO LIST ======
+    // ====== LOAD POST TỪ FIRESTORE VỚI SNAPSHOT LISTENER (REAL-TIME) ======
     fun loadPosts() {
+        // Nếu đã có listener rồi thì không đăng ký thêm để tránh lãng phí tài nguyên
+        if (postsListener != null) return
 
-        db.collection("posts")
+        postsListener = db.collection("posts")
             .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
-            .get()
-            .addOnSuccessListener { result ->
-                list.clear()
-
-                for (doc in result) {
-                    val post = doc.toObject(Post::class.java)
-                    post.id = doc.id
-                    list.add(post)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    Log.e("FeedActivity", "Lỗi tải bài viết: ${e.message}")
+                    return@addSnapshotListener
                 }
 
-                adapter.notifyDataSetChanged()
+                if (snapshots != null) {
+                    list.clear()
+                    for (doc in snapshots) {
+                        val post = doc.toObject(Post::class.java)
+                        post.id = doc.id
+                        list.add(post)
+                    }
+                    adapter.notifyDataSetChanged()
+                }
             }
-            .addOnFailureListener { e ->
-                Log.e("FeedActivity", "Lỗi tải bài viết: ${e.message}")
-            }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Hủy lắng nghe khi Activity bị hủy để tránh rò rỉ bộ nhớ
+        postsListener?.remove()
     }
 }

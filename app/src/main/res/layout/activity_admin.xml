@@ -30,7 +30,7 @@
                 android:background="@drawable/circle_white_bg"
                 android:src="@drawable/ic_notifications"
                 android:padding="10dp"
-                app:tint="@color/colorPrimary"
+                app:tint="@color/colorTextReverse"
                 android:contentDescription="Admin Notification" />
 
             <LinearLayout
@@ -59,7 +59,7 @@
                     android:id="@+id/txtUserName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorTextReverse"
+                    android:textColor="@android:color/white"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:layout_marginTop="8dp"/>
@@ -68,7 +68,7 @@
                     android:id="@+id/txtUserID"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorTextReverse"
+                    android:textColor="@android:color/white"
                     android:textSize="13sp"/>
 
             </LinearLayout>

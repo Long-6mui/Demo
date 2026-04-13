@@ -27,44 +27,34 @@ class ManageFeedbackAdapter(private val feedbackList: List<Feedback>) :
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_feedback, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_feedback, parent, false)
         return ViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val feedback = feedbackList[position]
         val context = holder.itemView.context
+        val db = FirebaseFirestore.getInstance()
 
         holder.txtUserName.text = feedback.userName
         holder.txtContent.text = feedback.content
-
-        // Hiển thị trạng thái Quan tâm
         holder.indicator.visibility = if (feedback.isInterested) View.VISIBLE else View.GONE
 
-        // Hiển thị phản hồi cũ nếu có
         if (feedback.adminReply.isNotEmpty()) {
-            holder.txtAdminReply.text = "Admin phản hồi: ${feedback.adminReply}"
+            holder.txtAdminReply.text = "Phản hồi: ${feedback.adminReply}"
             holder.txtAdminReply.visibility = View.VISIBLE
         } else {
             holder.txtAdminReply.visibility = View.GONE
         }
 
-        // Nút Quan tâm
         holder.btnInterested.setOnClickListener {
-            FirebaseFirestore.getInstance().collection("feedbacks")
-                .document(feedback.id)
-                .update("isInterested", true)
+            db.collection("feedbacks").document(feedback.id).update("isInterested", true)
         }
 
-        // Nút Không quan tâm/Bỏ qua
         holder.btnNotInterested.setOnClickListener {
-            FirebaseFirestore.getInstance().collection("feedbacks")
-                .document(feedback.id)
-                .update("isInterested", false)
+            db.collection("feedbacks").document(feedback.id).update("isInterested", false)
         }
 
-        // Gửi phản hồi
         holder.btnSendReply.setOnClickListener {
             val replyText = holder.edtReply.text.toString().trim()
             if (replyText.isEmpty()) {
@@ -72,11 +62,25 @@ class ManageFeedbackAdapter(private val feedbackList: List<Feedback>) :
                 return@setOnClickListener
             }
 
-            FirebaseFirestore.getInstance().collection("feedbacks")
-                .document(feedback.id)
+            // 1. Cập nhật nội dung phản hồi vào góp ý
+            db.collection("feedbacks").document(feedback.id)
                 .update("adminReply", replyText)
                 .addOnSuccessListener {
-                    Toast.makeText(context, "Đã phản hồi thành công!", Toast.LENGTH_SHORT).show()
+                    
+                    // 2. PHÁT THÔNG BÁO CHO USER
+                    val userNoti = hashMapOf(
+                        "fromUserId" to "admin_system",
+                        "fromUserName" to "Admin",
+                        "toUserId" to feedback.userId,
+                        "postId" to feedback.id,
+                        "type" to "admin_reply",
+                        "content" to replyText,
+                        "timestamp" to System.currentTimeMillis(),
+                        "seen" to false
+                    )
+                    db.collection("notifications").add(userNoti)
+
+                    Toast.makeText(context, "Đã phản hồi và gửi thông báo!", Toast.LENGTH_SHORT).show()
                     holder.edtReply.setText("")
                 }
         }

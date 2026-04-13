@@ -19,14 +19,14 @@ class AdminRecipeAdapter(
 
     class AdminViewHolder(v: View) : RecyclerView.ViewHolder(v) {
 
-        val img: ImageView = v.findViewById(R.id.imgAdminRecipe)
-        val name: TextView = v.findViewById(R.id.tvAdminRecipeName)
-        val btnEdit: ImageButton = v.findViewById(R.id.btnEditRecipe)
-        val btnDelete: ImageButton = v.findViewById(R.id.btnDeleteRecipe)
+        val img: ImageView = v.findViewById(R.id.imgRecipe)
+        val name: TextView = v.findViewById(R.id.txtRecipeName)
+        val btnEdit: TextView = v.findViewById(R.id.btnEdit)
+        val btnDelete: TextView = v.findViewById(R.id.btnDelete)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdminViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_admin_recipe, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_manage_recipe, parent, false)
         return AdminViewHolder(v)
     }
 

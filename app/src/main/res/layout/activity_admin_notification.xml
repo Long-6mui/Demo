@@ -30,7 +30,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Thông báo Admin"
+            android:text="Thông báo"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -52,7 +52,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chưa có thông báo mới nào"
+            android:text="Chưa có thông báo nào"
             android:textColor="@color/textSecondary"
             android:layout_marginTop="16dp"
             android:textSize="16sp"/>

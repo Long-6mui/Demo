@@ -148,6 +148,7 @@ class AddRecipeActivity : BaseActivity() {
     private fun saveToFirebase(imageUrl: String) {
         val name = edtRecipeName.text.toString().trim()
         val desc = edtDescription.text.toString().trim()
+        val adminUid = auth.currentUser?.uid ?: ""
 
         val recipeData = hashMapOf(
             "name" to name,
@@ -168,11 +169,50 @@ class AddRecipeActivity : BaseActivity() {
         docRef.set(recipeData)
             .addOnSuccessListener {
                 Toast.makeText(this, "✅ Đã lưu!", Toast.LENGTH_SHORT).show()
-                finish()
+                
+                // PHÁT THÔNG BÁO CHO TẤT CẢ USER (Chỉ khi thêm mới)
+                if (recipeId == null) {
+                    sendNotificationToAllUsers(name, docRef.id, adminUid)
+                } else {
+                    finish()
+                }
             }
             .addOnFailureListener {
                 Toast.makeText(this, "Lỗi Firebase!", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun sendNotificationToAllUsers(recipeName: String, recipeId: String, fromUid: String) {
+        // 1. Lấy danh sách tất cả User
+        firestore.collection("Users").get().addOnSuccessListener { users ->
+            val batch = firestore.batch()
+            
+            for (userDoc in users) {
+                val toUid = userDoc.id
+                // Không tự gửi thông báo cho chính mình (Admin)
+                if (toUid == fromUid) continue
+                
+                val notiRef = firestore.collection("notifications").document()
+                val notiData = hashMapOf(
+                    "fromUserId" to fromUid,
+                    "fromUserName" to "Admin",
+                    "toUserId" to toUid,
+                    "postId" to recipeId,
+                    "type" to "new_recipe",
+                    "content" to recipeName,
+                    "timestamp" to System.currentTimeMillis(),
+                    "seen" to false
+                )
+                batch.set(notiRef, notiData)
+            }
+            
+            // 2. Thực thi gửi hàng loạt (Batch write) để tối ưu hiệu năng
+            batch.commit().addOnCompleteListener {
+                finish()
+            }
+        }.addOnFailureListener {
+            finish() // Vẫn thoát trang nếu không gửi được thông báo
+        }
     }
 
     private fun addTextViewToLayout(layout: LinearLayout, content: String) {
@@ -180,17 +220,15 @@ class AddRecipeActivity : BaseActivity() {
         tv.text = content
         tv.textSize = 16f
         tv.setPadding(10, 10, 10, 10)
-
         tv.setTextColor(ContextCompat.getColor(this, R.color.colorTextReverse))
         layout.addView(tv)
     }
 
     private fun showInputDialog(title: String, hint: String, onResult: (String) -> Unit) {
-        val builder = AlertDialog.Builder(this, R.style.CustomDialogTheme) // Áp dụng Dark Mode cho Dialog
+        val builder = AlertDialog.Builder(this, R.style.CustomDialogTheme)
         builder.setTitle(title)
         val input = EditText(this)
         input.hint = hint
-        // Đảm bảo chữ trong ô nhập liệu của Dialog cũng hiển thị đúng màu
         input.setTextColor(ContextCompat.getColor(this, R.color.textPrimary))
         input.setHintTextColor(ContextCompat.getColor(this, R.color.textSecondary))
         builder.setView(input)

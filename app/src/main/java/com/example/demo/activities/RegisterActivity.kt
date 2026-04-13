@@ -53,7 +53,7 @@ class RegisterActivity : AppCompatActivity() {
                     val user = result.user!!
                     val uid  = user.uid
 
-                    // 🔥 Lưu lên Firestore (QUAN TRỌNG)
+                    // 🔥 Lưu lên Firestore
                     val userMap = hashMapOf(
                         "userID" to uid,
                         "name"   to username,
@@ -64,9 +64,18 @@ class RegisterActivity : AppCompatActivity() {
                     db.collection("Users").document(uid)
                         .set(userMap)
                         .addOnSuccessListener {
+                            // PHÁT THÔNG BÁO CHO ADMIN
+                            val adminNoti = hashMapOf(
+                                "fromUserId" to uid,
+                                "fromUserName" to username,
+                                "type" to "new_user",
+                                "content" to "đã đăng ký tài khoản mới.",
+                                "timestamp" to System.currentTimeMillis(),
+                                "seen" to false
+                            )
+                            db.collection("admin_notifications").add(adminNoti)
 
                             Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show()
-
                             startActivity(Intent(this, MainActivity::class.java))
                             finish()
                         }

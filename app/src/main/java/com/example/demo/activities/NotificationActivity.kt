@@ -1,14 +1,24 @@
 package com.example.demo.activities
 
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.ImageButton
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.LinearLayout
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demo.R
+import com.example.demo.adapters.NotificationAdapter
+import com.example.demo.models.Notification
+import com.google.firebase.firestore.Query
 
 class NotificationActivity : BaseActivity() {
+
+    private lateinit var adapter: NotificationAdapter
+    private val notificationList = mutableListOf<Notification>()
+    private lateinit var layoutEmpty: LinearLayout
+    private lateinit var recycler: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -16,28 +26,49 @@ class NotificationActivity : BaseActivity() {
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(AppLifecycleObserver())
 
-        // Nút quay lại
-        val btnBack = findViewById<ImageButton>(R.id.btnBackNotification)
+        findViewById<ImageButton>(R.id.btnBackNotification)?.setOnClickListener { finish() }
 
-        btnBack.setOnClickListener {
-            finish()
-        }
-
-        // RecyclerView
-        val recycler = findViewById<RecyclerView>(R.id.recyclerNotification)
-
+        layoutEmpty = findViewById(R.id.layoutEmpty)
+        recycler = findViewById(R.id.recyclerNotification)
+        
         recycler.layoutManager = LinearLayoutManager(this)
-
-        // Dữ liệu demo
-        val list = listOf(
-            NotificationModel(R.drawable.login,"Nam đã thích bài viết của bạn","2 phút trước"),
-            NotificationModel(R.drawable.login,"Lan đã bình luận bài viết của bạn","5 phút trước"),
-            NotificationModel(R.drawable.login,"Hùng đã thích bài viết của bạn","10 phút trước"),
-            NotificationModel(R.drawable.login,"Trang đã theo dõi bạn","1 giờ trước")
-        )
-
-        val adapter = NotificationAdapter(list)
-
+        adapter = NotificationAdapter(notificationList)
         recycler.adapter = adapter
+
+        loadNotifications()
+    }
+
+    private fun loadNotifications() {
+        val currentUid = auth.currentUser?.uid ?: return
+
+        db.collection("notifications")
+            .whereEqualTo("toUserId", currentUid)
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    Log.e("NotificationError", "Lỗi tải thông báo: ${e.message}")
+                    return@addSnapshotListener
+                }
+
+                if (snapshots != null) {
+                    notificationList.clear()
+                    for (doc in snapshots) {
+                        val noti = doc.toObject(Notification::class.java)
+                        noti.id = doc.id
+                        notificationList.add(noti)
+                    }
+
+                    // HIỂN THỊ EMPTY STATE NẾU KHÔNG CÓ THÔNG BÁO
+                    if (notificationList.isEmpty()) {
+                        layoutEmpty.visibility = View.VISIBLE
+                        recycler.visibility = View.GONE
+                    } else {
+                        layoutEmpty.visibility = View.GONE
+                        recycler.visibility = View.VISIBLE
+                        adapter.notifyDataSetChanged()
+                    }
+                    Log.d("NotificationSuccess", "Đã tải ${notificationList.size} thông báo")
+                }
+            }
     }
 }
