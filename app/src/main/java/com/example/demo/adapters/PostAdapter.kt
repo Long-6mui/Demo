@@ -131,7 +131,7 @@ class PostAdapter(private val list: MutableList<Post>) :
                             "toUserId" to post.userId,
                             "postId" to post.id,
                             "type" to "like",
-                            "timestamp" to System.currentTimeMillis(),
+                            "timestamp" to timestamp,
                             "seen" to false
                         )
                         firestore.collection("notifications").add(userNoti)
@@ -175,7 +175,21 @@ class PostAdapter(private val list: MutableList<Post>) :
                     if (isOwner) popup.menu.add("Edit")
                     popup.menu.add("Delete")
                     popup.setOnMenuItemClickListener { menuItem ->
-                        if (menuItem.title == "Delete") firestore.collection("posts").document(post.id).delete()
+                        when (menuItem.title) {
+                            "Delete" -> {
+                                firestore.collection("posts").document(post.id).delete()
+                                    .addOnSuccessListener {
+                                        Toast.makeText(holder.itemView.context, "Đã xóa bài viết", Toast.LENGTH_SHORT).show()
+                                    }
+                            }
+                            "Edit" -> {
+                                val intent = Intent(holder.itemView.context, EditPostActivity::class.java)
+                                intent.putExtra("postId", post.id)
+                                intent.putExtra("content", post.content)
+                                intent.putExtra("image", post.imageUrl)
+                                holder.itemView.context.startActivity(intent)
+                            }
+                        }
                         true
                     }
                     popup.show()
