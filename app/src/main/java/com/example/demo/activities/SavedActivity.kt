@@ -6,15 +6,12 @@ import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.demo.R
 import com.example.demo.models.Recipe
 import com.example.demo.adapters.SavedAdapter
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
 
 class SavedActivity : BaseActivity() {
 
@@ -34,37 +31,68 @@ class SavedActivity : BaseActivity() {
         val btnBack = findViewById<ImageButton>(R.id.btnBackSaved)
 
         btnBack?.setOnClickListener {
-            // Kết thúc Activity này để quay lại màn hình trước đó
             onBackPressedDispatcher.onBackPressed()
         }
-        
+
         rvSavedRecipes.layoutManager = LinearLayoutManager(this)
+        adapter = SavedAdapter(fullList, true)
+        rvSavedRecipes.adapter = adapter
 
         loadSavedFromFirebase()
         setupSearch()
     }
 
-    // Trong SavedActivity.kt
     private fun loadSavedFromFirebase() {
         val userId = auth.currentUser?.uid ?: return
 
-        // Thay .addSnapshotListener bằng .get() để tránh tự động load lại khi đang xóa
+        // SỬ DỤNG addSnapshotListener ĐỂ LẮNG NGHE THỜI GIAN THỰC
         db.collection("Users").document(userId)
             .collection("SavedRecipes")
-            .get()
-            .addOnSuccessListener { snapshots ->
-                fullList.clear()
-                snapshots?.forEach { doc ->
-                    val recipe = doc.toObject(Recipe::class.java).copy(id = doc.id)
-                    fullList.add(recipe)
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    Toast.makeText(this, "Lỗi kết nối", Toast.LENGTH_SHORT).show()
+                    return@addSnapshotListener
                 }
 
-                // Khởi tạo adapter một lần
-                adapter = SavedAdapter(fullList, true)
-                rvSavedRecipes.adapter = adapter
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Lỗi tải dữ liệu", Toast.LENGTH_SHORT).show()
+                val recipesToCheck = snapshots?.documents ?: emptyList()
+                if (recipesToCheck.isEmpty()) {
+                    fullList.clear()
+                    adapter.notifyDataSetChanged()
+                    return@addSnapshotListener
+                }
+
+                val validRecipes = mutableListOf<Recipe>()
+                var checkedCount = 0
+
+                for (doc in recipesToCheck) {
+                    val recipeId = doc.id
+                    val recipeData = doc.toObject(Recipe::class.java)?.copy(id = recipeId)
+
+                    if (recipeData != null) {
+                        // KIỂM TRA XEM CÔNG THỨC CÒN TỒN TẠI TRÊN HỆ THỐNG KHÔNG
+                        db.collection("recipes").document(recipeId).get().addOnSuccessListener { mainDoc ->
+                            if (!mainDoc.exists()) {
+                                // ADMIN ĐÃ XÓA -> Xóa ngay lập tức khỏi kho lưu của User
+                                db.collection("Users").document(userId)
+                                    .collection("SavedRecipes").document(recipeId).delete()
+                            } else {
+                                validRecipes.add(recipeData)
+                            }
+
+                            checkedCount++
+                            // Khi đã kiểm tra xong tất cả
+                            if (checkedCount == recipesToCheck.size) {
+                                fullList.clear()
+                                fullList.addAll(validRecipes)
+                                // Sắp xếp theo tên hoặc thời gian nếu cần
+                                fullList.sortBy { it.name }
+                                adapter.notifyDataSetChanged()
+                            }
+                        }
+                    } else {
+                        checkedCount++
+                    }
+                }
             }
     }
 
@@ -78,7 +106,8 @@ class SavedActivity : BaseActivity() {
                 } else {
                     fullList.filter { it.name.contains(query, ignoreCase = true) }
                 }
-                rvSavedRecipes.adapter = SavedAdapter(filteredList.toMutableList(), true)
+                adapter = SavedAdapter(filteredList.toMutableList(), true)
+                rvSavedRecipes.adapter = adapter
             }
             override fun afterTextChanged(s: Editable?) {}
         })
